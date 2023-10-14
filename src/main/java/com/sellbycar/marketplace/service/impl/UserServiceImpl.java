@@ -1,8 +1,11 @@
-package com.sellbycar.marketplace.service;
+package com.sellbycar.marketplace.service.impl;
 
-import com.sellbycar.marketplace.model.user.User;
+import com.sellbycar.marketplace.repository.enums.UserRole;
+import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.repository.UserRepository;
+import com.sellbycar.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,6 +15,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -27,7 +31,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setEnabled(true);
+        user.getAuthority().add(UserRole.USER);
         return userRepository.save(user);
+    }
+
+
+    @Override
+    public boolean isEmailAlreadyExists(String email) {
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        return existingUser.isPresent();
     }
 
 
