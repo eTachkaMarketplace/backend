@@ -1,7 +1,7 @@
 package com.sellbycar.marketplace.rest;
 
-import com.sellbycar.marketplace.rest.exception.CustomUserException;
 import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.rest.exception.CustomUserException;
 import com.sellbycar.marketplace.rest.exception.UserEmailException;
 import com.sellbycar.marketplace.service.impl.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,17 +10,23 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Tag(name = "User Library", description = "Endpoints for managing user")
 public class UserController {
 
     private final UserServiceImpl userService;
+
+
+    @GetMapping("/login")
+    public ResponseEntity<String> loginPage() {
+
+        return ResponseEntity.ok("Login page");
+    }
 
 
     @GetMapping("/user/{id}")

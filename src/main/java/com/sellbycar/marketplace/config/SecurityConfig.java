@@ -77,7 +77,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(ENDPOINTS_WHITELIST).permitAll()
-                        .anyRequest().authenticated()
+
                 )
                 .formLogin(form -> form
                         .loginPage(LOGIN_URL)
