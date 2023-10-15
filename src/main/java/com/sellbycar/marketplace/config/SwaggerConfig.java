@@ -1,22 +1,46 @@
 package com.sellbycar.marketplace.config;
 
+import com.sellbycar.marketplace.rest.api.ApiKey;
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 
 @Configuration
 public class SwaggerConfig {
+
     @Bean
-    OpenAPI customOpenApi() {
-        return new OpenAPI().info(new Info().
-                        title("RESTfull API marketplace")
-                        .version("v1")
-                        .description("REST API for user database")
-                        .termsOfService("s"))
-                .addServersItem(new Server()
-                        .url("http://16.171.118.114:8443/swagger-ui/index.html")
-                        .description("Future Server for Marketplace"));
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("Marketplace")
+                .pathsToMatch(ApiKey.API + "/**")
+                .build();
+    }
+    @Bean
+    public OpenAPI marketPlaceOpenAPI() {
+        return new OpenAPI()
+                .info(new Info().title("Marketplace  API")
+                        .description("API Definitions of the Marketplace project")
+                        .version("v0.0.1")
+                        .license(new License().name("Apache 2.0").url("https://springdoc.org")))
+                .externalDocs(new ExternalDocumentation()
+                        .description("Marketplace GitHub Docs")
+                        .url("Later need add URL"))
+                .addSecurityItem(new SecurityRequirement()
+                        .addList(HttpHeaders.AUTHORIZATION))
+                .components(new Components()
+                        .addSecuritySchemes(HttpHeaders.AUTHORIZATION, new SecurityScheme()
+                                .name(HttpHeaders.AUTHORIZATION)
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")));
     }
 }

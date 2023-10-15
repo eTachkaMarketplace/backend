@@ -1,6 +1,7 @@
 package com.sellbycar.marketplace.rest;
 
 import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.rest.api.ApiKey;
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
 import com.sellbycar.marketplace.rest.exception.UserEmailException;
 import com.sellbycar.marketplace.service.impl.UserServiceImpl;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
 @Tag(name = "User Library", description = "Endpoints for managing user")
 public class UserController {
@@ -22,7 +22,7 @@ public class UserController {
     private final UserServiceImpl userService;
 
 
-    @GetMapping("/login")
+    @GetMapping(ApiKey.AUTH_LOGIN)
     public ResponseEntity<String> loginPage() {
 
         return ResponseEntity.ok("Login page");
@@ -49,7 +49,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user")
+    @PostMapping(ApiKey.USER)
     @Operation(summary = "Create a new user", description = "Create a new user", tags = {"User Library"})
     @ApiResponse(
             responseCode = "201",

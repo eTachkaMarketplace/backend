@@ -1,18 +1,25 @@
 package com.sellbycar.marketplace.config;
 
 import com.sellbycar.marketplace.service.impl.UserDetailsServiceImpl;
+import jakarta.servlet.DispatcherType;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,7 +27,8 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = "com.sellbycar.marketplace")
+@EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
+@Order(SecurityProperties.BASIC_AUTH_ORDER)
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
@@ -30,7 +38,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
@@ -60,10 +68,15 @@ public class SecurityConfig {
 
 
     public static final String[] ENDPOINTS_WHITELIST = {
-            "/users/**",
+            "/api/**",
             "/api/auth/login",
             "/",
-            "/swagger-ui/index.html"
+            "/swagger-ui/index.html",
+            "/swagger-ui/**",
+            "/swagger-resources/**",
+            "/v3/api-docs/**",
+            "/error",
+
     };
     public static final String LOGIN_URL = "/api/auth/login";
     public static final String LOGIN_FAIL_URL = LOGIN_URL + "?error";
@@ -72,10 +85,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http.csrf(AbstractHttpConfigurer::disable
                 )
 
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.ERROR).permitAll()
+
                         .requestMatchers(ENDPOINTS_WHITELIST).permitAll()
 
                 )
