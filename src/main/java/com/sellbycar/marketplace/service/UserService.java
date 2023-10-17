@@ -30,6 +30,7 @@ public class UserService implements UserDetails {
         User user = new User();
         user.setEmail(email);
         user.setFirstName(signUpRequest.getUsername());
+        user.setPhone(signUpRequest.getPhone());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.getAuthority().add(UserRole.USER);
         user.setEnabled(true);
