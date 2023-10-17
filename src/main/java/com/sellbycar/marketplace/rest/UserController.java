@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,16 +23,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-//
-//
-//    @GetMapping("/")
-//    public ResponseEntity<String> loginPage() {
-//
-//        return ResponseEntity.ok("Login page");
-//    }
-
 
     @GetMapping("/info/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID", tags = {"User Library"})
     @ApiResponse(
             responseCode = "200",
@@ -57,6 +51,7 @@ public class UserController {
     }
 
     @PostMapping("/user")
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new user", description = "Create a new user", tags = {"User Library"})
     @ApiResponse(
             responseCode = "201",
@@ -77,6 +72,7 @@ public class UserController {
     }
 
     @PutMapping("/user")
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update a user", description = "Update an existing user", tags = {"User Library"})
     @ApiResponse(
             responseCode = "200",
@@ -93,6 +89,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Delete a user", description = "Delete an existing user by ID", tags = {"User Library"})
     @ApiResponse(responseCode = "200", description = "User deleted successfully")
     @ApiResponse(responseCode = "400", description = "Bad Request")

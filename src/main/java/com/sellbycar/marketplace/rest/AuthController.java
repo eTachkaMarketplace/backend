@@ -7,6 +7,7 @@ import com.sellbycar.marketplace.payload.request.SignupRequest;
 import com.sellbycar.marketplace.payload.response.JwtResponse;
 import com.sellbycar.marketplace.payload.response.MessageResponse;
 import com.sellbycar.marketplace.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
+    @Operation(summary = "Login User")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -44,6 +46,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
+    @Operation(summary = "Register User")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userService.createUser(signUpRequest)) {
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
