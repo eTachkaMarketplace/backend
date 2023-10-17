@@ -16,30 +16,11 @@ import org.springframework.http.HttpHeaders;
 public class SwaggerConfig {
 
     @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("Marketplace")
-                .pathsToMatch("/api/**")
-                .build();
-    }
-
-    @Bean
     public OpenAPI marketPlaceOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("Marketplace  API")
+                        .version("v1")
                         .description("API Definitions of the Marketplace project")
-                        .version("v0.0.1")
-                        .license(new License().name("Apache 2.0").url("https://springdoc.org")))
-                .externalDocs(new ExternalDocumentation()
-                        .description("Marketplace GitHub Docs")
-                        .url("Later need add URL"))
-                .addSecurityItem(new SecurityRequirement()
-                        .addList(HttpHeaders.AUTHORIZATION))
-                .components(new Components()
-                        .addSecuritySchemes(HttpHeaders.AUTHORIZATION, new SecurityScheme()
-                                .name(HttpHeaders.AUTHORIZATION)
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme("bearer")
-                                .bearerFormat("JWT")));
+                        .license(new License().name("Apache 2.0").url("https://springdoc.org")));
     }
 }

@@ -2,6 +2,7 @@ package com.sellbycar.marketplace.rest;
 
 import com.sellbycar.marketplace.payload.request.SignupRequest;
 import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.rest.dto.UserDTO;
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
 import com.sellbycar.marketplace.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ public class UserController {
 //    }
 
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/info/{id}")
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID", tags = {"User Library"})
     @ApiResponse(
             responseCode = "200",
@@ -44,6 +45,11 @@ public class UserController {
 
         User user = userService.getUser(id);
         if (user != null) {
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setFirstName(user.getFirstName());
+            userDTO.setEmail(userDTO.getEmail());
+            userDTO.setPhone(userDTO.getPhone());
             return ResponseEntity.ok(user);
         } else {
             throw new CustomUserException("User with id: " + id + " not found");

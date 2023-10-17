@@ -44,14 +44,6 @@ public class UserService implements UserDetails {
     }
 
 
-//    Optional<User> user = userRepository.findById(id);
-//        if(user.isPresent()) {
-//        userRepository.deleteById(id);
-//        return true;
-//    }
-//        return false;
-//}
-
     public User getUser(long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
