@@ -41,16 +41,16 @@ public class UserController {
                     schema = @Schema(implementation = User.class)
             )
     )
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
 
         User user = userService.getUser(id);
         if (user != null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(user.getId());
             userDTO.setFirstName(user.getFirstName());
-            userDTO.setEmail(userDTO.getEmail());
-            userDTO.setPhone(userDTO.getPhone());
-            return ResponseEntity.ok(user);
+            userDTO.setEmail(user.getEmail());
+            userDTO.setPhone(user.getPhone());
+            return ResponseEntity.ok(userDTO);
         } else {
             throw new CustomUserException("User with id: " + id + " not found");
         }
