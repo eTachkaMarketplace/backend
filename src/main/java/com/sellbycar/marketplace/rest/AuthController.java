@@ -6,7 +6,6 @@ import com.sellbycar.marketplace.payload.request.LoginRequest;
 import com.sellbycar.marketplace.payload.request.SignupRequest;
 import com.sellbycar.marketplace.payload.response.JwtResponse;
 import com.sellbycar.marketplace.payload.response.MessageResponse;
-import com.sellbycar.marketplace.rest.api.ApiKey;
 import com.sellbycar.marketplace.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(ApiKey.AUTH)
+@RequestMapping("/api/auth")
 @AllArgsConstructor
 public class AuthController {
 
@@ -29,7 +28,7 @@ public class AuthController {
 
     private final JwtUtils jwtUtils;
 
-    @PostMapping(ApiKey.AUTH_LOGIN)
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -44,7 +43,7 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(jwtAccessToken, jwtRefreshToken));
     }
 
-    @PostMapping(ApiKey.AUTH_REGISTER)
+    @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userService.createUser(signUpRequest)) {
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

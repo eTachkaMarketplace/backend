@@ -29,7 +29,7 @@ public class UserService implements UserDetails {
         if (userRepository.findByEmail(email).isPresent()) return false;
         User user = new User();
         user.setEmail(email);
-        user.setFirstName(signUpRequest.getName());
+        user.setFirstName(signUpRequest.getUsername());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.getAuthority().add(UserRole.USER);
         user.setEnabled(true);
