@@ -2,6 +2,7 @@ package com.sellbycar.marketplace.repository.model;
 
 import com.sellbycar.marketplace.repository.enums.UserRole;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
