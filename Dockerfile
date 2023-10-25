@@ -4,18 +4,16 @@ WORKDIR /app
 
 COPY pom.xml .
 
-RUN mvn install -DskipTests
+RUN mvn clean install -DskipTests
 
 COPY src src
 
 RUN mv target/marketplace-0.0.1-SNAPSHOT.war /marketplace.war
 
-RUN mvn clean install -Dmaven.test.skip=true
+FROM openjdk:17-jdk-alpine
 
-FROM eclipse-temurin:17-jdk-alpine
-
-COPY --from=builder /marketplace.war /app.war
+COPY --from=builder /marketplace.war /marketplace.war
 
 WORKDIR /marketplace
 
-CMD ["java", "-jar", "/app.war"]
+CMD ["java", "-jar", "/marketplace.war"]
