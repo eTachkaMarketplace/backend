@@ -1,0 +1,30 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: marketplace
+      POSTGRES_USER: kingofukr
+      POSTGRES_PASSWORD: qmwpbjwhyjfuxdyyosul
+    ports:
+      - "5433:5432"
+    networks:
+      - mynetwork
+
+  myapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8443:8443"
+    depends_on:
+      - postgres
+    networks:
+      - mynetwork
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace
+      SPRING_DATASOURCE_USERNAME: kingofukr
+      SPRING_DATASOURCE_PASSWORD: qmwpbjwhyjfuxdyyosul
+
+networks:
+  mynetwork:
