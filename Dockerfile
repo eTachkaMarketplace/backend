@@ -23,7 +23,7 @@ COPY src src
 
 RUN mvn package -DskipTests
 
-RUN cp target/your-app.jar /app.jar
+RUN mv app.war /app.war
 
 FROM openjdk:11-jre-slim
 
@@ -31,5 +31,4 @@ COPY --from=builder /app.war /app.war
 
 WORKDIR /marketplace
 
-CMD ["java", "-jar", "/app.jar"]
-
+CMD ["java", "-jar", "/app.war"]
