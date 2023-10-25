@@ -23,9 +23,8 @@ COPY src src
 
 RUN mvn package -DskipTests
 
-RUN mv marketplace-0.0.1-SNAPSHOT.war /app.war
+RUN mv marketplace-0.0.1-SNAPSHOT.war /marketplace-0.0.1-SNAPSHOT.war
 
-#FROM openjdk:11-jre-slim
 FROM openjdk:17-jdk-alpine
 
 COPY --from=builder /app.war /app.war
