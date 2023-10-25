@@ -33,4 +33,4 @@ COPY --from=builder /marketplace.war /app.war
 
 WORKDIR /marketplace
 
-CMD ["java", "-jar", "/marketplace.war"]
+CMD ["java", "-jar", "/app.war"]
