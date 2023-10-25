@@ -24,12 +24,12 @@ COPY src src
 RUN #mvn package -DskipTests  \
 RUN mvn clean install -Dmaven.test.skip=true
 
-RUN #mv marketplace-0.0.1-SNAPSHOT.war /marketplace.war
+RUN mv marketplace-0.0.1-SNAPSHOT.war /marketplace.war
 
 
 FROM openjdk:17-jdk-alpine
 
-COPY --from=builder /app.war /app.war
+COPY --from=builder /marketplace.war /app.war
 
 WORKDIR /marketplace
 
