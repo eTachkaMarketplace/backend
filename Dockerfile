@@ -10,7 +10,6 @@ COPY src src
 RUN mv target/marketplace-0.0.1-SNAPSHOT.war /marketplace.war
 RUN mvn clean install -Dmaven.test.skip=true
 
-RUN #mv marketplace-0.0.1-SNAPSHOT.war /marketplace.war
 
 
 FROM eclipse-temurin:17-alpine
