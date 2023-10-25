@@ -16,4 +16,6 @@ COPY --from=builder /marketplace.war /marketplace.war
 
 WORKDIR /marketplace
 
+EXPOSE 8443
+
 CMD ["java", "-jar", "/marketplace.war"]
