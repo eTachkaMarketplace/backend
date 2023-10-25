@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: kingofukr
       POSTGRES_PASSWORD: qmwpbjwhyjfuxdyyosul
     ports:
-      - "5433:5432"
+      - "5432:5432"
     networks:
       - mynetwork
 
