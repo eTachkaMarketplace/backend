@@ -21,7 +21,8 @@ RUN mvn install -DskipTests
 
 COPY src src
 
-RUN mvn package -DskipTests
+RUN #mvn package -DskipTests  \
+RUN mvn clean install -Dmaven.test.skip=true
 
 RUN mv marketplace-0.0.1-SNAPSHOT.war /marketplace.war
 
