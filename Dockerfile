@@ -11,7 +11,7 @@
 #
 #CMD ["java", "-jar", "app.war"]
 
-FROM maven:3.8.4-openjdk-11-slim as builder
+FROM maven:3.9.5 as builder
 
 WORKDIR /app
 
@@ -25,7 +25,8 @@ RUN mvn package -DskipTests
 
 RUN mv app.war /app.war
 
-FROM openjdk:11-jre-slim
+#FROM openjdk:11-jre-slim
+FROM openjdk:17-jdk-alpine
 
 COPY --from=builder /app.war /app.war
 
