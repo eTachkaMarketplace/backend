@@ -1,12 +1,34 @@
-FROM openjdk:17-jdk-alpine
-
-#ENV LANG=C.UTF-8
+FROM maven:3.9.5 as builder
 
 WORKDIR /app
 
-COPY target/marketplace-0.0.1-SNAPSHOT.war app.war
+COPY pom.xml .
+
+RUN mvn clean install -DskipTests
+
 COPY src src
 
-EXPOSE 8443
+COPY target/marketplace-0.0.1-SNAPSHOT.war /app/marketplace.war
+#
+#FROM openjdk:17-jdk-alpine
+#
+#COPY --from=builder /app/marketplace.war /app/marketplace.war
+#
+#WORKDIR /app
+#
+#EXPOSE 8443
+#
+#CMD ["java", "-jar", "marketplace.war"]
 
-CMD ["java", "-jar", "app.war"]
+
+FROM eclipse-temurin:17-jdk-jammy
+
+WORKDIR /app
+
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:resolve
+
+COPY src ./src
+
+CMD ["./mvnw", "spring-boot:run"]
