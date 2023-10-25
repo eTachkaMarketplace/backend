@@ -23,7 +23,8 @@ COPY src src
 
 RUN mvn package -DskipTests
 
-RUN mv marketplace-0.0.1-SNAPSHOT.war /marketplace-0.0.1-SNAPSHOT.war
+RUN mv marketplace-0.0.1-SNAPSHOT.war /app.war
+
 
 FROM openjdk:17-jdk-alpine
 
