@@ -1,11 +1,10 @@
 package com.sellbycar.marketplace.rest;
 
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
-import com.sellbycar.marketplace.rest.exception.UserEmailException;
+import com.sellbycar.marketplace.rest.exception.UserInValidDataException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,8 +18,8 @@ public class UserExceptionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(UserEmailException.class)
-    public ResponseEntity<String> duplicateUserEmail(UserEmailException ex) {
+    @ExceptionHandler(UserInValidDataException.class)
+    public ResponseEntity<String> duplicateUserEmail(UserInValidDataException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
