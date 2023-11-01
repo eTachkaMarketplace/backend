@@ -1,6 +1,9 @@
 package com.sellbycar.marketplace.payload.request;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,19 +13,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SignupRequest {
     @NotBlank
-    @Size(min = 2, message = "login.minzize")
+    @Size(min = 2, max = 20)
     @NotNull
     private String username;
 
-    @Size(min = 6, message = "password.minsize")
-    @Size(max = 72, message = "password.maxsize")
-    @Pattern(regexp = "^\\S*$", message = "password.spaces")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$^#!%*?&()])[A-Za-z\\d@$^#!%*?&()]+$", message = "password.pattern")
+    @NotBlank
+    @Size(min = 6, max = 40)
     private String password;
 
-    @NotBlank(message = "email.notblank")
-    @Size(max = 50, message = "email.maxsize")
-    @Email(message = "email.email", regexp = "^(?=.{1,50}$)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$")
+    @NotBlank
+    @Size(max = 50)
+    @Email
     private String email;
     @NotBlank
     @Size(max = 13)

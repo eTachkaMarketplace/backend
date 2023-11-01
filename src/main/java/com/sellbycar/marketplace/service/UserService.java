@@ -28,20 +28,26 @@ public class UserService implements UserDetails {
 
 
     public boolean createUser(SignupRequest signUpRequest) {
-//        String username = signUpRequest.getUsername();
-//        String password = signUpRequest.getPassword();
+        String username = signUpRequest.getUsername();
+        String password = signUpRequest.getPassword();
         String email = signUpRequest.getEmail();
-//        String phone = signUpRequest.getPhone();
-//        if (username == null || username.length() < 2 || containsDigits(username))
-//            throw new UserInValidDataException("Invalid username. Usernames should be at least 2 symbols long and should not contain digits.");
-//        if (password == null || password.length() < 5)
-//            throw new UserInValidDataException("Password should have at least 5 symbols");
-//        if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
-//            throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
-//        }
-//        if (email == null || email.isEmpty() || !isEmailValid(email)) {
-//            throw new UserInValidDataException("Invalid email address. Email should not be empty and should have a valid format.");
-//        }
+        String phone = signUpRequest.getPhone();
+        if (username == null || username.length() < 2 || containsDigits(username))
+            throw new UserInValidDataException("Invalid username. Usernames should be at least 2 symbols long and should not contain digits.");
+        if (password == null || password.length() < 5 || !isPasswordValid(password))
+            throw new UserInValidDataException("The password must meet the following criteria:\n"
+                    + "- At least 5 characters long\n"
+                    + "- Must contain at least one uppercase letter\n"
+                    + "- Must contain at least one lowercase letter\n"
+                    + "- Must contain at least one digit\n"
+                    + "- Must contain at least one of the following special characters: @$^#!%*?&()\n"
+                    + "- Must not contain Cyrillic characters");
+        if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
+            throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
+        }
+        if (email == null || email.isEmpty() || !isEmailValid(email)) {
+            throw new UserInValidDataException("Invalid email address. Email should not be empty and should have a valid format.");
+        }
 
 
         if (userRepository.findByEmail(email).isPresent()) return false;
@@ -70,9 +76,16 @@ public class UserService implements UserDetails {
     }
 
     private boolean isEmailValid(String email) {
-        String emailRegex = "^(.+)@(.+)$";
+        String emailRegex = "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$";
         Pattern pattern = Pattern.compile(emailRegex);
         Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private boolean isPasswordValid(String password) {
+        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$^#!%*?&()])[A-Za-z\\d@$^#!%*?&()]+$";
+        Pattern pattern = Pattern.compile(passRegex);
+        Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
 
