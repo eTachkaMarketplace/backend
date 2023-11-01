@@ -28,20 +28,20 @@ public class UserService implements UserDetails {
 
 
     public boolean createUser(SignupRequest signUpRequest) {
-        String username = signUpRequest.getUsername();
-        String password = signUpRequest.getPassword();
+//        String username = signUpRequest.getUsername();
+//        String password = signUpRequest.getPassword();
         String email = signUpRequest.getEmail();
-        String phone = signUpRequest.getPhone();
-        if (username == null || username.length() < 2 || containsDigits(username))
-            throw new UserInValidDataException("Invalid username. Usernames should be at least 2 symbols long and should not contain digits.");
-        if (password == null || password.length() < 5)
-            throw new UserInValidDataException("Password should have at least 5 symbols");
-        if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
-            throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
-        }
-        if (email == null || email.isEmpty() || !isEmailValid(email)) {
-            throw new UserInValidDataException("Invalid email address. Email should not be empty and should have a valid format.");
-        }
+//        String phone = signUpRequest.getPhone();
+//        if (username == null || username.length() < 2 || containsDigits(username))
+//            throw new UserInValidDataException("Invalid username. Usernames should be at least 2 symbols long and should not contain digits.");
+//        if (password == null || password.length() < 5)
+//            throw new UserInValidDataException("Password should have at least 5 symbols");
+//        if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
+//            throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
+//        }
+//        if (email == null || email.isEmpty() || !isEmailValid(email)) {
+//            throw new UserInValidDataException("Invalid email address. Email should not be empty and should have a valid format.");
+//        }
 
 
         if (userRepository.findByEmail(email).isPresent()) return false;
@@ -82,11 +82,15 @@ public class UserService implements UserDetails {
         return existingUser.isPresent();
     }
 
-
-    public User getUser(long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.orElse(null);
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
+
+
+//    public User getUser(long id) {
+//        Optional<User> user = userRepository.findById(id);
+//        return user.orElse(null);
+//    }
 
     public User updateUser(User user) {
         return userRepository.save(user);
