@@ -17,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
@@ -47,7 +46,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "Register User")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
         if (userService.createUser(signUpRequest)) {
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         } else return ResponseEntity

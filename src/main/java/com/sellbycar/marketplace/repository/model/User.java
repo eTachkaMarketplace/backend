@@ -9,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -33,6 +35,8 @@ public class User implements Serializable {
     private Boolean enabled;
     @Column
     private String activationCode;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Advertisement> advertisement = new ArrayList<>();
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
