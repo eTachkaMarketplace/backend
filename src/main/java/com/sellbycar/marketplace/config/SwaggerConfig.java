@@ -19,8 +19,8 @@ public class SwaggerConfig {
                         .description("REST API for user database")
                         .termsOfService("s"))
                 .addServersItem(new Server()
-                        .url("https://16.171.118.114:8443/")
-//                        .url("https://localhost:8443/")
+//                        .url("https://16.171.118.114:8443/")
+                        .url("http://localhost:8080/")
                         .description("Future Server for Marketplace"));
     }
 }
