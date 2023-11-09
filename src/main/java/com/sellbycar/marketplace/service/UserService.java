@@ -84,7 +84,7 @@ public class UserService implements UserDetails {
 
     private boolean isPasswordValid(String password) {
 //        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$^#!%*?&()])[A-Za-z\\d@$^#!%*?&()]+$";
-        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d@$^#!%*?&()]+$";
+        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]+$";
         Pattern pattern = Pattern.compile(passRegex);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
