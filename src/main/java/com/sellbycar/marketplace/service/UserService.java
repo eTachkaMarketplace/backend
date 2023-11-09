@@ -7,6 +7,8 @@ import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.exception.UserInValidDataException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class UserService implements UserDetails {
     private final UserRepository userRepository;
+    private final UserDetailsServiceImpl userDetailsServiceImpl;
     private User user;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
@@ -117,6 +120,11 @@ public class UserService implements UserDetails {
             return true;
         }
         return false;
+    }
+
+    public Authentication userAuthentication(User user) {
+        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(user.getEmail());
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     @Override

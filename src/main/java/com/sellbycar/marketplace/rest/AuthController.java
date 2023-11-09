@@ -49,6 +49,8 @@ public class AuthController {
 
         UserDetailsConfig userDetails = (UserDetailsConfig) authentication.getPrincipal();
 
+        authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
+
         return ResponseEntity.ok(new JwtResponse(jwtAccessToken, jwtRefreshToken));
     }
 

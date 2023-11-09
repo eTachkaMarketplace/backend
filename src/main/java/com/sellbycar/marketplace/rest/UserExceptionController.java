@@ -2,6 +2,8 @@ package com.sellbycar.marketplace.rest;
 
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
 import com.sellbycar.marketplace.rest.exception.UserInValidDataException;
+import io.jsonwebtoken.SignatureException;
+import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,5 +30,18 @@ public class UserExceptionController {
     @ResponseBody
     public ResponseEntity<String> userNotFound(BadCredentialsException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ResponseEntity<String> badAccessToken(SignatureException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+    @ExceptionHandler(AuthException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public ResponseEntity<String> badRefreshToken(AuthException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 }

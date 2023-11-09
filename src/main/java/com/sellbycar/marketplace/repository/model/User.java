@@ -3,10 +3,7 @@ package com.sellbycar.marketplace.repository.model;
 import com.sellbycar.marketplace.repository.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,10 +16,12 @@ import java.util.Set;
 @NoArgsConstructor
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email", name = "unique_email_constraint"))
 public class User implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
+
     @Column
     private String firstName;
     @Column(unique = true)
@@ -37,10 +36,13 @@ public class User implements Serializable {
     private String activationCode;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Advertisement> advertisement = new ArrayList<>();
-
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<UserRole> authority = new HashSet<>();
+
+    public User(String email) {
+        this.email = email;
+    }
 
 }
