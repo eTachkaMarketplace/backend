@@ -31,7 +31,7 @@ public class UserService implements UserDetails {
         String username = signUpRequest.getUsername();
         String password = signUpRequest.getPassword();
         String email = signUpRequest.getEmail();
-        String phone = signUpRequest.getPhone();
+//        String phone = signUpRequest.getPhone();
         if (username == null || username.length() < 2 || containsDigits(username))
             throw new UserInValidDataException("Invalid username. Usernames should be at least 2 symbols long and should not contain digits.");
         if (password == null || password.length() < 5 || !isPasswordValid(password))
@@ -42,9 +42,9 @@ public class UserService implements UserDetails {
                     + "- Must contain at least one digit\n"
 //                    + "- Must contain at least one of the following special characters: @$^#!%*?&()\n"
                     + "- Must not contain Cyrillic characters");
-        if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
-            throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
-        }
+//        if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
+//            throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
+//        }
         if (email == null || email.isEmpty() || !isEmailValid(email)) {
             throw new UserInValidDataException("Invalid email address. Email should not be empty and should have a valid format.");
         }
@@ -54,7 +54,7 @@ public class UserService implements UserDetails {
         User user = new User();
         user.setEmail(email);
         user.setFirstName(signUpRequest.getUsername());
-        user.setPhone(signUpRequest.getPhone());
+//        user.setPhone(signUpRequest.getPhone());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.getAuthority().add(UserRole.USER);
         user.setEnabled(true);
