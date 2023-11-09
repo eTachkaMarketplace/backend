@@ -74,6 +74,14 @@ public class JwtUtils {
         return validateJwtToken(accessToken, jwtAccessSecret);
     }
 
+    public Claims getAccessClaims(@NonNull String token) {
+        return getClaims(token, (SecretKey) jwtAccessSecret);
+    }
+
+    public Claims getRefreshClaims(@NonNull String token) {
+        return getClaims(token, jwtRefreshSecret);
+    }
+
     public boolean validateJwtToken(@NonNull String token, @NonNull Key secret) {
         try {
             Jwts.parser().setSigningKey(secret).build().parse(token);
@@ -93,5 +101,12 @@ public class JwtUtils {
         return false;
     }
 
+    private Claims getClaims(@NonNull String token, @NonNull SecretKey secret) {
+        return Jwts.parser()
+                .verifyWith(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getPayload();
+    }
 
 }
