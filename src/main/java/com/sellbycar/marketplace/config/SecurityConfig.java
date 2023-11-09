@@ -60,6 +60,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors()
                 .disable()
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests()
                 .requestMatchers("/api/users/**").authenticated()
                 .requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html")

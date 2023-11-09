@@ -17,7 +17,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
     @Value(("${jwt.secret.access.expirationMs}"))
     private int jwtAccessExpirationMs;

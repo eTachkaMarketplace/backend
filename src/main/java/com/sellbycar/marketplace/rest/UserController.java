@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.rest;
 
+import com.sellbycar.marketplace.payload.jwt.JwtUtils;
 import com.sellbycar.marketplace.payload.request.SignupRequest;
 import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.dto.UserDTO;
@@ -11,10 +12,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @RestController
 @RequestMapping("/api/users")
@@ -23,8 +27,18 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JwtUtils jwtUtils;
 
-    @GetMapping("/info/{id}")
+    private String getTokenFromRequest() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
+    }
+
+    @GetMapping("/info")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID", tags = {"User Library"})
     @ApiResponse(
@@ -35,9 +49,12 @@ public class UserController {
                     schema = @Schema(implementation = User.class)
             )
     )
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUser() {
+        String token = getTokenFromRequest();
+        String username = jwtUtils.getUserNameFromJwtToken(token);
 
-        User user = userService.getUser(id);
+        User user = userService.getUserByEmail(username);
+
         if (user != null) {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(user.getId());
@@ -46,7 +63,7 @@ public class UserController {
             userDTO.setPhone(user.getPhone());
             return ResponseEntity.ok(userDTO);
         } else {
-            throw new CustomUserException("User with id: " + id + " not found");
+            throw new CustomUserException("User not found");
         }
     }
 
