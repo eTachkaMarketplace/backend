@@ -40,7 +40,7 @@ public class UserService implements UserDetails {
                     + "- Must contain at least one uppercase letter\n"
                     + "- Must contain at least one lowercase letter\n"
                     + "- Must contain at least one digit\n"
-                    + "- Must contain at least one of the following special characters: @$^#!%*?&()\n"
+//                    + "- Must contain at least one of the following special characters: @$^#!%*?&()\n"
                     + "- Must not contain Cyrillic characters");
         if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
             throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
@@ -83,7 +83,8 @@ public class UserService implements UserDetails {
     }
 
     private boolean isPasswordValid(String password) {
-        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$^#!%*?&()])[A-Za-z\\d@$^#!%*?&()]+$";
+//        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$^#!%*?&()])[A-Za-z\\d@$^#!%*?&()]+$";
+        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d@$^#!%*?&()]+$";
         Pattern pattern = Pattern.compile(passRegex);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
