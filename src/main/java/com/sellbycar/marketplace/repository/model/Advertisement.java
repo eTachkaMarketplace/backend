@@ -1,7 +1,6 @@
 package com.sellbycar.marketplace.repository.model;
 
 import com.sellbycar.marketplace.repository.enums.Transmission;
-import com.sellbycar.marketplace.repository.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
