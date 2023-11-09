@@ -55,6 +55,6 @@ public class Advertisement {
     private Set<Transmission> transmissions = new HashSet<>();
 
     @OneToMany
-    @JoinColumn(name = "images")
+    @JoinColumn(name = "image_id")
     private List<Images> images = new ArrayList<>();
 }
