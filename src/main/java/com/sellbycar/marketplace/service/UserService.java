@@ -31,7 +31,7 @@ public class UserService implements UserDetails {
 
 
     public boolean createUser(SignupRequest signUpRequest) {
-        String username = signUpRequest.getUsername();
+        String username = signUpRequest.getName();
         String password = signUpRequest.getPassword();
         String email = signUpRequest.getEmail();
 //        String phone = signUpRequest.getPhone();
@@ -56,7 +56,7 @@ public class UserService implements UserDetails {
         if (userRepository.findByEmail(email).isPresent()) return false;
         User user = new User();
         user.setEmail(email);
-        user.setFirstName(signUpRequest.getUsername());
+        user.setFirstName(signUpRequest.getName());
 //        user.setPhone(signUpRequest.getPhone());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.getAuthority().add(UserRole.USER);
