@@ -24,6 +24,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Tag(name = "User Library", description = "Endpoints for managing user")
+@CrossOrigin(origins = "https://yura-platonov.github.io")
 public class UserController {
 
     private final UserService userService;
