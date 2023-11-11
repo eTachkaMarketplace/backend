@@ -27,7 +27,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
-@CrossOrigin(origins = "https://yura-platonov.github.io")
+//@CrossOrigin(origins = "https://yura-platonov.github.io")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final UserService userService;
