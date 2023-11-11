@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,31 +42,40 @@ public class UserController {
     @GetMapping("/info")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID", tags = {"User Library"})
-    @ApiResponse(
-            responseCode = "200",
-            description = "User retrieved successfully",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = User.class)
-            )
-    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User retrieved successfully",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    })
     public ResponseEntity<UserDTO> getUser() {
-        String token = getTokenFromRequest();
-        String username = jwtUtils.getUserNameFromJwtToken(token);
+        try {
+            String token = getTokenFromRequest();
+            String username = jwtUtils.getUserNameFromJwtToken(token);
 
-        User user = userService.getUserByEmail(username);
+            User user = userService.getUserByEmail(username);
 
-        if (user != null) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            userDTO.setFirstName(user.getFirstName());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setPhone(user.getPhone());
-            return ResponseEntity.ok(userDTO);
-        } else {
-            throw new CustomUserException("User not found");
+            if (user != null) {
+                UserDTO userDTO = userToUserDTO(user);
+                return ResponseEntity.ok(userDTO);
+            } else {
+                throw new CustomUserException("User not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    private UserDTO userToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setFirstName(user.getFirstName());
+        userDTO.setEmail(user.getEmail());
+        userDTO.setPhone(user.getPhone());
+        return userDTO;
+    }
+
 
     @PostMapping("/user")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -90,16 +100,10 @@ public class UserController {
 
     @PutMapping("/user")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Update a user", description = "Update an existing user", tags = {"User Library"})
-    @ApiResponse(
-            responseCode = "200",
-            description = "User updated successfully",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = User.class)
-            )
-    )
-    @ApiResponse(responseCode = "400", description = "Bad Request")
+    @Operation(summary = "Change existing user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")})
     public ResponseEntity<User> updateUser(@RequestBody User user) {
         userService.updateUser(user);
         return ResponseEntity.ok(user);
