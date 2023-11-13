@@ -1,7 +1,6 @@
-package com.sellbycar.marketplace.service;
+package com.sellbycar.marketplace.service.impl;
 
 
-import com.sellbycar.marketplace.config.UserDetailsConfig;
 import com.sellbycar.marketplace.repository.UserRepository;
 import com.sellbycar.marketplace.repository.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, BadCredentialsException {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if (optionalUser.isEmpty()) throw new BadCredentialsException("User with this email not found");
-        return new UserDetailsConfig(optionalUser.get());
+        return new UserDetailsImpl(optionalUser.get());
     }
 }

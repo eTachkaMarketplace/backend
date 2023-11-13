@@ -1,10 +1,11 @@
 package com.sellbycar.marketplace.rest;
 
-import com.sellbycar.marketplace.config.UserDetailsConfig;
+import com.sellbycar.marketplace.rest.dto.UserDTO;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
+import com.sellbycar.marketplace.service.UserService;
 import com.sellbycar.marketplace.service.jwt.JwtUtils;
 import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
-import com.sellbycar.marketplace.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,11 +45,11 @@ public class UserController {
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID", tags = {"User Library"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User retrieved successfully",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = com.sellbycar.marketplace.rest.dto.User.class))),
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
     })
-    public ResponseEntity<com.sellbycar.marketplace.rest.dto.User> getUser() {
+    public ResponseEntity<UserDTO> getUser() {
         try {
             String token = getTokenFromRequest();
             String username = jwtUtils.getUserNameFromJwtToken(token);
@@ -56,7 +57,7 @@ public class UserController {
             User user = userService.getUserByEmail(username);
 
             if (user != null) {
-                com.sellbycar.marketplace.rest.dto.User userDTO = userToUserDTO(user);
+                UserDTO userDTO = userToUserDTO(user);
                 return ResponseEntity.ok(userDTO);
             } else {
                 throw new CustomUserException("User not found");
@@ -66,8 +67,8 @@ public class UserController {
         }
     }
 
-    private com.sellbycar.marketplace.rest.dto.User userToUserDTO(User user) {
-        com.sellbycar.marketplace.rest.dto.User userDTO = new com.sellbycar.marketplace.rest.dto.User();
+    private UserDTO userToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setEmail(user.getEmail());
@@ -123,11 +124,12 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN"),
             @ApiResponse(responseCode = "404", description = "User not found")})
-    public ResponseEntity<User> updateUser(@RequestBody com.sellbycar.marketplace.rest.dto.User updatedUser, @PathVariable Long id) {
+    public ResponseEntity<User> updateUser(@RequestBody UserDTO updatedUser, @PathVariable Long id) {
+
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetailsConfig) {
-            UserDetailsConfig userPrincipal = (UserDetailsConfig) principal;
+        if (principal instanceof UserDetailsImpl) {
+            UserDetailsImpl userPrincipal = (UserDetailsImpl) principal;
             if (userPrincipal.getId().equals(id)) {
                 User existingUser = userService.getUser(id);
                 if (existingUser != null) {
@@ -156,7 +158,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetailsConfig userPrincipal) {
+        if (principal instanceof UserDetailsImpl userPrincipal) {
             if (userPrincipal.getId().equals(id)) {
                 userService.deleteUser(id);
                 return ResponseEntity.ok("User with id = " + id + " was deleted");

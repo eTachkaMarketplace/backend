@@ -1,6 +1,6 @@
 package com.sellbycar.marketplace.service;
 
-import com.sellbycar.marketplace.config.UserDetailsConfig;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
 import com.sellbycar.marketplace.service.jwt.JwtUtils;
 import com.sellbycar.marketplace.rest.payload.response.JwtResponse;
 import com.sellbycar.marketplace.repository.model.User;
@@ -56,7 +56,7 @@ public class AuthService {
 
                 final String accessToken = jwtUtils.generateJwtToken(authentication);
                 final String newRefreshToken = jwtUtils.generateRefreshToken(authentication);
-                UserDetailsConfig userDetails = (UserDetailsConfig) authentication.getPrincipal();
+                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
                 refreshStorage.put(userDetails.getUsername(), newRefreshToken);
                 return new JwtResponse(accessToken, newRefreshToken);
             }

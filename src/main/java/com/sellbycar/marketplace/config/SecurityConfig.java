@@ -2,12 +2,13 @@ package com.sellbycar.marketplace.config;
 
 import com.sellbycar.marketplace.service.jwt.AuthEntryPointJwt;
 import com.sellbycar.marketplace.service.jwt.AuthTokenFilter;
-import com.sellbycar.marketplace.service.UserDetailsServiceImpl;
+import com.sellbycar.marketplace.service.impl.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,15 +59,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors()
-                .disable()
+                .cors(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-                .authorizeHttpRequests()
-                .requestMatchers("/api/users/**").authenticated()
-                .requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html")
-                .permitAll()
-                .anyRequest()
-                .permitAll();
+                .authorizeHttpRequests(configurer -> configurer.requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .anyRequest().permitAll());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 

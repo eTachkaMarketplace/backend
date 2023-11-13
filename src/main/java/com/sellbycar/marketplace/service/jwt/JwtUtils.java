@@ -1,6 +1,6 @@
 package com.sellbycar.marketplace.service.jwt;
 
-import com.sellbycar.marketplace.config.UserDetailsConfig;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -39,7 +39,7 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
 
-        UserDetailsConfig userPrincipal = (UserDetailsConfig) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         final Date expiration = new Date(new Date().getTime() + jwtAccessExpirationMs);
 
         return Jwts.builder()
@@ -52,7 +52,7 @@ public class JwtUtils {
     }
 
     public String generateRefreshToken(@NonNull Authentication authentication) {
-        UserDetailsConfig userPrincipal = (UserDetailsConfig) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         final Date expiration = new Date(new Date().getTime() + jwtRefreshExpirationMs);
         return Jwts.builder()
                 .subject((userPrincipal.getUsername()))

@@ -1,34 +1,33 @@
 package com.sellbycar.marketplace.service;
 
-import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
 import com.sellbycar.marketplace.repository.UserRepository;
 import com.sellbycar.marketplace.repository.enums.UserRole;
 import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.exception.UserInValidDataException;
+import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
+import com.sellbycar.marketplace.service.impl.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserDetails {
+public class UserService {
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
-    private User user;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
     private final HttpServletRequest httpServletRequest;
-
 
     public boolean createUser(SignupRequest signUpRequest) {
         String username = signUpRequest.getUsername();
@@ -104,13 +103,12 @@ public class UserService implements UserDetails {
     }
 
 
-    public User getUser(long id) {
+    public User getUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
 
     public User updateUser(User user) {
-        var userID = userRepository.existsById(user.getId());
         return userRepository.save(user);
     }
 
@@ -128,38 +126,9 @@ public class UserService implements UserDetails {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthority();
-    }
-
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return user.getEmail();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return user.getEnabled();
+    public User getUserFromSecurityContextHolder() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return userRepository.findByEmail(userDetails.getUsername()).get();
     }
 }
