@@ -1,4 +1,4 @@
-package com.sellbycar.marketplace.payload.jwt;
+package com.sellbycar.marketplace.service.jwt;
 
 import com.sellbycar.marketplace.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;

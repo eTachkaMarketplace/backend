@@ -1,6 +1,6 @@
 package com.sellbycar.marketplace.service;
 
-import com.sellbycar.marketplace.payload.request.SignupRequest;
+import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
 import com.sellbycar.marketplace.repository.UserRepository;
 import com.sellbycar.marketplace.repository.enums.UserRole;
 import com.sellbycar.marketplace.repository.model.User;
@@ -104,12 +104,13 @@ public class UserService implements UserDetails {
     }
 
 
-//    public User getUser(long id) {
-//        Optional<User> user = userRepository.findById(id);
-//        return user.orElse(null);
-//    }
+    public User getUser(long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.orElse(null);
+    }
 
     public User updateUser(User user) {
+        var userID = userRepository.existsById(user.getId());
         return userRepository.save(user);
     }
 

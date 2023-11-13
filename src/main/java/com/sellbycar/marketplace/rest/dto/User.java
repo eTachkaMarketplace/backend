@@ -3,7 +3,7 @@ package com.sellbycar.marketplace.rest.dto;
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class User {
     private Long id;
     private String firstName;
     private String email;

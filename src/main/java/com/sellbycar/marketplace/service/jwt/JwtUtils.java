@@ -1,4 +1,4 @@
-package com.sellbycar.marketplace.payload.jwt;
+package com.sellbycar.marketplace.service.jwt;
 
 import com.sellbycar.marketplace.config.UserDetailsConfig;
 import io.jsonwebtoken.*;
@@ -43,6 +43,7 @@ public class JwtUtils {
         final Date expiration = new Date(new Date().getTime() + jwtAccessExpirationMs);
 
         return Jwts.builder()
+                .claim("id",userPrincipal.getId())
                 .subject((userPrincipal.getUsername()))
                 .issuedAt(new Date())
                 .expiration(expiration)

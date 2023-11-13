@@ -1,7 +1,7 @@
 package com.sellbycar.marketplace.config;
 
-import com.sellbycar.marketplace.payload.jwt.AuthEntryPointJwt;
-import com.sellbycar.marketplace.payload.jwt.AuthTokenFilter;
+import com.sellbycar.marketplace.service.jwt.AuthEntryPointJwt;
+import com.sellbycar.marketplace.service.jwt.AuthTokenFilter;
 import com.sellbycar.marketplace.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.sellbycar.marketplace.payload.jwt;
+package com.sellbycar.marketplace.service.jwt;
 
 
 import jakarta.servlet.ServletException;

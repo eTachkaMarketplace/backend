@@ -1,8 +1,8 @@
 package com.sellbycar.marketplace.service;
 
 import com.sellbycar.marketplace.config.UserDetailsConfig;
-import com.sellbycar.marketplace.payload.jwt.JwtUtils;
-import com.sellbycar.marketplace.payload.response.JwtResponse;
+import com.sellbycar.marketplace.service.jwt.JwtUtils;
+import com.sellbycar.marketplace.rest.payload.response.JwtResponse;
 import com.sellbycar.marketplace.repository.model.User;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

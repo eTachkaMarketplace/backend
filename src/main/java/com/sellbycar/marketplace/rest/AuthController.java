@@ -1,11 +1,11 @@
 package com.sellbycar.marketplace.rest;
 
 import com.sellbycar.marketplace.config.UserDetailsConfig;
-import com.sellbycar.marketplace.payload.jwt.JwtUtils;
-import com.sellbycar.marketplace.payload.request.LoginRequest;
-import com.sellbycar.marketplace.payload.request.SignupRequest;
-import com.sellbycar.marketplace.payload.response.JwtResponse;
-import com.sellbycar.marketplace.payload.response.MessageResponse;
+import com.sellbycar.marketplace.service.jwt.JwtUtils;
+import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
+import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
+import com.sellbycar.marketplace.rest.payload.response.JwtResponse;
+import com.sellbycar.marketplace.rest.payload.response.MessageResponse;
 import com.sellbycar.marketplace.service.AuthService;
 import com.sellbycar.marketplace.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -59,7 +59,8 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
         if (userService.createUser(signUpRequest)) {
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-        } else return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     }
 
     @PostMapping("/refresh/access-token")
