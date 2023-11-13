@@ -61,9 +61,12 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-                .authorizeHttpRequests(configurer -> configurer.requestMatchers("/api/users/**").authenticated()
-                        .requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().permitAll());
+                .authorizeHttpRequests(configurer -> configurer
+                        .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html")
+                        .permitAll()
+                        .anyRequest()
+                        .permitAll());
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
