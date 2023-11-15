@@ -1,68 +1,44 @@
 package com.sellbycar.marketplace.service;
 
-import com.sellbycar.marketplace.config.UserDetailsConfig;
-import com.sellbycar.marketplace.payload.jwt.JwtUtils;
-import com.sellbycar.marketplace.payload.response.JwtResponse;
-import com.sellbycar.marketplace.repository.model.User;
-import io.jsonwebtoken.Claims;
+import com.sellbycar.marketplace.rest.payload.response.JwtResponse;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.constraints.NotNull;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface AuthService {
+    /**
+     * Saves the JWT refresh token associated with a user's email.
+     * <p>
+     * This method is responsible for persisting the JWT refresh token in a secure manner,
+     * typically in the database, for the given user identified by their email address.
+     *
+     * @param email           The email address of the user.
+     * @param jwtRefreshToken The JWT refresh token to be saved.
+     */
+    void saveJwtRefreshToken(String email, String jwtRefreshToken);
 
-@Service
-@RequiredArgsConstructor
-public class AuthService {
+    /**
+     * Retrieves a new JWT access token based on the provided refresh token.
+     * <p>
+     * This method is responsible for generating a new JWT access token using the provided refresh token.
+     * The refresh token is typically obtained from the client and used to request a fresh access token.
+     *
+     * @param refreshToken The refresh token used to request a new JWT access token.
+     * @return JwtResponse containing the new JWT access token and related information.
+     * @throws AuthException if the provided refresh token is null.
+     */
 
-    private final JwtUtils jwtUtils;
+    JwtResponse getJwtAccessToken(@NotNull String refreshToken) throws AuthException;
 
-    private final UserService userService;
-    private final Map<String, String> refreshStorage = new HashMap<>();
+    /**
+     * Retrieves information related to a JWT refresh token.
+     * <p>
+     * This method is responsible for obtaining information about the provided JWT refresh token.
+     * It can include details such as the token's expiration, associated user, or any additional data.
+     *
+     * @param refreshToken The JWT refresh token for which information is requested.
+     * @return JwtResponse containing information related to the provided JWT refresh token.
+     * @throws AuthException if the provided refresh token is null.
+     */
 
-    public void saveJwtRefreshToken(String email, String jwtRefreshToken) {
-        refreshStorage.put(email, jwtRefreshToken);
-    }
-
-    public JwtResponse getAccessToken(@NotNull String refreshToken) throws AuthException {
-        if (jwtUtils.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtUtils.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final Authentication authentication = userService.userAuthentication(new User(login));
-                if (authentication == null) throw new AuthException("User authentication error");
-
-                final String accessToken = jwtUtils.generateJwtToken(authentication);
-
-                return new JwtResponse(accessToken, null);
-            }
-        }
-        throw  new AuthException("Invalid Token");
-    }
-
-    public JwtResponse getJwtRefreshToken(@NonNull String refreshToken) throws AuthException {
-        if (jwtUtils.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtUtils.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final Authentication authentication = userService.userAuthentication(new User(login));
-                if (authentication == null) throw new AuthException("User authentication error");
-
-                final String accessToken = jwtUtils.generateJwtToken(authentication);
-                final String newRefreshToken = jwtUtils.generateRefreshToken(authentication);
-                UserDetailsConfig userDetails = (UserDetailsConfig) authentication.getPrincipal();
-                refreshStorage.put(userDetails.getUsername(), newRefreshToken);
-                return new JwtResponse(accessToken, newRefreshToken);
-            }
-        }
-        throw new AuthException("Invalid JWT token");
-    }
+    JwtResponse getJwtRefreshToken(@NotNull String refreshToken) throws AuthException;
 }
-

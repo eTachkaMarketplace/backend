@@ -1,4 +1,4 @@
-package com.sellbycar.marketplace.payload.response;
+package com.sellbycar.marketplace.rest.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

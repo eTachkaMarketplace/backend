@@ -1,6 +1,6 @@
-package com.sellbycar.marketplace.payload.jwt;
+package com.sellbycar.marketplace.service.jwt;
 
-import com.sellbycar.marketplace.service.UserDetailsServiceImpl;
+import com.sellbycar.marketplace.service.impl.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

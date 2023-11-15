@@ -1,19 +1,20 @@
 package com.sellbycar.marketplace.rest;
 
-import com.sellbycar.marketplace.config.UserDetailsConfig;
-import com.sellbycar.marketplace.payload.jwt.JwtUtils;
-import com.sellbycar.marketplace.payload.request.LoginRequest;
-import com.sellbycar.marketplace.payload.request.SignupRequest;
-import com.sellbycar.marketplace.payload.response.JwtResponse;
-import com.sellbycar.marketplace.payload.response.MessageResponse;
 import com.sellbycar.marketplace.service.AuthService;
 import com.sellbycar.marketplace.service.UserService;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
+import com.sellbycar.marketplace.service.jwt.JwtUtils;
+import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
+import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
+import com.sellbycar.marketplace.rest.payload.response.JwtResponse;
+import com.sellbycar.marketplace.rest.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -27,8 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
-//@CrossOrigin(origins = "https://yura-platonov.github.io")
-@CrossOrigin(origins = "*")
+@Tag(name = "User Registration Library", description = "Endpoints for register user")
 public class AuthController {
 
     private final UserService userService;
@@ -49,7 +49,7 @@ public class AuthController {
         final String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
         final String jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
 
-        UserDetailsConfig userDetails = (UserDetailsConfig) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
 
@@ -59,9 +59,10 @@ public class AuthController {
     @PostMapping("/signup")
     @Operation(summary = "Register User")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
-        if (userService.createUser(signUpRequest)) {
+        if (userService.createNewUser(signUpRequest)) {
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-        } else return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     }
 
     @PostMapping("/refresh/access-token")
@@ -69,7 +70,7 @@ public class AuthController {
     @ApiResponses({@ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")}),})
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody JwtResponse response) throws AuthException {
-        final JwtResponse token = authService.getAccessToken(response.getJwtRefreshToken());
+        final JwtResponse token = authService.getJwtAccessToken(response.getJwtRefreshToken());
         return ResponseEntity.ok(token);
     }
 

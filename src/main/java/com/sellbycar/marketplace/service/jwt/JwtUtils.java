@@ -1,6 +1,6 @@
-package com.sellbycar.marketplace.payload.jwt;
+package com.sellbycar.marketplace.service.jwt;
 
-import com.sellbycar.marketplace.config.UserDetailsConfig;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -39,10 +39,11 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
 
-        UserDetailsConfig userPrincipal = (UserDetailsConfig) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         final Date expiration = new Date(new Date().getTime() + jwtAccessExpirationMs);
 
         return Jwts.builder()
+                .claim("id",userPrincipal.getId())
                 .subject((userPrincipal.getUsername()))
                 .issuedAt(new Date())
                 .expiration(expiration)
@@ -51,7 +52,7 @@ public class JwtUtils {
     }
 
     public String generateRefreshToken(@NonNull Authentication authentication) {
-        UserDetailsConfig userPrincipal = (UserDetailsConfig) authentication.getPrincipal();
+        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
         final Date expiration = new Date(new Date().getTime() + jwtRefreshExpirationMs);
         return Jwts.builder()
                 .subject((userPrincipal.getUsername()))
@@ -104,8 +105,7 @@ public class JwtUtils {
     private Claims getClaims(@NonNull String token, @NonNull SecretKey secret) {
         return Jwts.parser()
                 .verifyWith(secret)
-                .build()
-                .parseClaimsJws(token)
+                .build().parseSignedClaims(token)
                 .getPayload();
     }
 
