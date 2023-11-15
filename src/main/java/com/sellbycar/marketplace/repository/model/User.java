@@ -20,7 +20,6 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
-
     @Column
     private String firstName;
     @Column(unique = true)
@@ -33,8 +32,10 @@ public class User implements Serializable {
     private Boolean enabled;
     @Column
     private String activationCode;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Advertisement> advertisement = new ArrayList<>();
+
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)

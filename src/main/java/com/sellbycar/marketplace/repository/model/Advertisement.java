@@ -41,7 +41,8 @@ public class Advertisement {
     private boolean crashed = false;
     @Column
     private Integer mileage;
-    @ManyToOne
+
+    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -53,7 +54,6 @@ public class Advertisement {
     @Enumerated(EnumType.STRING)
     private Set<Transmission> transmissions = new HashSet<>();
 
-    @OneToMany
-    @JoinColumn(name = "image_id")
+    @OneToMany(mappedBy = "advertisement",cascade = CascadeType.ALL)
     private List<Images> images = new ArrayList<>();
 }
