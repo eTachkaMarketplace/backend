@@ -5,9 +5,7 @@ import com.sellbycar.marketplace.repository.enums.UserRole;
 import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.exception.UserDataException;
 import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
-import com.sellbycar.marketplace.service.MailSenderService;
 import com.sellbycar.marketplace.service.UserService;
-import com.sellbycar.marketplace.service.impl.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final PasswordEncoder passwordEncoder;
-    private final MailSenderService mailSenderService;
+    private final MailSenderServiceImpl mailSenderServiceImpl;
     private final HttpServletRequest httpServletRequest;
 
     public boolean createNewUser(SignupRequest signUpRequest) {

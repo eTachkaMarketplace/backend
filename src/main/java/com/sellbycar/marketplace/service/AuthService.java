@@ -14,7 +14,7 @@ public interface AuthService {
      * @param email           The email address of the user.
      * @param jwtRefreshToken The JWT refresh token to be saved.
      */
-    public void saveJwtRefreshToken(String email, String jwtRefreshToken);
+    void saveJwtRefreshToken(String email, String jwtRefreshToken);
 
     /**
      * Retrieves a new JWT access token based on the provided refresh token.
@@ -27,7 +27,7 @@ public interface AuthService {
      * @throws AuthException if the provided refresh token is null.
      */
 
-    public JwtResponse getJwtAccessToken(@NotNull String refreshToken) throws AuthException;
+    JwtResponse getJwtAccessToken(@NotNull String refreshToken) throws AuthException;
 
     /**
      * Retrieves information related to a JWT refresh token.
@@ -40,5 +40,5 @@ public interface AuthService {
      * @throws AuthException if the provided refresh token is null.
      */
 
-    public JwtResponse getJwtRefreshToken(@NotNull String refreshToken) throws AuthException;
+    JwtResponse getJwtRefreshToken(@NotNull String refreshToken) throws AuthException;
 }

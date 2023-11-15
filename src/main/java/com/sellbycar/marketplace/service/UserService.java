@@ -15,7 +15,7 @@ public interface UserService {
      * @throws UserDataException if there is an issue during the registration process.
      */
 
-    public boolean createNewUser(SignupRequest signUpRequest);
+    boolean createNewUser(SignupRequest signUpRequest);
 
     /**
      * Checks whether the user exists in the database by email.
@@ -24,7 +24,7 @@ public interface UserService {
      * @return User object representing the user if found, null otherwise.
      */
 
-    public User existByEmail(String email);
+    User existByEmail(String email);
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
@@ -32,7 +32,7 @@ public interface UserService {
      * @param id ID of the user.
      * @return Optional containing the converted user as the result.
      */
-    public User findUser(Long id);
+    User findUser(Long id);
 
     /**
      * Updates an existing user with new data.
@@ -40,7 +40,7 @@ public interface UserService {
      * @param user New data for the update.
      * @return User object representing the updated user.
      */
-    public User updateUser(User user);
+    User updateUser(User user);
 
     /**
      * Removes the selected user.
@@ -48,7 +48,7 @@ public interface UserService {
      * @param id ID of the existing user.
      * @return true if the deletion is successful, false otherwise.
      */
-    public boolean deleteUser(long id);
+    boolean deleteUser(long id);
 
     /**
      * Authenticates a user based on the provided User object.
@@ -56,5 +56,5 @@ public interface UserService {
      * @param user The User object containing information for authentication.
      * @return Authentication object representing the authenticated user.
      */
-    public Authentication userAuthentication(User user);
+    Authentication userAuthentication(User user);
 }
