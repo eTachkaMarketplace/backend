@@ -18,8 +18,8 @@ public class SwaggerConfig {
                         .description("REST API for user database")
                         .termsOfService("s"))
                 .addServersItem(new Server()
-//                        .url("https://marketplace-fi3l.onrender.com")
-                        .url("https://localhost:8080/")
+                        .url("https://marketplace-fi3l.onrender.com")
+//                        .url("http://localhost:8080/")
                         .description("Future Server for Marketplace"));
     }
 }

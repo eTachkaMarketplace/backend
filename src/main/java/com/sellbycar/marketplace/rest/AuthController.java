@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @AllArgsConstructor
 @Tag(name = "User Registration Library", description = "Endpoints for register user")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final UserService userService;

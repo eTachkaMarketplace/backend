@@ -5,6 +5,7 @@ import com.sellbycar.marketplace.repository.enums.UserRole;
 import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.exception.UserDataException;
 import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
+import com.sellbycar.marketplace.service.MailService;
 import com.sellbycar.marketplace.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +25,11 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final PasswordEncoder passwordEncoder;
-    private final MailSenderServiceImpl mailSenderServiceImpl;
+    private final MailService mailService;
     private final HttpServletRequest httpServletRequest;
 
     public boolean createNewUser(SignupRequest signUpRequest) {
-        String username = signUpRequest.getUsername();
+        String username = signUpRequest.getName();
         String password = signUpRequest.getPassword();
         String email = signUpRequest.getEmail();
         if (username == null || username.length() < 2 || containsDigits(username))
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByEmail(email).isPresent()) return false;
         User user = new User();
         user.setEmail(email);
-        user.setFirstName(signUpRequest.getUsername());
+        user.setFirstName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.getAuthority().add(UserRole.USER);
         user.setEnabled(true);
