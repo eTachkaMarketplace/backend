@@ -105,8 +105,7 @@ public class JwtUtils {
     private Claims getClaims(@NonNull String token, @NonNull SecretKey secret) {
         return Jwts.parser()
                 .verifyWith(secret)
-                .build()
-                .parseClaimsJws(token)
+                .build().parseSignedClaims(token)
                 .getPayload();
     }
 

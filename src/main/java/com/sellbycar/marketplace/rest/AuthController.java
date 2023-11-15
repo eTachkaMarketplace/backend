@@ -1,13 +1,13 @@
 package com.sellbycar.marketplace.rest;
 
-import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
+import com.sellbycar.marketplace.service.AuthService;
 import com.sellbycar.marketplace.service.UserService;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
 import com.sellbycar.marketplace.service.jwt.JwtUtils;
 import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
 import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
 import com.sellbycar.marketplace.rest.payload.response.JwtResponse;
 import com.sellbycar.marketplace.rest.payload.response.MessageResponse;
-import com.sellbycar.marketplace.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,7 +59,7 @@ public class AuthController {
     @PostMapping("/signup")
     @Operation(summary = "Register User")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
-        if (userService.createUser(signUpRequest)) {
+        if (userService.createNewUser(signUpRequest)) {
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         }
         return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
@@ -70,7 +70,7 @@ public class AuthController {
     @ApiResponses({@ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")}),})
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody JwtResponse response) throws AuthException {
-        final JwtResponse token = authService.getAccessToken(response.getJwtRefreshToken());
+        final JwtResponse token = authService.getJwtAccessToken(response.getJwtRefreshToken());
         return ResponseEntity.ok(token);
     }
 

@@ -1,134 +1,60 @@
 package com.sellbycar.marketplace.service;
 
-import com.sellbycar.marketplace.repository.UserRepository;
-import com.sellbycar.marketplace.repository.enums.UserRole;
 import com.sellbycar.marketplace.repository.model.User;
-import com.sellbycar.marketplace.rest.exception.UserInValidDataException;
+import com.sellbycar.marketplace.rest.exception.UserDataException;
 import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
-import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
-import com.sellbycar.marketplace.service.impl.UserDetailsServiceImpl;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+public interface UserService {
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
-    private final PasswordEncoder passwordEncoder;
-    private final MailSenderService mailSenderService;
-    private final HttpServletRequest httpServletRequest;
+    /**
+     * Registers a new user in the system.
+     *
+     * @param signUpRequest DTO containing all required data for user registration.
+     * @return true if the registration is successful, false otherwise.
+     * @throws UserDataException if there is an issue during the registration process.
+     */
 
-    public boolean createUser(SignupRequest signUpRequest) {
-        String username = signUpRequest.getUsername();
-        String password = signUpRequest.getPassword();
-        String email = signUpRequest.getEmail();
-//        String phone = signUpRequest.getPhone();
-        if (username == null || username.length() < 2 || containsDigits(username))
-            throw new UserInValidDataException("Invalid username. Usernames should be at least 2 symbols long and should not contain digits.");
-        if (password == null || password.length() < 5 || !isPasswordValid(password))
-            throw new UserInValidDataException("The password must meet the following criteria:\n"
-                    + "- At least 5 characters long\n"
-                    + "- Must contain at least one uppercase letter\n"
-                    + "- Must contain at least one lowercase letter\n"
-                    + "- Must contain at least one digit\n"
-//                    + "- Must contain at least one of the following special characters: @$^#!%*?&()\n"
-                    + "- Must not contain Cyrillic characters");
-//        if (phone == null || phone.length() < 10 || !isPhoneNumberValid(phone)) {
-//            throw new UserInValidDataException("Invalid phone number. Phone numbers should be at least 10 digits long and contain only digits.");
-//        }
-        if (email == null || email.isEmpty() || !isEmailValid(email)) {
-            throw new UserInValidDataException("Invalid email address. Email should not be empty and should have a valid format.");
-        }
+    public boolean createNewUser(SignupRequest signUpRequest);
 
+    /**
+     * Checks whether the user exists in the database by email.
+     *
+     * @param email Email address of the user to check.
+     * @return User object representing the user if found, null otherwise.
+     */
 
-        if (userRepository.findByEmail(email).isPresent()) return false;
-        User user = new User();
-        user.setEmail(email);
-        user.setFirstName(signUpRequest.getUsername());
-//        user.setPhone(signUpRequest.getPhone());
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.getAuthority().add(UserRole.USER);
-        user.setEnabled(true);
-        userRepository.save(user);
-        return true;
-    }
+    public User existByEmail(String email);
 
-    private boolean containsDigits(String str) {
-        for (char c : str.toCharArray()) {
-            if (Character.isDigit(c)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    /**
+     * Finds a user in the database by checking the given user ID and converts it into DTO.
+     *
+     * @param id ID of the user.
+     * @return Optional containing the converted user as the result.
+     */
+    public User findUser(Long id);
 
-    private boolean isPhoneNumberValid(String phoneNumber) {
-        return phoneNumber.matches("\\d{10,}");
-    }
+    /**
+     * Updates an existing user with new data.
+     *
+     * @param user New data for the update.
+     * @return User object representing the updated user.
+     */
+    public User updateUser(User user);
 
-    private boolean isEmailValid(String email) {
-        String emailRegex = "^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
+    /**
+     * Removes the selected user.
+     *
+     * @param id ID of the existing user.
+     * @return true if the deletion is successful, false otherwise.
+     */
+    public boolean deleteUser(long id);
 
-    private boolean isPasswordValid(String password) {
-//        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$^#!%*?&()])[A-Za-z\\d@$^#!%*?&()]+$";
-        String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]+$";
-        Pattern pattern = Pattern.compile(passRegex);
-        Matcher matcher = pattern.matcher(password);
-        return matcher.matches();
-    }
-
-
-    public boolean isEmailAlreadyExists(String email) {
-        Optional<User> existingUser = userRepository.findByEmail(email);
-        return existingUser.isPresent();
-    }
-
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
-    }
-
-
-    public User getUser(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return user.orElse(null);
-    }
-
-    public User updateUser(User user) {
-        return userRepository.save(user);
-    }
-
-    public boolean deleteUser(long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-    public Authentication userAuthentication(User user) {
-        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(user.getEmail());
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-    }
-
-    public User getUserFromSecurityContextHolder() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return userRepository.findByEmail(userDetails.getUsername()).get();
-    }
+    /**
+     * Authenticates a user based on the provided User object.
+     *
+     * @param user The User object containing information for authentication.
+     * @return Authentication object representing the authenticated user.
+     */
+    public Authentication userAuthentication(User user);
 }

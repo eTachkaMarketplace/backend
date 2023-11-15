@@ -1,7 +1,7 @@
-package com.sellbycar.marketplace.rest;
+package com.sellbycar.marketplace.rest.exception.handler;
 
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
-import com.sellbycar.marketplace.rest.exception.UserInValidDataException;
+import com.sellbycar.marketplace.rest.exception.UserDataException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,8 @@ public class UserExceptionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
-    @ExceptionHandler(UserInValidDataException.class)
-    public ResponseEntity<String> duplicateUserEmail(UserInValidDataException ex) {
+    @ExceptionHandler(UserDataException.class)
+    public ResponseEntity<String> duplicateUserEmail(UserDataException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 

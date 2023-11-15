@@ -1,11 +1,11 @@
 package com.sellbycar.marketplace.rest;
 
-import com.sellbycar.marketplace.rest.dto.UserDTO;
-import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
-import com.sellbycar.marketplace.service.UserService;
-import com.sellbycar.marketplace.service.jwt.JwtUtils;
 import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.rest.dto.UserDTO;
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
+import com.sellbycar.marketplace.service.UserService;
+import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
+import com.sellbycar.marketplace.service.jwt.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -32,7 +34,8 @@ public class UserController {
     private final JwtUtils jwtUtils;
 
     private String getTokenFromRequest() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
+                .getRequestAttributes())).getRequest();
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             return authorizationHeader.substring(7);
@@ -54,7 +57,7 @@ public class UserController {
             String token = getTokenFromRequest();
             String username = jwtUtils.getUserNameFromJwtToken(token);
 
-            User user = userService.getUserByEmail(username);
+            User user = userService.existByEmail(username);
 
             if (user != null) {
                 UserDTO userDTO = userToUserDTO(user);
@@ -77,45 +80,6 @@ public class UserController {
     }
 
 
-//    @PostMapping("/user")
-//    @SecurityRequirement(name = "Bearer Authentication")
-//    @Operation(summary = "Create a new user", description = "Create a new user", tags = {"User Library"})
-//    @ApiResponse(
-//            responseCode = "201",
-//            description = "User created successfully",
-//            content = @Content(
-//                    mediaType = "application/json",
-//                    schema = @Schema(implementation = User.class)
-//            )
-//    )
-//    @ApiResponse(responseCode = "400", description = "Bad Request")
-//    public ResponseEntity<String> createUser(@RequestBody SignupRequest signupRequest) {
-//        if (userService.isEmailAlreadyExists(signupRequest.getEmail())) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("There is email: " + signupRequest.getEmail() + " exist in database");
-//        }
-//        userService.createUser(signupRequest);
-//        return ResponseEntity.ok("You a created account");
-//
-//    }
-
-//    @PutMapping("/user/{id}")
-//    @SecurityRequirement(name = "Bearer Authentication")
-//    @Operation(summary = "Change existing user")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "OK"),
-//            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED")})
-//    public ResponseEntity<User> updateUser(@RequestBody User user, @PathVariable Long id) {
-//
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (principal instanceof UserDetailsConfig userPrincipal) {
-//            if (userPrincipal.getId().equals(id)) {
-//                userService.updateUser(user);
-//            }
-//            return ResponseEntity.ok(user);
-//        }
-//        throw new CustomUserException("User with id: " + id + " does not exists in database");
-//    }
-
     @PutMapping("/user/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Change existing user")
@@ -128,10 +92,9 @@ public class UserController {
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetailsImpl) {
-            UserDetailsImpl userPrincipal = (UserDetailsImpl) principal;
+        if (principal instanceof UserDetailsImpl userPrincipal) {
             if (userPrincipal.getId().equals(id)) {
-                User existingUser = userService.getUser(id);
+                User existingUser = userService.findUser(id);
                 if (existingUser != null) {
                     existingUser.setFirstName(updatedUser.getFirstName());
                     userService.updateUser(existingUser);
@@ -165,11 +128,7 @@ public class UserController {
             }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
 
-//                throw new CustomUserException("User with id: " + id + " does not exists in database");
         }
-//        if (userService.deleteUser(id)) {
-//            return ResponseEntity.ok("User with id = " + id + " was deleted");
-//        } else {
         throw new CustomUserException("User with id: " + id + " does not exists in database");
     }
 
