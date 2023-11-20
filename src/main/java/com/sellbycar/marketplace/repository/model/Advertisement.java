@@ -19,30 +19,28 @@ import java.util.Set;
 public class Advertisement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
+
     @Column
     private String description;
+
     @Column
     private String name;
-    @Column
-    private String year;
+
     @Column
     private Integer price;
-    @Column
-    private String carNumber;
-    @Column
-    private String vinNumber;
+
     @Column
     private boolean change = false;
+
     @Column
     private boolean bargain = false;
+
     @Column
     private boolean crashed = false;
-    @Column
-    private Integer mileage;
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -50,10 +48,11 @@ public class Advertisement {
     private Auto auto;
 
     @ElementCollection(targetClass = Transmission.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "transmission", joinColumns = @JoinColumn(name = "advertisement_id"))
+    @CollectionTable(name = "advertisement_transmissions", joinColumns = @JoinColumn(name = "advertisement_id"))
     @Enumerated(EnumType.STRING)
     private Set<Transmission> transmissions = new HashSet<>();
 
-    @OneToMany(mappedBy = "advertisement",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Images> images = new ArrayList<>();
+
 }

@@ -23,9 +23,9 @@ public class CarMark {
     @Column
     private String name;
 
-    @OneToOne
-    @JoinColumn(name = "image_id")
-    private Images images;
+//    @OneToOne
+//    @JoinColumn(name = "image_id")
+//    private Images images;
 
     @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)
     private List<CarModel> carModel = new ArrayList<>();
