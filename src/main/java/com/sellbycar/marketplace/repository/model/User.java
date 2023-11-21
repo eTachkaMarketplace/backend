@@ -31,7 +31,7 @@ public class User implements Serializable {
     @Column
     private Boolean enabled;
     @Column
-    private String activationCode;
+    private String uniqueCode;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Advertisement> advertisement = new ArrayList<>();

@@ -3,6 +3,8 @@ package com.sellbycar.marketplace.rest;
 import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.dto.UserDTO;
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
+import com.sellbycar.marketplace.rest.payload.request.EmailRequest;
+import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
 import com.sellbycar.marketplace.service.UserService;
 import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
 import com.sellbycar.marketplace.service.jwt.JwtUtils;
@@ -25,7 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @Tag(name = "User Library", description = "Endpoints for managing user")
 //@CrossOrigin(origins = "https://yura-platonov.github.io")
@@ -45,7 +47,7 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/info")
+    @GetMapping("/users/info")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID", tags = {"User Library"})
     @ApiResponses(value = {
@@ -82,7 +84,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/users/user/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Change existing user")
     @ApiResponses(value = {
@@ -114,7 +116,7 @@ public class UserController {
     }
 
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/users/user/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Delete a user", description = "Delete an existing user by ID", tags = {"User Library"})
     @ApiResponse(responseCode = "200", description = "User deleted successfully")
@@ -132,6 +134,24 @@ public class UserController {
 
         }
         throw new CustomUserException("User with id: " + id + " does not exists in database");
+    }
+
+    @PutMapping("/forgot/password")
+    public ResponseEntity<String> forgotPassword(@RequestBody EmailRequest emailRequest) {
+
+        return ResponseEntity.ok(userService.forgotPassword(emailRequest));
+    }
+
+    @PutMapping("/accept/code/{code}")
+    public ResponseEntity<User> acceptCode(@PathVariable("code") String code) {
+        return ResponseEntity.ok(userService.acceptCode(code));
+    }
+
+    @PutMapping("/change/password")
+    public ResponseEntity<String> changePassword(@RequestBody LoginRequest request) {
+        if (!userService.isPasswordValid(request.getPassword())) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Invalid password");
+        return ResponseEntity.ok(userService.changePassword(request));
     }
 
 }

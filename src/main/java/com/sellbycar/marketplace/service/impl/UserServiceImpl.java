@@ -4,6 +4,8 @@ import com.sellbycar.marketplace.repository.UserRepository;
 import com.sellbycar.marketplace.repository.enums.UserRole;
 import com.sellbycar.marketplace.repository.model.User;
 import com.sellbycar.marketplace.rest.exception.UserDataException;
+import com.sellbycar.marketplace.rest.payload.request.EmailRequest;
+import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
 import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
 import com.sellbycar.marketplace.service.MailService;
 import com.sellbycar.marketplace.service.UserService;
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,7 +57,9 @@ public class UserServiceImpl implements UserService {
         user.getAuthority().add(UserRole.USER);
         user.setEnabled(true);
         userRepository.save(user);
+        mailService.sendSimpleMessage(user.getEmail(), "Реєстрація", "Дякую за реєстрацію на платформі CarPark");
         return true;
+
     }
 
     private boolean containsDigits(String str) {
@@ -77,7 +82,7 @@ public class UserServiceImpl implements UserService {
         return matcher.matches();
     }
 
-    private boolean isPasswordValid(String password) {
+    public boolean isPasswordValid(String password) {
         String passRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]+$";
         Pattern pattern = Pattern.compile(passRegex);
         Matcher matcher = pattern.matcher(password);
@@ -116,6 +121,45 @@ public class UserServiceImpl implements UserService {
     public Authentication userAuthentication(User user) {
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(user.getEmail());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    @Override
+    public String forgotPassword(EmailRequest request) {
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setUniqueCode(UUID.randomUUID().toString());
+            userRepository.save(user);
+            mailService.sendSimpleMessage(user.getEmail(), "Forgot Password"
+                    , "Link for change password " + user.getUniqueCode());
+
+            return "Link sent for your email";
+        }
+        return "User not found";
+    }
+
+    @Override
+    public User acceptCode(String uniqueCode) {
+        Optional<User> optionalUser = userRepository.findUserByUniqueCode(uniqueCode);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setUniqueCode(null);
+            userRepository.save(user);
+            return user;
+        }
+        throw new UserDataException("Bad request");
+    }
+
+    @Override
+    public String changePassword(LoginRequest request) {
+        Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            userRepository.save(user);
+            return "Success";
+        }
+        throw new UserDataException("Bad request");
     }
 
 }
