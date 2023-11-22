@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -59,7 +60,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "Register User")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) throws MessagingException {
         if (userService.createNewUser(signUpRequest)) {
             return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
         }

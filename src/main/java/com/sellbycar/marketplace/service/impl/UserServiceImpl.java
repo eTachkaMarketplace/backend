@@ -9,13 +9,16 @@ import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
 import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
 import com.sellbycar.marketplace.service.MailService;
 import com.sellbycar.marketplace.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -25,13 +28,14 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    @Value(("${front.host}"))
+    private String host;
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsServiceImpl;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
-    private final HttpServletRequest httpServletRequest;
 
-    public boolean createNewUser(SignupRequest signUpRequest) {
+    public boolean createNewUser(SignupRequest signUpRequest) throws MessagingException {
         String username = signUpRequest.getName();
         String password = signUpRequest.getPassword();
         String email = signUpRequest.getEmail();
@@ -57,7 +61,10 @@ public class UserServiceImpl implements UserService {
         user.getAuthority().add(UserRole.USER);
         user.setEnabled(true);
         userRepository.save(user);
-        mailService.sendSimpleMessage(user.getEmail(), "Реєстрація", "Дякую за реєстрацію на платформі CarPark");
+        Context context = new Context();
+        context.setVariable("username", user.getFirstName());
+        context.setVariable("host", host);
+        mailService.sendSimpleMessage(user.getEmail(), "Registration", "activation_message_uk" , context);
         return true;
 
     }
@@ -124,15 +131,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String forgotPassword(EmailRequest request) {
+    public String forgotPassword(EmailRequest request) throws MessagingException {
         Optional<User> optionalUser = userRepository.findByEmail(request.getEmail());
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setUniqueCode(UUID.randomUUID().toString());
             userRepository.save(user);
-            mailService.sendSimpleMessage(user.getEmail(), "Forgot Password"
-                    , "Link for change password " + user.getUniqueCode());
-
+            Context context = new Context();
+            context.setVariable("username", user.getFirstName());
+            context.setVariable("host", host);
+            context.setVariable("code", user.getUniqueCode());
+            mailService.sendSimpleMessage(user.getEmail(), "Registration", "forgot_password_message_uk" , context);
             return "Link sent for your email";
         }
         return "User not found";

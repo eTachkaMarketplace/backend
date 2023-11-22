@@ -1,5 +1,8 @@
 package com.sellbycar.marketplace.service;
 
+import jakarta.mail.MessagingException;
+import org.thymeleaf.context.Context;
+
 public interface MailService {
 
     /**
@@ -15,5 +18,6 @@ public interface MailService {
      * @throws IllegalArgumentException if any of the provided parameters (emailTo, subject, or text) is null.
      */
 
-    void sendSimpleMessage(String emailTo, String subject, String text);
-}
+    public void sendSimpleMessage(String emailTo, String subject, String templateName, Context context) throws MessagingException;
+
+    }

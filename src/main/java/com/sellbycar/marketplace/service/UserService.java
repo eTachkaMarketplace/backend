@@ -5,6 +5,7 @@ import com.sellbycar.marketplace.rest.exception.UserDataException;
 import com.sellbycar.marketplace.rest.payload.request.EmailRequest;
 import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
 import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
+import jakarta.mail.MessagingException;
 import org.springframework.security.core.Authentication;
 
 public interface UserService {
@@ -17,7 +18,7 @@ public interface UserService {
      * @throws UserDataException if there is an issue during the registration process.
      */
 
-    boolean createNewUser(SignupRequest signUpRequest);
+    boolean createNewUser(SignupRequest signUpRequest) throws MessagingException;
 
     /**
      * Checks whether the user exists in the database by email.
@@ -60,7 +61,7 @@ public interface UserService {
      */
     Authentication userAuthentication(User user);
 
-    String forgotPassword(EmailRequest request);
+    String forgotPassword(EmailRequest request) throws MessagingException;
 
     User acceptCode(String uniqueCode);
 
