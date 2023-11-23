@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "autos")
@@ -33,12 +35,13 @@ public class Auto implements Serializable {
     private Integer mileage;
 
     @JsonBackReference
-    @OneToOne(mappedBy = "auto",fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "auto", fetch = FetchType.EAGER)
     private Advertisement advertisement;
 
-    @Column
-    @Enumerated(value = EnumType.STRING)
-    private EngineType engineType;
+    @ElementCollection(targetClass = EngineType.class)
+    @CollectionTable(name = "engine_types", joinColumns = @JoinColumn(name = "auto_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<EngineType> engineType = new HashSet<>();
 
 
     @ManyToOne(fetch = FetchType.EAGER)

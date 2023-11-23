@@ -2,7 +2,6 @@ package com.sellbycar.marketplace.service;
 
 import com.sellbycar.marketplace.persistance.AdvertisementRepository;
 import com.sellbycar.marketplace.persistance.model.Advertisement;
-import com.sellbycar.marketplace.persistance.model.Auto;
 import com.sellbycar.marketplace.persistance.model.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +35,7 @@ public class AdvertisementService {
 
     @Transactional
     public void saveNewAd(Advertisement advertisement) {
-        advertisement.setAuto(new Auto());
+//        advertisement.setAuto(new Auto());
         User user = userService.getUserFromSecurityContextHolder();
         advertisement.setUser(user);
         advertisementRepository.save(advertisement);
