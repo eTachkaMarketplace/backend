@@ -1,4 +1,4 @@
-package com.sellbycar.marketplace.repository.enums;
+package com.sellbycar.marketplace.persistance.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

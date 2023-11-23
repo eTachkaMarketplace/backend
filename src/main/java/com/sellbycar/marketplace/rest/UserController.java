@@ -1,6 +1,6 @@
 package com.sellbycar.marketplace.rest;
 
-import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.persistance.model.User;
 import com.sellbycar.marketplace.rest.dto.UserDTO;
 import com.sellbycar.marketplace.rest.exception.CustomUserException;
 import com.sellbycar.marketplace.rest.payload.request.EmailRequest;
@@ -8,6 +8,7 @@ import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
 import com.sellbycar.marketplace.service.UserService;
 import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
 import com.sellbycar.marketplace.service.jwt.JwtUtils;
+import com.sellbycar.marketplace.service.validate.Validator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +35,8 @@ import java.util.Objects;
 //@CrossOrigin(origins = "https://yura-platonov.github.io")
 @CrossOrigin(origins = "*")
 public class UserController {
+
+    private final Validator validator;
 
     private final UserService userService;
     private final JwtUtils jwtUtils;
@@ -150,7 +153,7 @@ public class UserController {
 
     @PutMapping("/change/password")
     public ResponseEntity<String> changePassword(@RequestBody LoginRequest request) {
-        if (!userService.isPasswordValid(request.getPassword())) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        if (!validator.isPasswordValid(request.getPassword())) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Invalid password");
         return ResponseEntity.ok(userService.changePassword(request));
     }

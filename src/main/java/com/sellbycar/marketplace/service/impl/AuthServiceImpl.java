@@ -1,10 +1,9 @@
 package com.sellbycar.marketplace.service.impl;
 
-import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.persistance.model.User;
 import com.sellbycar.marketplace.rest.payload.response.JwtResponse;
 import com.sellbycar.marketplace.service.AuthService;
 import com.sellbycar.marketplace.service.UserService;
-import com.sellbycar.marketplace.service.impl.UserDetailsImpl;
 import com.sellbycar.marketplace.service.jwt.JwtUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;

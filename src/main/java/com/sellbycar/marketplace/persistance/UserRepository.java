@@ -1,6 +1,6 @@
-package com.sellbycar.marketplace.repository;
+package com.sellbycar.marketplace.persistance;
 
-import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.persistance.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

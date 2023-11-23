@@ -1,6 +1,7 @@
-package com.sellbycar.marketplace.repository.model;
+package com.sellbycar.marketplace.persistance.model;
 
-import com.sellbycar.marketplace.repository.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.sellbycar.marketplace.persistance.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email", name = "unique_email_constraint"))
 public class User implements Serializable {
@@ -33,7 +35,8 @@ public class User implements Serializable {
     @Column
     private String uniqueCode;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonBackReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Advertisement> advertisement = new ArrayList<>();
 
     @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)

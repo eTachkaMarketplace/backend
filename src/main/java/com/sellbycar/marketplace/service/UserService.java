@@ -1,6 +1,6 @@
 package com.sellbycar.marketplace.service;
 
-import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.persistance.model.User;
 import com.sellbycar.marketplace.rest.exception.UserDataException;
 import com.sellbycar.marketplace.rest.payload.request.EmailRequest;
 import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
@@ -67,5 +67,5 @@ public interface UserService {
 
     String changePassword(LoginRequest request);
 
-    boolean isPasswordValid(String password);
+    User getUserFromSecurityContextHolder();
 }

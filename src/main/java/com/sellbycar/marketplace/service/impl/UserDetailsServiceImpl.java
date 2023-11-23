@@ -1,8 +1,8 @@
 package com.sellbycar.marketplace.service.impl;
 
 
-import com.sellbycar.marketplace.repository.UserRepository;
-import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.persistance.UserRepository;
+import com.sellbycar.marketplace.persistance.model.User;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,6 +1,6 @@
 package com.sellbycar.marketplace.service.impl;
 
-import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.persistance.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

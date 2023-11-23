@@ -1,11 +1,14 @@
-package com.sellbycar.marketplace.repository.model;
+package com.sellbycar.marketplace.persistance.model;
 
-import com.sellbycar.marketplace.repository.enums.Transmission;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sellbycar.marketplace.persistance.enums.Transmission;
+import com.sellbycar.marketplace.persistance.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +19,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Advertisement {
+public class Advertisement implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,19 +43,21 @@ public class Advertisement {
     private boolean crashed = false;
 
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Embedded
+    @JsonManagedReference
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "auto_id")
     private Auto auto;
 
     @ElementCollection(targetClass = Transmission.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "advertisement_transmissions", joinColumns = @JoinColumn(name = "advertisement_id"))
+    @CollectionTable(name = "transmissions", joinColumns = @JoinColumn(name = "advertisement_id"))
     @Enumerated(EnumType.STRING)
-    private Set<Transmission> transmissions = new HashSet<>();
+    private Set<Transmission> authority = new HashSet<>();
 
-    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
     private List<Images> images = new ArrayList<>();
 
 }

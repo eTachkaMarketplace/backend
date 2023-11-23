@@ -1,10 +1,11 @@
-package com.sellbycar.marketplace.repository.model;
+package com.sellbycar.marketplace.persistance.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Region {
+public class Region implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

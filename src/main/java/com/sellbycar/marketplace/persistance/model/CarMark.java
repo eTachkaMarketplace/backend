@@ -1,11 +1,11 @@
-package com.sellbycar.marketplace.repository.model;
+package com.sellbycar.marketplace.persistance.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.lang.annotation.ElementType;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CarMark {
+public class CarMark implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +24,8 @@ public class CarMark {
     @Column
     private String name;
 
-//    @OneToOne
-//    @JoinColumn(name = "image_id")
-//    private Images images;
+//    @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)
+//    private List<CarModel> carModel = new ArrayList<>();
 
-    @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)
-    private List<CarModel> carModel = new ArrayList<>();
 
 }

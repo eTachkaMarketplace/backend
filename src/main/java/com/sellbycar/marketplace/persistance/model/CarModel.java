@@ -1,16 +1,18 @@
-package com.sellbycar.marketplace.repository.model;
+package com.sellbycar.marketplace.persistance.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "car_models")
 @Getter
 @Setter
 @NoArgsConstructor
-public class CarModel {
+public class CarModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
