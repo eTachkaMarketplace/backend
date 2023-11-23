@@ -3,6 +3,7 @@ package com.sellbycar.marketplace.service.impl;
 import com.sellbycar.marketplace.repository.UserRepository;
 import com.sellbycar.marketplace.repository.enums.UserRole;
 import com.sellbycar.marketplace.repository.model.User;
+import com.sellbycar.marketplace.rest.exception.CustomUserException;
 import com.sellbycar.marketplace.rest.exception.UserDataException;
 import com.sellbycar.marketplace.rest.payload.request.EmailRequest;
 import com.sellbycar.marketplace.rest.payload.request.LoginRequest;
@@ -10,7 +11,6 @@ import com.sellbycar.marketplace.rest.payload.request.SignupRequest;
 import com.sellbycar.marketplace.service.MailService;
 import com.sellbycar.marketplace.service.UserService;
 import jakarta.mail.MessagingException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         Context context = new Context();
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", host);
-        mailService.sendSimpleMessage(user.getEmail(), "Registration", "activation_message_uk" , context);
+        mailService.sendSimpleMessage(user.getEmail(), "Registration", "activation_message_uk", context);
         return true;
 
     }
@@ -141,10 +141,10 @@ public class UserServiceImpl implements UserService {
             context.setVariable("username", user.getFirstName());
             context.setVariable("host", host);
             context.setVariable("code", user.getUniqueCode());
-            mailService.sendSimpleMessage(user.getEmail(), "Registration", "forgot_password_message_uk" , context);
+            mailService.sendSimpleMessage(user.getEmail(), "Registration", "forgot_password_message_uk", context);
             return "Link sent for your email";
         }
-        return "User not found";
+        throw new CustomUserException("User not found");
     }
 
     @Override

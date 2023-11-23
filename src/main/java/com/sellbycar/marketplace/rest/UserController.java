@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @PutMapping("/forgot/password")
-    public ResponseEntity<String> forgotPassword(@RequestBody EmailRequest emailRequest) throws MessagingException {
+    public ResponseEntity<?> forgotPassword(@RequestBody EmailRequest emailRequest) throws MessagingException {
 
         return ResponseEntity.ok(userService.forgotPassword(emailRequest));
     }
