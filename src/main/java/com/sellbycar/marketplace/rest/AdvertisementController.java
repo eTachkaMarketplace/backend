@@ -1,7 +1,7 @@
 package com.sellbycar.marketplace.rest;
 
 import com.sellbycar.marketplace.persistance.model.Advertisement;
-import com.sellbycar.marketplace.rest.dto.AdDTO;
+import com.sellbycar.marketplace.rest.dto.AdvertisementDTO;
 import com.sellbycar.marketplace.service.AdvertisementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,23 +22,20 @@ public class AdvertisementController {
 
     @GetMapping("/get/all/ad")
     @Operation(summary = "Login User")
-    public ResponseEntity<List<Advertisement>> showAllAd() {
+    public ResponseEntity<List<AdvertisementDTO>> showAllAd() {
         return ResponseEntity.ok(advertisementService.findAllAd());
     }
 
     @GetMapping("/get/ad/{id}")
-    public ResponseEntity<Advertisement> getAd(@PathVariable Long id) {
-        Advertisement adv = advertisementService.getAd(id);
-//        AdDTO dto = new AdDTO();
-//        dto.setName(adv.getName());
-//        dto.setDescription(adv.getDescription());
+    public ResponseEntity<AdvertisementDTO> getAd(@PathVariable Long id) {
+        AdvertisementDTO adv = advertisementService.getAd(id);
         return ResponseEntity.ok(adv);
     }
 
     @PostMapping("/users/create/ad")
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<String> createAd(@RequestBody Advertisement advertisement) {
-        advertisementService.saveNewAd(advertisement);
+    public ResponseEntity<String> createAd(@RequestBody AdvertisementDTO advertisementDTO) {
+        advertisementService.saveNewAd(advertisementDTO);
         return ResponseEntity.ok("Success");
     }
 }

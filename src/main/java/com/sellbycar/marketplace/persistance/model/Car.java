@@ -12,11 +12,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "autos")
+@Table(name = "cars")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Auto implements Serializable {
+public class Car implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class Auto implements Serializable {
     private Integer mileage;
 
     @JsonBackReference
-    @OneToOne(mappedBy = "auto", fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "car", fetch = FetchType.EAGER)
     private Advertisement advertisement;
 
     @ElementCollection(targetClass = EngineType.class)

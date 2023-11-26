@@ -2,7 +2,6 @@ package com.sellbycar.marketplace.persistance.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sellbycar.marketplace.persistance.enums.Transmission;
-import com.sellbycar.marketplace.persistance.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -48,9 +47,9 @@ public class Advertisement implements Serializable {
     private User user;
 
     @JsonManagedReference
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "auto_id")
-    private Auto auto;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_id")
+    private Car car;
 
     @ElementCollection(targetClass = Transmission.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "transmissions", joinColumns = @JoinColumn(name = "advertisement_id"))
