@@ -43,20 +43,26 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login User")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
+    public ResponseEntity<?> authenticateUser(
+            @Valid @RequestBody LoginRequest loginRequest,
+            @RequestParam(name = "rememberMe", defaultValue = "false") boolean rememberMe
+    ) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
-        final String jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
+        String jwtRefreshToken = null;
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
+        if (rememberMe) {
+            jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
+            authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
+        }
 
         return ResponseEntity.ok(new JwtResponse(jwtAccessToken, jwtRefreshToken));
     }
+
 
     @PostMapping("/signup")
     @Operation(summary = "Register User")

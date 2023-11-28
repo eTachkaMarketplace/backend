@@ -66,13 +66,24 @@ public class AdvertisementService {
 
     public AdvertisementDTO updateADv(AdvertisementDTO advertisementDTO, Long id) {
         User user = userService.getUserFromSecurityContextHolder();
-        Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
-        advertisement.setUser(user);
-        if (user.getId().equals(advertisement.getUser().getId())) {
-            advertisementRepository.save(advertisement);
-            return advertisementMapper.toDTO(advertisement);
+
+        // Отримати існуючий об'єкт з бази даних
+        Advertisement existingAd = advertisementRepository.findById(id)
+                .orElseThrow(() -> new UserDataException("Ad with ID " + id + " not found"));
+
+        // Перевірка, чи користувач, який оновлює оголошення, є його власником
+        if (user.getId().equals(existingAd.getUser().getId())) {
+            // Оновлення полів існуючого об'єкта
+            existingAd.setDescription(advertisementDTO.getDescription());
+            // Оновіть інші поля за потреби
+
+            advertisementRepository.save(existingAd);  // Збережіть оновлений об'єкт
+            return advertisementMapper.toDTO(existingAd);
+        } else {
+            throw new UserDataException("You don't have permission to update this ad");
         }
-        throw new UserDataException("Шось не так");
     }
+
+
 
 }
