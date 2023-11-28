@@ -45,6 +45,6 @@ public class Car implements Serializable {
 
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "car_mark_id")
-    private CarMark carMark;
+    @JoinColumn(name = "car_model_id")
+    private CarModel carModel;
 }

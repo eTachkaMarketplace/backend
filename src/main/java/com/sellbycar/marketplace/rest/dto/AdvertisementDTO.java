@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.rest.dto;
 
+import com.sellbycar.marketplace.persistance.model.User;
 import lombok.Data;
 
 @Data
@@ -19,4 +20,5 @@ public class AdvertisementDTO {
     private boolean crashed = false;
 
     private CarDTO carDTO;
+
 }

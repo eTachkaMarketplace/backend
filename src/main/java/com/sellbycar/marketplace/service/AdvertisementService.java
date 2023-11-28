@@ -2,32 +2,42 @@ package com.sellbycar.marketplace.service;
 
 import com.sellbycar.marketplace.persistance.AdvertisementRepository;
 import com.sellbycar.marketplace.persistance.model.Advertisement;
-import com.sellbycar.marketplace.persistance.model.Car;
 import com.sellbycar.marketplace.persistance.model.User;
 import com.sellbycar.marketplace.rest.dto.AdvertisementDTO;
 import com.sellbycar.marketplace.rest.exception.UserDataException;
 import com.sellbycar.marketplace.rest.mapper.AdvertisementMapper;
-import com.sellbycar.marketplace.rest.mapper.CarMapper;
+import com.sellbycar.marketplace.service.jwt.JwtUtils;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Service
 @RequiredArgsConstructor
 public class AdvertisementService {
 
+    private final JwtUtils jwtUtils;
     private final AdvertisementRepository advertisementRepository;
-
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
-    private final CarMapper carMapper;
+
+    private String getTokenFromRequest() {
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
+                .getRequestAttributes())).getRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
+    }
 
     @Transactional
     public List<AdvertisementDTO> findAllAd() {
@@ -44,16 +54,26 @@ public class AdvertisementService {
             return advertisementMapper.toDTO(ad.get());
         }
         //TODO
-        throw new UserDataException("No ADv id in database");
+        throw new UserDataException("ADv with ID " + id + " not found");
     }
 
     @Transactional
     public void saveNewAd(AdvertisementDTO advertisementDTO) {
         Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
-//        Car car = carMapper.toModel(advertisementDTO.getCarDTO());
-//        advertisement.setCar(car);
         User user = userService.getUserFromSecurityContextHolder();
         advertisement.setUser(user);
         advertisementRepository.save(advertisement);
     }
+
+    public AdvertisementDTO updateADv(AdvertisementDTO advertisementDTO, Long id) {
+        User user = userService.getUserFromSecurityContextHolder();
+        Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
+        advertisement.setUser(user);
+        if (user.getId().equals(advertisement.getUser().getId())) {
+            advertisementRepository.save(advertisement);
+            return advertisementMapper.toDTO(advertisement);
+        }
+        throw new UserDataException("Шось не так");
+    }
+
 }

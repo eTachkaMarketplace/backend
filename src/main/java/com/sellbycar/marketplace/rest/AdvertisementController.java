@@ -1,12 +1,13 @@
 package com.sellbycar.marketplace.rest;
 
-import com.sellbycar.marketplace.persistance.model.Advertisement;
 import com.sellbycar.marketplace.rest.dto.AdvertisementDTO;
 import com.sellbycar.marketplace.service.AdvertisementService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,5 +38,12 @@ public class AdvertisementController {
     public ResponseEntity<String> createAd(@RequestBody AdvertisementDTO advertisementDTO) {
         advertisementService.saveNewAd(advertisementDTO);
         return ResponseEntity.ok("Success");
+    }
+
+    @PutMapping("users/change/ad/{id}")
+    public ResponseEntity<AdvertisementDTO> changeADv(@RequestBody AdvertisementDTO advertisementDTO
+            , @PathVariable Long id) {
+        advertisementService.updateADv(advertisementDTO, id);
+        return ResponseEntity.ok(advertisementDTO);
     }
 }

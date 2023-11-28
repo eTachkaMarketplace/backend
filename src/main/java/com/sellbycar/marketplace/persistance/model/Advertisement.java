@@ -56,7 +56,7 @@ public class Advertisement implements Serializable {
     @Enumerated(EnumType.STRING)
     private Set<Transmission> authority = new HashSet<>();
 
-    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Images> images = new ArrayList<>();
 
 }
