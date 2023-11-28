@@ -41,7 +41,6 @@ public class AdvertisementController {
     @PutMapping("users/change/ad/{id}")
     public ResponseEntity<AdvertisementDTO> changeADv(@RequestBody AdvertisementDTO advertisementDTO
             , @PathVariable Long id) {
-        advertisementService.updateADv(advertisementDTO, id);
-        return ResponseEntity.ok(advertisementDTO);
+        return ResponseEntity.ok(advertisementService.updateADv(advertisementDTO, id));
     }
 }
