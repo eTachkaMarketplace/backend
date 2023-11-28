@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.services;
 
+import com.sellbycar.marketplace.models.entities.Car;
 import com.sellbycar.marketplace.repositories.AdvertisementRepository;
 import com.sellbycar.marketplace.models.entities.Advertisement;
 import com.sellbycar.marketplace.models.entities.User;
@@ -67,23 +68,29 @@ public class AdvertisementService {
     public AdvertisementDTO updateADv(AdvertisementDTO advertisementDTO, Long id) {
         User user = userService.getUserFromSecurityContextHolder();
 
-        // Отримати існуючий об'єкт з бази даних
         Advertisement existingAd = advertisementRepository.findById(id)
                 .orElseThrow(() -> new UserDataException("Ad with ID " + id + " not found"));
 
-        // Перевірка, чи користувач, який оновлює оголошення, є його власником
         if (user.getId().equals(existingAd.getUser().getId())) {
-            // Оновлення полів існуючого об'єкта
+            existingAd.setName(advertisementDTO.getName());
             existingAd.setDescription(advertisementDTO.getDescription());
-            // Оновіть інші поля за потреби
+            existingAd.setPrice(advertisementDTO.getPrice());
+            existingAd.setChange(advertisementDTO.isChange());
+            existingAd.setBargain(advertisementDTO.isBargain());
+            existingAd.setCrashed(advertisementDTO.isCrashed());
+            Car car = existingAd.getCar();
+            car.setYearToCreate(advertisementDTO.getCarDTO().getYearToCreate());
+            car.setCarNumber(advertisementDTO.getCarDTO().getCarNumber());
+            car.setVinNumber(advertisementDTO.getCarDTO().getVinNumber());
+            car.setMileage(advertisementDTO.getCarDTO().getMileage());
+            existingAd.setCar(car);
 
-            advertisementRepository.save(existingAd);  // Збережіть оновлений об'єкт
+            advertisementRepository.save(existingAd);
             return advertisementMapper.toDTO(existingAd);
         } else {
             throw new UserDataException("You don't have permission to update this ad");
         }
     }
-
 
 
 }

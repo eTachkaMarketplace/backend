@@ -5,6 +5,7 @@ import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR
         , uses = {CarMapper.class})
@@ -12,8 +13,10 @@ public interface AdvertisementMapper {
 
 
     @Mapping(source = "carDTO", target = "car")
+//    @Mapping(target = "id", ignore = true)
     Advertisement toModel(AdvertisementDTO dto);
 
     @Mapping(source = "car", target = "carDTO")
+//    @Mapping(target = "id" , ignore = true)
     AdvertisementDTO toDTO(Advertisement model);
 }
