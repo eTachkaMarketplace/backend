@@ -1,14 +1,12 @@
 package com.sellbycar.marketplace.controllers;
 
-import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.models.dto.UserDTO;
-import com.sellbycar.marketplace.utilities.exception.CustomUserException;
+import com.sellbycar.marketplace.models.entities.User;
+import com.sellbycar.marketplace.services.UserService;
+import com.sellbycar.marketplace.utilities.jwt.JwtUtils;
 import com.sellbycar.marketplace.utilities.mapper.UserMapper;
 import com.sellbycar.marketplace.utilities.payload.request.EmailRequest;
 import com.sellbycar.marketplace.utilities.payload.request.LoginRequest;
-import com.sellbycar.marketplace.services.UserService;
-import com.sellbycar.marketplace.services.impls.UserDetailsImpl;
-import com.sellbycar.marketplace.utilities.jwt.JwtUtils;
 import com.sellbycar.marketplace.utilities.validate.Validator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
