@@ -34,7 +34,6 @@ import java.util.Objects;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Tag(name = "User Library", description = "Endpoints for managing user")
-//@CrossOrigin(origins = "https://yura-platonov.github.io")
 @CrossOrigin(origins = "*")
 public class UserController {
 
@@ -85,8 +84,7 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "FORBIDDEN"),
             @ApiResponse(responseCode = "404", description = "User not found")})
     public ResponseEntity<?> updateUser(@RequestBody UserDTO updatedUser) {
-        try
-        {
+        try {
             String token = getTokenFromRequest();
             String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
 
@@ -95,9 +93,7 @@ public class UserController {
             UserDTO userDTO = userMapper.toDTO(user);
 
             return ResponseEntity.ok(userDTO);
-        }
-        catch (BadCredentialsException e)
-        {
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
@@ -110,14 +106,11 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Bad Request")
     @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        try
-        {
+        try {
             userService.deleteUser(id);
 
             return ResponseEntity.ok("User was deleted");
-        }
-        catch (BadCredentialsException e)
-        {
+        } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }

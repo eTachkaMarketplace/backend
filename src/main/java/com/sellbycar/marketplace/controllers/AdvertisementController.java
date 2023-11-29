@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/advertisement")
+@RequestMapping("/api/advertisements")
 @RequiredArgsConstructor
 @Tag(name = "ADV Library", description = "Endpoints for ADV")
 public class AdvertisementController {
@@ -40,7 +40,7 @@ public class AdvertisementController {
         return ResponseEntity.ok("Success");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update datas of advertisement by id")
     public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
