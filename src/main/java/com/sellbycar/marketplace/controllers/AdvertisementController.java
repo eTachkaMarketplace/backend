@@ -12,35 +12,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/advertisement")
 @RequiredArgsConstructor
 @Tag(name = "ADV Library", description = "Endpoints for ADV")
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;
 
-    @GetMapping("/get/all/ad")
+    @GetMapping("")
     @Operation(summary = "Login User")
     public ResponseEntity<List<AdvertisementDTO>> showAllAd() {
         return ResponseEntity.ok(advertisementService.findAllAd());
     }
 
-    @GetMapping("/get/ad/{id}")
-    public ResponseEntity<AdvertisementDTO> getAd(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<AdvertisementDTO> getAdById(@PathVariable Long id) {
         AdvertisementDTO adv = advertisementService.getAd(id);
         return ResponseEntity.ok(adv);
     }
 
-    @PostMapping("/users/create/ad")
+    @PostMapping("/create")
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<String> createAd(@RequestBody AdvertisementDTO advertisementDTO) {
         advertisementService.saveNewAd(advertisementDTO);
         return ResponseEntity.ok("Success");
     }
 
-    @PutMapping("users/change/ad/{id}")
-    public ResponseEntity<AdvertisementDTO> changeADv(@RequestBody AdvertisementDTO advertisementDTO
-            , @PathVariable Long id) {
+    @PutMapping("/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<AdvertisementDTO> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
+                                                      @PathVariable Long id) {
         return ResponseEntity.ok(advertisementService.updateADv(advertisementDTO, id));
     }
 }
