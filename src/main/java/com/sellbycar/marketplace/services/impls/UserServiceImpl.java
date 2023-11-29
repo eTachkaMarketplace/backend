@@ -87,7 +87,6 @@ public class UserServiceImpl implements UserService {
         {
             User user = findedUser.get();
 
-            user.setEmail(updatedUser.getEmail());
             user.setFirstName(updatedUser.getFirstName());
             user.setPhone(updatedUser.getPhone());
 
