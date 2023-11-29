@@ -1,9 +1,12 @@
 package com.sellbycar.marketplace.services.impls;
 
+import com.sellbycar.marketplace.models.dto.UserDTO;
 import com.sellbycar.marketplace.repositories.UserRepository;
 import com.sellbycar.marketplace.models.enums.UserRole;
 import com.sellbycar.marketplace.models.entities.User;
+import com.sellbycar.marketplace.utilities.exception.CustomUserException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
+import com.sellbycar.marketplace.utilities.mapper.UserMapper;
 import com.sellbycar.marketplace.utilities.payload.request.EmailRequest;
 import com.sellbycar.marketplace.utilities.payload.request.LoginRequest;
 import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
@@ -13,6 +16,9 @@ import com.sellbycar.marketplace.utilities.validate.Validator;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,27 +63,54 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public User existByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    public User existByEmail(String email)
+    {
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user != null) {
+            return user;
+        } else {
+            throw new BadCredentialsException(String.format("User with email {%s} was not found", user.getEmail()));
+        }
     }
 
 
-    public User findUser(Long id) {
+    public User findUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
     }
 
-    public User updateUser(User user) {
-        return userRepository.save(user);
+    public User updateUser(User updatedUser, String emailOfUserForUpdating) {
+        Optional<User> findedUser = userRepository.findByEmail(emailOfUserForUpdating);
+
+        if (findedUser.isPresent())
+        {
+            User user = findedUser.get();
+
+            user.setEmail(updatedUser.getEmail());
+            user.setFirstName(updatedUser.getFirstName());
+            user.setPhone(updatedUser.getPhone());
+
+            return userRepository.save(user);
+        }
+        else
+        {
+            throw new BadCredentialsException("User was not found");
+        }
     }
 
-    public boolean deleteUser(long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.deleteById(id);
-            return true;
+    public void deleteUser(long id) {
+        Optional<User> foundUser = userRepository.findById(id);
+        if (foundUser.isPresent()) {
+            User user = foundUser.get();
+            user.setEnabled(false);
+
+            userRepository.save(user);
         }
-        return false;
+        else
+        {
+            throw new BadCredentialsException(String.format("USer with id %s was not found", id));
+        }
     }
     public Authentication userAuthentication(User user) {
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(user.getEmail());

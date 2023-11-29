@@ -35,7 +35,7 @@ public interface UserService {
      * @param id ID of the user.
      * @return Optional containing the converted user as the result.
      */
-    User findUser(Long id);
+    User findUserById(Long id);
 
     /**
      * Updates an existing user with new data.
@@ -43,7 +43,7 @@ public interface UserService {
      * @param user New data for the update.
      * @return User object representing the updated user.
      */
-    User updateUser(User user);
+    User updateUser(User updatedUser, String emailOfUserForUpdating);
 
     /**
      * Removes the selected user.
@@ -51,7 +51,7 @@ public interface UserService {
      * @param id ID of the existing user.
      * @return true if the deletion is successful, false otherwise.
      */
-    boolean deleteUser(long id);
+    void deleteUser(long id);
 
     /**
      * Authenticates a user based on the provided User object.
