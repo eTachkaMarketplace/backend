@@ -7,13 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "firstName", ignore = true)
-    @Mapping(target = "phone", ignore = true)
-    User toModel(UserDTO userDTO);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "firstName", ignore = true)
-    @Mapping(target = "phone", ignore = true)
+    User toEntity(UserDTO userDTO);
+
     UserDTO toDTO(User user);
 }

@@ -3,6 +3,7 @@ package com.sellbycar.marketplace.controllers;
 import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.models.dto.UserDTO;
 import com.sellbycar.marketplace.utilities.exception.CustomUserException;
+import com.sellbycar.marketplace.utilities.mapper.UserMapper;
 import com.sellbycar.marketplace.utilities.payload.request.EmailRequest;
 import com.sellbycar.marketplace.utilities.payload.request.LoginRequest;
 import com.sellbycar.marketplace.services.UserService;
@@ -21,6 +22,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -29,7 +31,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 @Tag(name = "User Library", description = "Endpoints for managing user")
 //@CrossOrigin(origins = "https://yura-platonov.github.io")
@@ -37,7 +39,7 @@ import java.util.Objects;
 public class UserController {
 
     private final Validator validator;
-
+    private final UserMapper userMapper;
     private final UserService userService;
     private final JwtUtils jwtUtils;
 
@@ -51,93 +53,73 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/users/info")
+    @GetMapping("/user")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Get user by ID", description = "Retrieve a user by their ID", tags = {"User Library"})
+    @Operation(summary = "Get user by email from token", tags = {"User Library"})
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User retrieved successfully",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content),
     })
-    public ResponseEntity<UserDTO> getUser() {
+    public ResponseEntity<?> getUser() {
         try {
             String token = getTokenFromRequest();
-            String username = jwtUtils.getUserNameFromJwtToken(token);
+            String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
 
-            User user = userService.existByEmail(username);
+            User user = userService.existByEmail(emailOfUser);
+            UserDTO userDTO = userMapper.toDTO(user);
 
-            if (user != null) {
-                UserDTO userDTO = userToUserDTO(user);
-                return ResponseEntity.ok(userDTO);
-            } else {
-                throw new CustomUserException("User not found");
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.ok(userDTO);
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    private UserDTO userToUserDTO(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setId(user.getId());
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPhone(user.getPhone());
-        return userDTO;
-    }
-
-
-    @PutMapping("/users/user/{id}")
+    @PutMapping("/user")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Change existing user")
+    @Operation(summary = "Update existing user by email from token")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
             @ApiResponse(responseCode = "403", description = "FORBIDDEN"),
             @ApiResponse(responseCode = "404", description = "User not found")})
-    public ResponseEntity<User> updateUser(@RequestBody UserDTO updatedUser, @PathVariable Long id) {
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO updatedUser) {
+        try
+        {
+            String token = getTokenFromRequest();
+            String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            User userForUpdate = userMapper.toEntity(updatedUser);
+            User user = userService.updateUser(userForUpdate, emailOfUser);
+            UserDTO userDTO = userMapper.toDTO(user);
 
-        if (principal instanceof UserDetailsImpl userPrincipal) {
-            if (userPrincipal.getId().equals(id)) {
-                User existingUser = userService.findUser(id);
-                if (existingUser != null) {
-                    existingUser.setFirstName(updatedUser.getFirstName());
-                    userService.updateUser(existingUser);
-
-                    return ResponseEntity.ok(existingUser);
-                } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-            }
-        } else {
-            throw new CustomUserException("Unauthorized");
+            return ResponseEntity.ok(userDTO);
+        }
+        catch (BadCredentialsException e)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
 
-    @DeleteMapping("/users/user/{id}")
+    @DeleteMapping("/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Delete a user", description = "Delete an existing user by ID", tags = {"User Library"})
+    @Operation(summary = "Delete a user by id", tags = {"User Library"})
     @ApiResponse(responseCode = "200", description = "User deleted successfully")
     @ApiResponse(responseCode = "400", description = "Bad Request")
     @ApiResponse(responseCode = "404", description = "User not found")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try
+        {
+            userService.deleteUser(id);
 
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetailsImpl userPrincipal) {
-            if (userPrincipal.getId().equals(id)) {
-                userService.deleteUser(id);
-                return ResponseEntity.ok("User with id = " + id + " was deleted");
-            }
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
-
+            return ResponseEntity.ok("User was deleted");
         }
-        throw new CustomUserException("User with id: " + id + " does not exists in database");
+        catch (BadCredentialsException e)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @PutMapping("/forgot/password")

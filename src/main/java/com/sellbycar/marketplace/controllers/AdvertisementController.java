@@ -21,13 +21,13 @@ public class AdvertisementController {
 
     @GetMapping("")
     @Operation(summary = "Get all advertisement")
-    public ResponseEntity<List<AdvertisementDTO>> showAllAd() {
+    public ResponseEntity<?> showAllAd() {
         return ResponseEntity.ok(advertisementService.findAllAd());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get advertisement by id")
-    public ResponseEntity<AdvertisementDTO> getAdById(@PathVariable Long id) {
+    public ResponseEntity<?> getAdById(@PathVariable Long id) {
         AdvertisementDTO adv = advertisementService.getAd(id);
         return ResponseEntity.ok(adv);
     }
@@ -35,7 +35,7 @@ public class AdvertisementController {
     @PostMapping("/create")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new advertisement")
-    public ResponseEntity<String> createAd(@RequestBody AdvertisementDTO advertisementDTO) {
+    public ResponseEntity<?> createAd(@RequestBody AdvertisementDTO advertisementDTO) {
         advertisementService.saveNewAd(advertisementDTO);
         return ResponseEntity.ok("Success");
     }
@@ -43,7 +43,7 @@ public class AdvertisementController {
     @PutMapping("/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update datas of advertisement by id")
-    public ResponseEntity<AdvertisementDTO> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
+    public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
                                                       @PathVariable Long id) {
         return ResponseEntity.ok(advertisementService.updateADv(advertisementDTO, id));
     }
