@@ -60,13 +60,43 @@ public interface UserService {
      * @param user The User object containing information for authentication.
      * @return Authentication object representing the authenticated user.
      */
+    /**
+     * Authenticates a user based on the provided User object.
+     *
+     * @param user The User object containing information for authentication.
+     * @return Authentication object representing the authenticated user.
+     */
     Authentication userAuthentication(User user);
 
+    /**
+     * Initiates the process of resetting the user's password and sends a reset password link via email.
+     *
+     * @param request EmailRequest containing the user's email address.
+     * @return A success message indicating that the reset link has been sent.
+     * @throws MessagingException if there is an issue with sending the reset password email.
+     */
     String forgotPassword(EmailRequest request) throws MessagingException;
 
+    /**
+     * Verifies the provided unique code for password reset and retrieves the associated user.
+     *
+     * @param uniqueCode Unique code sent to the user for password reset.
+     * @return User object representing the user associated with the unique code.
+     */
     User acceptCode(String uniqueCode);
 
+    /**
+     * Changes the user's password based on the provided login request.
+     *
+     * @param request LoginRequest containing the user's email, new password, and confirmation code.
+     * @return A success message indicating that the password has been changed.
+     */
     String changePassword(LoginRequest request);
 
+    /**
+     * Retrieves the currently authenticated user from the security context.
+     *
+     * @return User object representing the authenticated user.
+     */
     User getUserFromSecurityContextHolder();
 }

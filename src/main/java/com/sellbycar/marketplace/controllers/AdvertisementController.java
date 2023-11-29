@@ -47,8 +47,7 @@ public class AdvertisementController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update datas of advertisement by id")
     public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
-                                       @PathVariable Long id)
-    {
+                                       @PathVariable Long id) {
         Advertisement advertisement = advertisementService.updateADv(advertisementDTO, id);
         AdvertisementDTO advDTO = advertisementMapper.toDTO(advertisement);
 
