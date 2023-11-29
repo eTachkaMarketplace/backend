@@ -40,7 +40,8 @@ public interface UserService {
     /**
      * Updates an existing user with new data.
      *
-     * @param user New data for the update.
+     * @param updatedUser New data for the update.
+     * @param emailOfUserForUpdating Email in order to get user, who needs to apply changes.
      * @return User object representing the updated user.
      */
     User updateUser(User updatedUser, String emailOfUserForUpdating);

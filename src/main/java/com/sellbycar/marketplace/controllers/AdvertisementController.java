@@ -1,15 +1,15 @@
 package com.sellbycar.marketplace.controllers;
 
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
+import com.sellbycar.marketplace.models.entities.Advertisement;
 import com.sellbycar.marketplace.services.AdvertisementService;
+import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/advertisements")
@@ -18,6 +18,7 @@ import java.util.List;
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;
+    private final AdvertisementMapper advertisementMapper;
 
     @GetMapping("")
     @Operation(summary = "Get all advertisement")
@@ -28,8 +29,10 @@ public class AdvertisementController {
     @GetMapping("/{id}")
     @Operation(summary = "Get advertisement by id")
     public ResponseEntity<?> getAdById(@PathVariable Long id) {
-        AdvertisementDTO adv = advertisementService.getAd(id);
-        return ResponseEntity.ok(adv);
+        Advertisement adv = advertisementService.getAd(id);
+        AdvertisementDTO advertisementDTO = advertisementMapper.toDTO(adv);
+
+        return ResponseEntity.ok(advertisementDTO);
     }
 
     @PostMapping("/create")
@@ -44,7 +47,11 @@ public class AdvertisementController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update datas of advertisement by id")
     public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
-                                                      @PathVariable Long id) {
-        return ResponseEntity.ok(advertisementService.updateADv(advertisementDTO, id));
+                                       @PathVariable Long id)
+    {
+        Advertisement advertisement = advertisementService.updateADv(advertisementDTO, id);
+        AdvertisementDTO advDTO = advertisementMapper.toDTO(advertisement);
+
+        return ResponseEntity.ok(advDTO);
     }
 }
