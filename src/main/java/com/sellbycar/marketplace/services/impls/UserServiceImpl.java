@@ -1,23 +1,20 @@
 package com.sellbycar.marketplace.services.impls;
 
 import com.sellbycar.marketplace.models.dto.UserDTO;
-import com.sellbycar.marketplace.repositories.UserRepository;
-import com.sellbycar.marketplace.models.enums.UserRole;
 import com.sellbycar.marketplace.models.entities.User;
-import com.sellbycar.marketplace.utilities.exception.CustomUserException;
+import com.sellbycar.marketplace.models.enums.UserRole;
+import com.sellbycar.marketplace.repositories.UserRepository;
+import com.sellbycar.marketplace.services.MailService;
+import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.UserMapper;
 import com.sellbycar.marketplace.utilities.payload.request.EmailRequest;
 import com.sellbycar.marketplace.utilities.payload.request.LoginRequest;
 import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
-import com.sellbycar.marketplace.services.MailService;
-import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.validate.Validator;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
