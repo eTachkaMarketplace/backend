@@ -103,14 +103,16 @@ public class UserController {
     @ApiResponse(responseCode = "400", description = "Bad Request")
     @ApiResponse(responseCode = "404", description = "User not found")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        try {
+        String token = getTokenFromRequest();
+        String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
+        User user = userService.existByEmail(emailOfUser);
+        if (user.getId().equals(id)){
             userService.deleteUser(id);
-
             return ResponseEntity.ok("User was deleted");
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
     }
+
 
     @PutMapping("/forgot/password")
     public ResponseEntity<?> forgotPassword(@RequestBody EmailRequest emailRequest) throws MessagingException {
@@ -119,7 +121,7 @@ public class UserController {
     }
 
     @PutMapping("/accept/code/{code}")
-    public ResponseEntity<User> acceptCode(@PathVariable("code") String code) {
+    public ResponseEntity<UserDTO> acceptCode(@PathVariable("code") String code) {
         return ResponseEntity.ok(userService.acceptCode(code));
     }
 

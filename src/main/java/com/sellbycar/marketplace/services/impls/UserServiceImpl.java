@@ -40,6 +40,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final Validator validator;
+    private final UserMapper userMapper;
 
     public boolean createNewUser(SignupRequest signUpRequest) throws MessagingException {
         validator.isValidUserInput(signUpRequest);
@@ -63,8 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public User existByEmail(String email)
-    {
+    public User existByEmail(String email) {
         User user = userRepository.findByEmail(email).orElse(null);
 
         if (user != null) {
@@ -83,34 +83,27 @@ public class UserServiceImpl implements UserService {
     public User updateUser(User updatedUser, String emailOfUserForUpdating) {
         Optional<User> findedUser = userRepository.findByEmail(emailOfUserForUpdating);
 
-        if (findedUser.isPresent())
-        {
+        if (findedUser.isPresent()) {
             User user = findedUser.get();
 
             user.setFirstName(updatedUser.getFirstName());
             user.setPhone(updatedUser.getPhone());
 
             return userRepository.save(user);
-        }
-        else
-        {
+        } else {
             throw new BadCredentialsException("User was not found");
         }
     }
 
-    public void deleteUser(long id) {
+    public boolean deleteUser(long id) {
         Optional<User> foundUser = userRepository.findById(id);
         if (foundUser.isPresent()) {
-            User user = foundUser.get();
-            user.setEnabled(false);
-
-            userRepository.save(user);
+            userRepository.deleteById(id);
+            return true;
         }
-        else
-        {
-            throw new BadCredentialsException(String.format("USer with id %s was not found", id));
-        }
+        return false;
     }
+
     public Authentication userAuthentication(User user) {
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(user.getEmail());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -134,13 +127,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User acceptCode(String uniqueCode) {
+    public UserDTO acceptCode(String uniqueCode) {
         Optional<User> optionalUser = userRepository.findUserByUniqueCode(uniqueCode);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setUniqueCode(null);
             userRepository.save(user);
-            return user;
+            return userMapper.toDTO(user);
         }
         throw new UserDataException("Bad request");
     }

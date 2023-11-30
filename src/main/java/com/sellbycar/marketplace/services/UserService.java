@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.services;
 
+import com.sellbycar.marketplace.models.dto.UserDTO;
 import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.payload.request.EmailRequest;
@@ -52,7 +53,7 @@ public interface UserService {
      * @param id ID of the existing user.
      * @return true if the deletion is successful, false otherwise.
      */
-    void deleteUser(long id);
+    boolean deleteUser(long id);
 
     /**
      * Authenticates a user based on the provided User object.
@@ -83,7 +84,7 @@ public interface UserService {
      * @param uniqueCode Unique code sent to the user for password reset.
      * @return User object representing the user associated with the unique code.
      */
-    User acceptCode(String uniqueCode);
+    UserDTO acceptCode(String uniqueCode);
 
     /**
      * Changes the user's password based on the provided login request.
