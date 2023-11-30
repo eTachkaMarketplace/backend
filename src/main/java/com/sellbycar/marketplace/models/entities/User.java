@@ -24,6 +24,8 @@ public class User implements Serializable {
     private Long id;
     @Column
     private String firstName;
+    @Column
+    private String lastName;
     @Column(unique = true)
     private String email;
     @Column
@@ -34,6 +36,8 @@ public class User implements Serializable {
     private Boolean enabled;
     @Column
     private String uniqueCode;
+    @Column
+    private String photo;
 
     @JsonBackReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
