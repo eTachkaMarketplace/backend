@@ -14,6 +14,7 @@ import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
 import com.sellbycar.marketplace.utilities.validate.Validator;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -83,10 +84,10 @@ public class UserServiceImpl implements UserService {
         if (findedUser.isPresent()) {
             User user = findedUser.get();
 
-            user.setFirstName(updatedUser.getFirstName());
-            user.setLastName(updatedUser.getLastName());
-            user.setPhoto(updatedUser.getPhoto());
-            user.setPhone(updatedUser.getPhone());
+            Optional.ofNullable(updatedUser.getFirstName()).ifPresent(user::setFirstName);
+            Optional.ofNullable(updatedUser.getLastName()).ifPresent(user::setLastName);
+            Optional.ofNullable(updatedUser.getPhoto()).ifPresent(user::setPhoto);
+            Optional.ofNullable(updatedUser.getPhone()).ifPresent(user::setPhone);
 
             return userRepository.save(user);
         } else {
