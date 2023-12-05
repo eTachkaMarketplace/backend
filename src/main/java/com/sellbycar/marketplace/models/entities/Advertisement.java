@@ -58,5 +58,4 @@ public class Advertisement implements Serializable {
 
     @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Images> images = new ArrayList<>();
-
 }
