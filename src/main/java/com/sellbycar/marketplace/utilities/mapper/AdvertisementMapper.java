@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.Set;
+
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR
         , uses = {CarMapper.class})
 public interface AdvertisementMapper {
@@ -19,4 +21,6 @@ public interface AdvertisementMapper {
     @Mapping(source = "car", target = "carDTO")
 //    @Mapping(target = "id" , ignore = true)
     AdvertisementDTO toDTO(Advertisement model);
+
+    Set<AdvertisementDTO> toDtoSet(Set<Advertisement> advertisements);
 }
