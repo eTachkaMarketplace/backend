@@ -50,8 +50,6 @@ public class AdvertisementController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new advertisement")
     public ResponseEntity<?> createAd(@RequestPart(value = "files") List<MultipartFile> files,
-//                                      @RequestPart(value = "file2") MultipartFile file2,
-//                                      @RequestPart(value = "file3") MultipartFile file3,
                                       @RequestPart("advertisementDTO") AdvertisementDTO advertisementDTO) throws IOException {
         advertisementService.createAdvertisement(advertisementDTO, files);
         return ResponseEntity.ok("Success");
