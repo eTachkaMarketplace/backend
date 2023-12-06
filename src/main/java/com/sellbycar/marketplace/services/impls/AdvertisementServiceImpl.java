@@ -8,6 +8,7 @@ import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.repositories.AdvertisementRepository;
 import com.sellbycar.marketplace.services.AdvertisementService;
 import com.sellbycar.marketplace.services.UserService;
+import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -111,5 +113,46 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         } else {
             throw new UserDataException("You don't have permission to update this ad");
         }
+    }
+
+    @Transactional
+    public Set<Advertisement> getAllFavorites()
+    {
+        User user = userService.getUserFromSecurityContextHolder();
+        Set<Advertisement> favCars = user.getFavoriteCars();
+
+        if (!favCars.isEmpty())
+        {
+            return favCars;
+        }
+        else
+        {
+            throw new FavoritesCarsNotFoundException();
+        }
+    }
+
+    @Transactional
+    public Advertisement addToFavoriteList(Long id) {
+        User user = userService.getUserFromSecurityContextHolder();
+        Advertisement advertisement = advertisementRepository.findById(id).orElse(null);
+        Set<Advertisement> favoriteCarsOfUser = getAllFavorites();
+        favoriteCarsOfUser.add(advertisement);
+
+        if (advertisement != null) {
+            user.setFavoriteCars(favoriteCarsOfUser);
+        }
+
+        return advertisement;
+    }
+
+    @Transactional
+    public void removeFromFavoriteList(Long id) {
+        User user = userService.getUserFromSecurityContextHolder();
+        Set<Advertisement> favoriteCarsOfUser = getAllFavorites();
+        Advertisement advertisement = advertisementRepository.findById(id).orElse(null);
+
+        favoriteCarsOfUser.remove(advertisement);
+
+        user.setFavoriteCars(favoriteCarsOfUser);
     }
 }
