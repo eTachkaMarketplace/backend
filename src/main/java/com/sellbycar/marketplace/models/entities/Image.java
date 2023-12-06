@@ -1,6 +1,7 @@
 package com.sellbycar.marketplace.models.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,16 +13,24 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Images implements Serializable {
+@AllArgsConstructor
+public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column
     private Long id;
-
     @Column
     private String name;
+    @Column
+    private Long size;
+    @Column
+    private String contentType;
+    @Column
+    private boolean isPreviewImage;
+    @Lob
+    private byte[] resource;
 
-    @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinColumn(name = "advertisement_id")
     private Advertisement advertisement;
 }

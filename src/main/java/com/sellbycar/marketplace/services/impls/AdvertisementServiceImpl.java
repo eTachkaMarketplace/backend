@@ -3,9 +3,9 @@ package com.sellbycar.marketplace.services.impls;
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
 import com.sellbycar.marketplace.models.entities.Advertisement;
 import com.sellbycar.marketplace.models.entities.Car;
+import com.sellbycar.marketplace.models.entities.Image;
 import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.repositories.AdvertisementRepository;
-import com.sellbycar.marketplace.repositories.UserRepository;
 import com.sellbycar.marketplace.services.AdvertisementService;
 import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
@@ -13,9 +13,11 @@ import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashSet;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,10 +25,9 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AdvertisementServiceImpl implements AdvertisementService
-{
+@Slf4j
+public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
 
@@ -49,11 +50,33 @@ public class AdvertisementServiceImpl implements AdvertisementService
     }
 
     @Transactional
-    public void saveNewAd(AdvertisementDTO advertisementDTO) {
+    public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
+
         Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
         User user = userService.getUserFromSecurityContextHolder();
         advertisement.setUser(user);
+
+        if (!files.isEmpty()) {
+            for (MultipartFile multipartFile : files) {
+                Image image = toImageEntity(multipartFile);
+                image.setPreviewImage(true);
+                advertisement.addImageToAdvertisement(image);
+            }
+        }
+
+        log.info("Saving new Advertisement. Title: {}; Author: {}");
+        Advertisement advertisementFromDB = advertisementRepository.save(advertisement);
+        advertisementFromDB.setPreviewImageId(advertisementFromDB.getImages().get(0).getId());
         advertisementRepository.save(advertisement);
+    }
+
+    private Image toImageEntity(MultipartFile file1) throws IOException {
+        Image image = new Image();
+        image.setName(file1.getName());
+        image.setContentType(file1.getContentType());
+        image.setSize(file1.getSize());
+        image.setResource(file1.getBytes());
+        return image;
     }
 
     public Advertisement updateADv(AdvertisementDTO advertisementDTO, Long id) {
@@ -84,17 +107,13 @@ public class AdvertisementServiceImpl implements AdvertisementService
     }
 
     @Transactional
-    public Set<Advertisement> getAllFavorites()
-    {
+    public Set<Advertisement> getAllFavorites() {
         User user = userService.getUserFromSecurityContextHolder();
         Set<Advertisement> favCars = user.getFavoriteCars();
 
-        if (!favCars.isEmpty())
-        {
+        if (!favCars.isEmpty()) {
             return favCars;
-        }
-        else
-        {
+        } else {
             throw new FavoritesCarsNotFoundException();
         }
     }
