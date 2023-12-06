@@ -2,11 +2,12 @@ package com.sellbycar.marketplace.services;
 
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
 import com.sellbycar.marketplace.models.entities.Advertisement;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
-public interface AdvertisementService
-{
+public interface AdvertisementService {
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
      *
@@ -27,14 +28,14 @@ public interface AdvertisementService
      *
      * @param advertisementDTO object with datas for creating
      */
-    void saveNewAd(AdvertisementDTO advertisementDTO);
+    public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
 
-    /**
-     * Finds a user in the database by checking the given user ID and converts it into DTO.
-     *
-     * @param advertisementDTO object with datas for changes
-     * @param id id of advertisement in order to get it
-     */
-    Advertisement updateADv(AdvertisementDTO advertisementDTO, Long id);
+        /**
+         * Finds a user in the database by checking the given user ID and converts it into DTO.
+         *
+         * @param advertisementDTO object with datas for changes
+         * @param id id of advertisement in order to get it
+         */
+        Advertisement updateADv (AdvertisementDTO advertisementDTO, Long id);
 
-}
+    }

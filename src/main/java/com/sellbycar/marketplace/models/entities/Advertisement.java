@@ -42,7 +42,7 @@ public class Advertisement implements Serializable {
     private boolean crashed = false;
 
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -56,7 +56,12 @@ public class Advertisement implements Serializable {
     @Enumerated(EnumType.STRING)
     private Set<Transmission> authority = new HashSet<>();
 
-    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
-    private List<Images> images = new ArrayList<>();
+    @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
+    private Long previewImageId;
 
+    public void addImageToAdvertisement(Image image) {
+        image.setAdvertisement(this);
+        images.add(image);
+    }
 }

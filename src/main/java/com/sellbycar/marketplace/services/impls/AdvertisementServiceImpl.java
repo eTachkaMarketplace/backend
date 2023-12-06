@@ -3,6 +3,7 @@ package com.sellbycar.marketplace.services.impls;
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
 import com.sellbycar.marketplace.models.entities.Advertisement;
 import com.sellbycar.marketplace.models.entities.Car;
+import com.sellbycar.marketplace.models.entities.Image;
 import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.repositories.AdvertisementRepository;
 import com.sellbycar.marketplace.services.AdvertisementService;
@@ -11,16 +12,19 @@ import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AdvertisementServiceImpl implements AdvertisementService
-{
+@Slf4j
+public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
@@ -44,11 +48,42 @@ public class AdvertisementServiceImpl implements AdvertisementService
     }
 
     @Transactional
-    public void saveNewAd(AdvertisementDTO advertisementDTO) {
+    public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
+        Image image2;
+        Image image3;
+
         Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
         User user = userService.getUserFromSecurityContextHolder();
         advertisement.setUser(user);
+//        if (files.get(0).getSize() != 0) {
+//            image1 = toImageEntity(files.get(0));
+//            image1.setPreviewImage(true);
+//            advertisement.addImageToAdvertisement(image1);
+//        }
+        if (!files.isEmpty()) {
+            for (MultipartFile multipartFile : files) {
+                Image image = toImageEntity(multipartFile);
+                image.setPreviewImage(true);
+                advertisement.addImageToAdvertisement(image);
+            }
+        }
+//        if (file3.getSize() != 0) {
+//            image3 = toImageEntity(file3);
+//            advertisement.addImageToAdvertisement(image3);
+//        }
+        log.info("Saving new Advertisement. Title: {}; Author: {}");
+        Advertisement advertisementFromDB = advertisementRepository.save(advertisement);
+        advertisementFromDB.setPreviewImageId(advertisementFromDB.getImages().get(0).getId());
         advertisementRepository.save(advertisement);
+    }
+
+    private Image toImageEntity(MultipartFile file1) throws IOException {
+        Image image = new Image();
+        image.setName(file1.getName());
+        image.setContentType(file1.getContentType());
+        image.setSize(file1.getSize());
+        image.setResource(file1.getBytes());
+        return image;
     }
 
     public Advertisement updateADv(AdvertisementDTO advertisementDTO, Long id) {
