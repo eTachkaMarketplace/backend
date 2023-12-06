@@ -31,13 +31,13 @@ public interface AdvertisementService {
      */
     public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
 
-        /**
-         * Finds a user in the database by checking the given user ID and converts it into DTO.
-         *
-         * @param advertisementDTO object with datas for changes
-         * @param id id of advertisement in order to get it
-         */
-        Advertisement updateADv (AdvertisementDTO advertisementDTO, Long id);
+    /**
+     * Finds a user in the database by checking the given user ID and converts it into DTO.
+     *
+     * @param advertisementDTO object with datas for changes
+     * @param id               id of advertisement in order to get it
+     */
+    Advertisement updateADv(AdvertisementDTO advertisementDTO, Long id);
 
     /**
      * Get all advertisements from favorite list
@@ -59,4 +59,4 @@ public interface AdvertisementService {
      * @param id id of advertisement in order to get it
      */
     void removeFromFavoriteList(Long id);
-    }
+}

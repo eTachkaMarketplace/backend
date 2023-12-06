@@ -51,17 +51,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Transactional
     public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
-        Image image2;
-        Image image3;
 
         Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
         User user = userService.getUserFromSecurityContextHolder();
         advertisement.setUser(user);
-//        if (files.get(0).getSize() != 0) {
-//            image1 = toImageEntity(files.get(0));
-//            image1.setPreviewImage(true);
-//            advertisement.addImageToAdvertisement(image1);
-//        }
+
         if (!files.isEmpty()) {
             for (MultipartFile multipartFile : files) {
                 Image image = toImageEntity(multipartFile);
@@ -69,10 +63,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                 advertisement.addImageToAdvertisement(image);
             }
         }
-//        if (file3.getSize() != 0) {
-//            image3 = toImageEntity(file3);
-//            advertisement.addImageToAdvertisement(image3);
-//        }
+
         log.info("Saving new Advertisement. Title: {}; Author: {}");
         Advertisement advertisementFromDB = advertisementRepository.save(advertisement);
         advertisementFromDB.setPreviewImageId(advertisementFromDB.getImages().get(0).getId());
@@ -116,17 +107,13 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public Set<Advertisement> getAllFavorites()
-    {
+    public Set<Advertisement> getAllFavorites() {
         User user = userService.getUserFromSecurityContextHolder();
         Set<Advertisement> favCars = user.getFavoriteCars();
 
-        if (!favCars.isEmpty())
-        {
+        if (!favCars.isEmpty()) {
             return favCars;
-        }
-        else
-        {
+        } else {
             throw new FavoritesCarsNotFoundException();
         }
     }
