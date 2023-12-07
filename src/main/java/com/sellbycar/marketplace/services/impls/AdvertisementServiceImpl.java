@@ -59,7 +59,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (!files.isEmpty()) {
             for (MultipartFile multipartFile : files) {
                 Image image = toImageEntity(multipartFile);
-//                image.setPreviewImage(true);
                 advertisement.addImageToAdvertisement(image);
             }
         }

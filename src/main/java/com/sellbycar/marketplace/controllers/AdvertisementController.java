@@ -49,15 +49,15 @@ public class AdvertisementController {
     @PostMapping("/create")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new advertisement")
-    public ResponseEntity<?> createAd(@RequestPart(value = "files") List<MultipartFile> files,
+    public ResponseEntity<?> createAd(@RequestPart(value = "images") List<MultipartFile> images,
                                       @RequestPart("advertisementDTO") AdvertisementDTO advertisementDTO) throws IOException {
-        advertisementService.createAdvertisement(advertisementDTO, files);
+        advertisementService.createAdvertisement(advertisementDTO, images);
         return ResponseEntity.ok("Success");
     }
 
     @PutMapping("/{id}/update")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Update datas of advertisement by id")
+    @Operation(summary = "Update data's of advertisement by id")
     public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
                                        @PathVariable Long id) {
         Advertisement advertisement = advertisementService.updateADv(advertisementDTO, id);
