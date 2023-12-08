@@ -2,6 +2,7 @@ package com.sellbycar.marketplace.controllers;
 
 import com.sellbycar.marketplace.models.entities.Image;
 import com.sellbycar.marketplace.services.ImageService;
+import com.sellbycar.marketplace.utilities.handlers.ResponseHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,6 @@ public class ImageController {
     public ResponseEntity<?> setAsPreviewImage(@PathVariable Long imageId,
                                                @PathVariable Long advertisementId) {
         imageService.addPreviewImageToAdvertisement(advertisementId, imageId);
-        return ResponseEntity.ok("Image set as preview successfully");
+        return ResponseHandler.generateResponse("Image set as preview successfully",HttpStatus.OK);
     }
 }
