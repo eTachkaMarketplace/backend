@@ -3,6 +3,7 @@ package com.sellbycar.marketplace.controllers;
 import com.sellbycar.marketplace.services.AuthService;
 import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.services.impls.UserDetailsImpl;
+import com.sellbycar.marketplace.utilities.handlers.ResponseHandler;
 import com.sellbycar.marketplace.utilities.jwt.JwtUtils;
 import com.sellbycar.marketplace.utilities.payload.request.LoginRequest;
 import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
@@ -19,6 +20,7 @@ import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -60,7 +62,7 @@ public class AuthController {
             authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
         }
 
-        return ResponseEntity.ok(new JwtResponse(jwtAccessToken, jwtRefreshToken));
+        return ResponseHandler.generateResponse("Token", HttpStatus.OK, new JwtResponse(jwtAccessToken, jwtRefreshToken));
     }
 
 
@@ -68,28 +70,28 @@ public class AuthController {
     @Operation(summary = "Register User")
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) throws MessagingException {
         if (userService.createNewUser(signUpRequest)) {
-            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+            return ResponseHandler.generateResponse("User registered successfully!", HttpStatus.OK);
         }
-        return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+        return ResponseHandler.generateError("Error: Email is already in use!", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/refresh/access-token")
     @Operation(summary = "Refresh jwt access token")
     @ApiResponses({@ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")}),})
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<JwtResponse> getNewAccessToken(@RequestBody JwtResponse response) throws AuthException {
+    public ResponseEntity<?> getNewAccessToken(@RequestBody JwtResponse response) throws AuthException {
         final JwtResponse token = authService.getJwtAccessToken(response.getJwtRefreshToken());
-        return ResponseEntity.ok(token);
+        return ResponseHandler.generateResponse("Access Token", HttpStatus.OK, token);
     }
 
     @PostMapping("/refresh/refresh-token")
     @Operation(summary = "Refresh jwt refresh token")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json") }),
+            @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")}),
     })
     @SecurityRequirement(name = "Bearer Authentication")
-    public ResponseEntity<JwtResponse> getNewRefreshToken(@RequestBody JwtResponse response) throws AuthException {
+    public ResponseEntity<?> getNewRefreshToken(@RequestBody JwtResponse response) throws AuthException {
         final JwtResponse token = authService.getJwtRefreshToken(response.getJwtRefreshToken());
-        return ResponseEntity.ok(token);
+        return ResponseHandler.generateResponse("Refresh token", HttpStatus.OK, token);
     }
 }

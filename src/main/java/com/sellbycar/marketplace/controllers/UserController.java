@@ -3,6 +3,7 @@ package com.sellbycar.marketplace.controllers;
 import com.sellbycar.marketplace.models.dto.UserDTO;
 import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.services.UserService;
+import com.sellbycar.marketplace.utilities.handlers.ResponseHandler;
 import com.sellbycar.marketplace.utilities.jwt.JwtUtils;
 import com.sellbycar.marketplace.utilities.mapper.UserMapper;
 import com.sellbycar.marketplace.utilities.payload.request.EmailRequest;
@@ -68,7 +69,7 @@ public class UserController {
 
             return ResponseEntity.ok(userDTO);
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseHandler.generateError("Not Found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -91,7 +92,7 @@ public class UserController {
 
             return ResponseEntity.ok(userDTO);
         } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseHandler.generateError("Not Found", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -106,30 +107,34 @@ public class UserController {
         String token = getTokenFromRequest();
         String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
         User user = userService.existByEmail(emailOfUser);
-        if (user.getId().equals(id)){
+        if (user.getId().equals(id)) {
             userService.deleteUser(id);
-            return ResponseEntity.ok("User was deleted");
+            return ResponseHandler.generateResponse("User was deleted", HttpStatus.OK);
         }
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        return ResponseHandler.generateResponse("Access denied", HttpStatus.FORBIDDEN);
     }
 
 
     @PutMapping("/forgot/password")
     public ResponseEntity<?> forgotPassword(@RequestBody EmailRequest emailRequest) throws MessagingException {
 
-        return ResponseEntity.ok(userService.forgotPassword(emailRequest));
+        var forgotPassword = userService.forgotPassword(emailRequest);
+
+        return ResponseHandler.generateResponse("Check your email", HttpStatus.OK, forgotPassword);
     }
 
     @PutMapping("/accept/code/{code}")
-    public ResponseEntity<UserDTO> acceptCode(@PathVariable("code") String code) {
-        return ResponseEntity.ok(userService.acceptCode(code));
+    public ResponseEntity<?> acceptCode(@PathVariable("code") String code) {
+        var userDTO = userService.acceptCode(code);
+        return ResponseHandler.generateResponse("Ok", HttpStatus.OK, userDTO);
     }
 
     @PutMapping("/change/password")
-    public ResponseEntity<String> changePassword(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> changePassword(@RequestBody LoginRequest request) {
         if (!validator.isPasswordValid(request.getPassword())) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Invalid password");
-        return ResponseEntity.ok(userService.changePassword(request));
+        var changePassword = userService.changePassword(request);
+        return ResponseHandler.generateResponse("Ok", HttpStatus.OK, changePassword);
     }
 
 }
