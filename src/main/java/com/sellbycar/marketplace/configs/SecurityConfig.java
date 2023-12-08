@@ -68,6 +68,8 @@ public class SecurityConfig {
                         .authenticated()
                         .requestMatchers("/api/advertisements/create","/api/advertisements/{id}/update")
                         .authenticated()
+                        .requestMatchers("/api/image/set/**")
+                        .authenticated()
                         .anyRequest()
                         .permitAll());
 

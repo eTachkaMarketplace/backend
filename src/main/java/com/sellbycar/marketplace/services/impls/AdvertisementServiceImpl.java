@@ -7,13 +7,13 @@ import com.sellbycar.marketplace.models.entities.Image;
 import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.repositories.AdvertisementRepository;
 import com.sellbycar.marketplace.services.AdvertisementService;
+import com.sellbycar.marketplace.services.ImageService;
 import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +25,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
+    private final ImageService imageService;
 
     @Transactional
     public List<AdvertisementDTO> findAllAd() {
@@ -58,24 +58,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         if (!files.isEmpty()) {
             for (MultipartFile multipartFile : files) {
-                Image image = toImageEntity(multipartFile);
+                Image image = imageService.createImage(multipartFile);
                 advertisement.addImageToAdvertisement(image);
             }
         }
 
-        log.info("Saving new Advertisement. Title: {}; Author: {}");
         Advertisement advertisementFromDB = advertisementRepository.save(advertisement);
         advertisementFromDB.setPreviewImageId(advertisementFromDB.getImages().get(0).getId());
         advertisementRepository.save(advertisement);
-    }
-
-    private Image toImageEntity(MultipartFile file1) throws IOException {
-        Image image = new Image();
-        image.setName(file1.getName());
-        image.setContentType(file1.getContentType());
-        image.setSize(file1.getSize());
-        image.setResource(file1.getBytes());
-        return image;
     }
 
     public Advertisement updateADv(AdvertisementDTO advertisementDTO, Long id) {
