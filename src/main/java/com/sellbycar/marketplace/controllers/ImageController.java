@@ -1,31 +1,31 @@
 package com.sellbycar.marketplace.controllers;
 
 import com.sellbycar.marketplace.models.entities.Image;
-import com.sellbycar.marketplace.repositories.ImageRepository;
+import com.sellbycar.marketplace.services.ImageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/image")
 @RequiredArgsConstructor
 public class ImageController {
 
-    private final ImageRepository imageRepository;
+    private final ImageService imageService;
 
-    @GetMapping("/images/{id}")
+    @GetMapping("{id}")
+    @Operation(summary = "Get image by id")
     public ResponseEntity<InputStreamResource> getImageById(@PathVariable Long id) {
-        Optional<Image> optionalImage = imageRepository.findById(id);
+        Optional<Image> optionalImage = imageService.getImageById(id);
 
         if (optionalImage.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -38,5 +38,15 @@ public class ImageController {
         headers.setContentType(MediaType.valueOf(image.getContentType()));
 
         return new ResponseEntity<>(new InputStreamResource(new ByteArrayInputStream(image.getResource())), headers, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/set/{imageId}/as-preview/{advertisementId}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Set preview image")
+    public ResponseEntity<?> setAsPreviewImage(@PathVariable Long imageId,
+                                               @PathVariable Long advertisementId) {
+        imageService.addPreviewImageToAdvertisement(advertisementId, imageId);
+        return ResponseEntity.ok("Image set as preview successfully");
     }
 }

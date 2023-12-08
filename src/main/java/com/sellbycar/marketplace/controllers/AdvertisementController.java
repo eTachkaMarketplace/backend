@@ -3,7 +3,6 @@ package com.sellbycar.marketplace.controllers;
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
 import com.sellbycar.marketplace.models.entities.Advertisement;
 import com.sellbycar.marketplace.services.AdvertisementService;
-import com.sellbycar.marketplace.utilities.exception.CustomUserException;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.handlers.ResponseHandler;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
-
 import java.util.List;
 import java.util.Set;
 
@@ -49,17 +46,15 @@ public class AdvertisementController {
     @PostMapping("/create")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new advertisement")
-    public ResponseEntity<?> createAd(@RequestPart(value = "files") List<MultipartFile> files,
-//                                      @RequestPart(value = "file2") MultipartFile file2,
-//                                      @RequestPart(value = "file3") MultipartFile file3,
+    public ResponseEntity<?> createAd(@RequestPart(value = "images") List<MultipartFile> images,
                                       @RequestPart("advertisementDTO") AdvertisementDTO advertisementDTO) throws IOException {
-        advertisementService.createAdvertisement(advertisementDTO, files);
-        return ResponseEntity.ok("Success");
+        advertisementService.createAdvertisement(advertisementDTO, images);
+        return ResponseEntity.ok(HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/update")
     @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Update datas of advertisement by id")
+    @Operation(summary = "Update data's of advertisement by id")
     public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
                                        @PathVariable Long id) {
         Advertisement advertisement = advertisementService.updateADv(advertisementDTO, id);
