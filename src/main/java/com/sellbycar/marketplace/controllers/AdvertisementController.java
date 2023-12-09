@@ -31,7 +31,9 @@ public class AdvertisementController {
     @GetMapping("")
     @Operation(summary = "Get all advertisement")
     public ResponseEntity<?> showAllAd() {
-        return ResponseEntity.ok(advertisementService.findAllAd());
+        var advertisementDto = advertisementService.findAllAd();
+
+        return ResponseHandler.generateResponse("All advertisements", HttpStatus.OK, advertisementDto);
     }
 
     @GetMapping("/{id}")
@@ -40,7 +42,7 @@ public class AdvertisementController {
         Advertisement adv = advertisementService.getAd(id);
         AdvertisementDTO advertisementDTO = advertisementMapper.toDTO(adv);
 
-        return ResponseEntity.ok(advertisementDTO);
+        return ResponseHandler.generateResponse("Advertisement by id", HttpStatus.OK, advertisementDTO);
     }
 
     @PostMapping("/create")
@@ -49,7 +51,8 @@ public class AdvertisementController {
     public ResponseEntity<?> createAd(@RequestPart(value = "images") List<MultipartFile> images,
                                       @RequestPart("advertisementDTO") AdvertisementDTO advertisementDTO) throws IOException {
         advertisementService.createAdvertisement(advertisementDTO, images);
-        return ResponseEntity.ok(HttpStatus.CREATED);
+
+        return ResponseHandler.generateResponse("Created", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/update")
@@ -60,7 +63,7 @@ public class AdvertisementController {
         Advertisement advertisement = advertisementService.updateADv(advertisementDTO, id);
         AdvertisementDTO advDTO = advertisementMapper.toDTO(advertisement);
 
-        return ResponseEntity.ok(advDTO);
+        return ResponseHandler.generateResponse("Updated", HttpStatus.OK, advDTO);
     }
 
     @GetMapping("/favorites")

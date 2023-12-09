@@ -29,7 +29,7 @@ public interface AdvertisementService {
      *
      * @param advertisementDTO object with datas for creating
      */
-    public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
+    void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
