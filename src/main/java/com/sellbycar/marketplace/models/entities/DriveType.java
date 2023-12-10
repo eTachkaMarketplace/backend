@@ -6,9 +6,9 @@ import lombok.Data;
 import java.util.List;
 
 @Entity
-@Table(name = "technical_states")
+@Table(name = "drive_types")
 @Data
-public class TechnicalState
+public class DriveType
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +17,6 @@ public class TechnicalState
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "technicalState", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "driveType", fetch = FetchType.EAGER)
     private List<Car> cars;
 }

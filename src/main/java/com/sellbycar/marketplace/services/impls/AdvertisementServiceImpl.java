@@ -78,9 +78,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             existingAd.setName(advertisementDTO.getName());
             existingAd.setDescription(advertisementDTO.getDescription());
             existingAd.setPrice(advertisementDTO.getPrice());
-            existingAd.setChange(advertisementDTO.isChange());
-            existingAd.setBargain(advertisementDTO.isBargain());
-            existingAd.setCrashed(advertisementDTO.isCrashed());
             Car car = existingAd.getCar();
             car.setYearToCreate(advertisementDTO.getCarDTO().getYearToCreate());
             car.setCarNumber(advertisementDTO.getCarDTO().getCarNumber());

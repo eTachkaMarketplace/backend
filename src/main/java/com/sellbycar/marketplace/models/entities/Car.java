@@ -1,15 +1,12 @@
 package com.sellbycar.marketplace.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sellbycar.marketplace.models.enums.EngineType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "cars")
@@ -22,29 +19,68 @@ public class Car implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "vin_number")
     private String vinNumber;
 
-    @Column
+    @Column(name = "year_to_create")
     private String yearToCreate;
 
-    @Column
+    @Column(name = "car_number")
     private String carNumber;
 
-    @Column
+    @Column(name = "mileage")
     private Integer mileage;
 
     @JsonBackReference
     @OneToOne(mappedBy = "car", fetch = FetchType.EAGER)
     private Advertisement advertisement;
 
-    @ElementCollection(targetClass = EngineType.class)
-    @CollectionTable(name = "engine_types", joinColumns = @JoinColumn(name = "auto_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<EngineType> engineType = new HashSet<>();
+    @ManyToOne
+    @JoinTable(
+            name = "transmissions",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    private Transmission transmission;
 
+    @ManyToOne
+    @JoinTable(
+            name = "engines",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    private Engine engine;
+
+    @ManyToOne
+    @JoinTable(
+            name = "technical_states",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    private TechnicalState technicalState;
+
+    @ManyToOne
+    @JoinTable(
+            name = "body_types",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    private BodyType bodyType;
+
+    @ManyToOne
+    @JoinTable(
+            name = "drive_types",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    private DriveType driveType;
+
+    @ManyToOne
+    @JoinTable(
+            name = "colors",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    private Color color;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "car_model_id")
-    private CarModel carModel;
+    @JoinTable(
+            name = "cars_marks",
+            joinColumns = @JoinColumn(name = "car_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    private CarMark carMark;
 }

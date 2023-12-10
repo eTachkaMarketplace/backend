@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "car_marks")
+@Table(name = "cars_marks")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,8 +24,10 @@ public class CarMark implements Serializable {
     @Column
     private String name;
 
-//    @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)
-//    private List<CarModel> carModel = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_id")
+    private Car car;
 
-
+    @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)
+    private List<CarModel> carModel = new ArrayList<>();
 }
