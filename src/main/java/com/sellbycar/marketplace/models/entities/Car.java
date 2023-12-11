@@ -35,52 +35,31 @@ public class Car implements Serializable {
     @OneToOne(mappedBy = "car", fetch = FetchType.EAGER)
     private Advertisement advertisement;
 
-    @ManyToOne
-    @JoinTable(
-            name = "transmissions",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "transmission_id", referencedColumnName = "id")
     private Transmission transmission;
 
-    @ManyToOne
-    @JoinTable(
-            name = "engines",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "engine_id", referencedColumnName = "id")
     private Engine engine;
 
-    @ManyToOne
-    @JoinTable(
-            name = "technical_states",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "technical_state_id", referencedColumnName = "id")
     private TechnicalState technicalState;
 
-    @ManyToOne
-    @JoinTable(
-            name = "body_types",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "body_type_id", referencedColumnName = "id")
     private BodyType bodyType;
 
-    @ManyToOne
-    @JoinTable(
-            name = "drive_types",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "drive_type_id", referencedColumnName = "id")
     private DriveType driveType;
 
-    @ManyToOne
-    @JoinTable(
-            name = "colors",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "color_id", referencedColumnName = "id")
     private Color color;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "cars_marks",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "id"))
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "car_mark_id", referencedColumnName = "id")
     private CarMark carMark;
 }

@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,6 +18,7 @@ public class Color
     @Column(name = "name")
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "color", fetch = FetchType.EAGER)
     private List<Car> cars;
 }

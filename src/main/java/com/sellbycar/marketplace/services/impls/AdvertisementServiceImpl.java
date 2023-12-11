@@ -12,8 +12,10 @@ import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
+import com.sellbycar.marketplace.utilities.mapper.CarMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,11 +27,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementRepository advertisementRepository;
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
     private final ImageService imageService;
+    private final CarMapper carMapper;
 
     @Transactional
     public List<AdvertisementDTO> findAllAd() {
@@ -54,6 +58,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
         User user = userService.getUserFromSecurityContextHolder();
+
         advertisement.setUser(user);
 
         if (!files.isEmpty()) {
@@ -63,8 +68,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             }
         }
 
-        Advertisement advertisementFromDB = advertisementRepository.save(advertisement);
-        advertisementFromDB.setPreviewImageId(advertisementFromDB.getImages().get(0).getId());
+        advertisement.setPreviewImageId(advertisement.getImages().get(0).getId());
         advertisementRepository.save(advertisement);
     }
 

@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,9 @@ public class CarMark implements Serializable {
     @Column
     private String name;
 
+    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "car_id")
+    @JoinColumn(name = "car_id", referencedColumnName = "id")
     private Car car;
 
     @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)

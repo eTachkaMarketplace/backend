@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ public class CarModel implements Serializable {
     @Column
     private String name;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "car_mark_id")
+    @JoinColumn(name = "car_mark_id", referencedColumnName = "id")
     private CarMark carMark;
 }
