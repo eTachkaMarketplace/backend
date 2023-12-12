@@ -12,8 +12,6 @@ import java.util.Set;
 @Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR
         , uses = {CarMapper.class})
 public interface AdvertisementMapper {
-
-
     @Mapping(source = "carDTO", target = "car")
 //    @Mapping(target = "id", ignore = true)
     Advertisement toModel(AdvertisementDTO dto);

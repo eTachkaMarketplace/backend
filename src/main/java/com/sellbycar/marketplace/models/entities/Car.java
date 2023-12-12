@@ -1,15 +1,12 @@
 package com.sellbycar.marketplace.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sellbycar.marketplace.models.enums.EngineType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "cars")
@@ -22,29 +19,47 @@ public class Car implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "vin_number")
     private String vinNumber;
 
-    @Column
+    @Column(name = "year_to_create")
     private String yearToCreate;
 
-    @Column
+    @Column(name = "car_number")
     private String carNumber;
 
-    @Column
+    @Column(name = "mileage")
     private Integer mileage;
 
     @JsonBackReference
     @OneToOne(mappedBy = "car", fetch = FetchType.EAGER)
     private Advertisement advertisement;
 
-    @ElementCollection(targetClass = EngineType.class)
-    @CollectionTable(name = "engine_types", joinColumns = @JoinColumn(name = "auto_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<EngineType> engineType = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "transmission_id", referencedColumnName = "id")
+    private Transmission transmission;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "engine_id", referencedColumnName = "id")
+    private Engine engine;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "car_model_id")
-    private CarModel carModel;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "technical_state_id", referencedColumnName = "id")
+    private TechnicalState technicalState;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "body_type_id", referencedColumnName = "id")
+    private BodyType bodyType;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "drive_type_id", referencedColumnName = "id")
+    private DriveType driveType;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "color_id", referencedColumnName = "id")
+    private Color color;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "car_mark_id", referencedColumnName = "id")
+    private CarMark carMark;
 }

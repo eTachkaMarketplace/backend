@@ -1,26 +1,24 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "technical_states")
-@Getter
-@Setter
-@NoArgsConstructor
-public class TechnicalState implements Serializable {
-
+@Data
+public class TechnicalState
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
-    @Column
+
+    @Column(name = "name")
     private String name;
 
-    
+    @JsonIgnore
+    @OneToMany(mappedBy = "technicalState", fetch = FetchType.EAGER)
+    private List<Car> cars;
 }

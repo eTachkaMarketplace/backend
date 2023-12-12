@@ -46,7 +46,6 @@ public class ImageServiceImpl implements ImageService {
         image.setPreviewImage(true);
         image.setAdvertisement(advertisement);
 
-        advertisement.setPreviewImageId(image.getId());
         imageRepository.save(image);
         advertisementRepository.save(advertisement);
     }

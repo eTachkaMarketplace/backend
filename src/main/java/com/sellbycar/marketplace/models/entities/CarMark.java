@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "car_marks")
+@Table(name = "cars_marks")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,14 +19,12 @@ public class CarMark implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-//    @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)
-//    private List<CarModel> carModel = new ArrayList<>();
-
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "car_model_id", referencedColumnName = "id")
+    private CarModel carModel;
 }
