@@ -98,4 +98,11 @@ public class AdvertisementController {
         advertisementService.removeFromFavoriteList(id);
         return ResponseHandler.generateResponse("The advertisement was removed", HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}/remove")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<?> deleteAdvertisement(@PathVariable Long id) {
+        advertisementService.removeAdvertisement(id);
+        return ResponseHandler.generateResponse("Ok", HttpStatus.OK);
+    }
 }

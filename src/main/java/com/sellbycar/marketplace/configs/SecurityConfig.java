@@ -66,7 +66,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/users/*")
                         .authenticated()
-                        .requestMatchers("/api/advertisements/create","/api/advertisements/{id}/update")
+                        .requestMatchers("/api/advertisements/create", "/api/advertisements/{id}/update", "/api/advertisements/{id}/remove")
                         .authenticated()
                         .requestMatchers("/api/image/set/**")
                         .authenticated()

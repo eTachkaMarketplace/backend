@@ -131,4 +131,16 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         user.setFavoriteCars(favoriteCarsOfUser);
     }
+
+    @Transactional
+    public void removeAdvertisement(Long id) {
+        User user = userService.getUserFromSecurityContextHolder();
+        Advertisement advertisement = advertisementRepository.getReferenceById(id);
+        Long existingUser = advertisement.getUser().getId();
+        if (existingUser.equals(user.getId())) {
+            advertisementRepository.deleteById(id);
+        } else {
+            throw new UserDataException("BAD USER");
+        }
+    }
 }
