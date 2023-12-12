@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -38,9 +39,12 @@ public class Advertisement implements Serializable {
     @JoinColumn(name = "car_id", referencedColumnName = "id")
     private Car car;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "region_id", referencedColumnName = "id")
+    private Region region;
+
     @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
-    private Long previewImageId;
 
     public void addImageToAdvertisement(Image image) {
         image.setAdvertisement(this);

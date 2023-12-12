@@ -19,17 +19,12 @@ public class CarMark implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "car_id", referencedColumnName = "id")
-    private Car car;
-
-    @OneToMany(mappedBy = "carMark", cascade = CascadeType.ALL)
-    private List<CarModel> carModel = new ArrayList<>();
+    @JoinColumn(name = "car_model_id", referencedColumnName = "id")
+    private CarModel carModel;
 }

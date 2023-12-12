@@ -1,10 +1,7 @@
 package com.sellbycar.marketplace.services.impls;
 
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
-import com.sellbycar.marketplace.models.entities.Advertisement;
-import com.sellbycar.marketplace.models.entities.Car;
-import com.sellbycar.marketplace.models.entities.Image;
-import com.sellbycar.marketplace.models.entities.User;
+import com.sellbycar.marketplace.models.entities.*;
 import com.sellbycar.marketplace.repositories.AdvertisementRepository;
 import com.sellbycar.marketplace.services.AdvertisementService;
 import com.sellbycar.marketplace.services.ImageService;
@@ -68,10 +65,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             }
         }
 
-        advertisement.setPreviewImageId(advertisement.getImages().get(0).getId());
         advertisementRepository.save(advertisement);
     }
 
+    @Transactional
     public Advertisement updateADv(AdvertisementDTO advertisementDTO, Long id) {
         User user = userService.getUserFromSecurityContextHolder();
 

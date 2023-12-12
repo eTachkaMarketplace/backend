@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,13 +19,16 @@ public class Region implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
-    private List<City> cities = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "region")
+    private List<Advertisement> advertisements;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    private City city;
 }

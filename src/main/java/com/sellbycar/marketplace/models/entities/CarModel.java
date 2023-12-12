@@ -16,14 +16,8 @@ import java.io.Serializable;
 public class CarModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
 
-    @Column
+    @Column(name = "name")
     private String name;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "car_mark_id", referencedColumnName = "id")
-    private CarMark carMark;
 }
