@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_DB: marketplace
       POSTGRES_USER: kingofukr
-      POSTGRES_PASSWORD: qmwpbjwhyjfuxdyyosul
+      POSTGRES_PASSWORD: potusnow
     ports:
       - "5432:5432"
     networks:
@@ -24,7 +24,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace
       SPRING_DATASOURCE_USERNAME: kingofukr
-      SPRING_DATASOURCE_PASSWORD: qmwpbjwhyjfuxdyyosul
+      SPRING_DATASOURCE_PASSWORD: potusnow
 
 networks:
   mynetwork:

@@ -5,6 +5,7 @@ import com.sellbycar.marketplace.services.ImageService;
 import com.sellbycar.marketplace.utilities.handlers.ResponseHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +20,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/image")
 @RequiredArgsConstructor
+@Tag(name = "Image Library", description = "Endpoints for work with images")
+@CrossOrigin(origins = "*")
 public class ImageController {
 
     private final ImageService imageService;

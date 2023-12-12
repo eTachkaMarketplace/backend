@@ -8,7 +8,6 @@ import com.sellbycar.marketplace.utilities.jwt.JwtUtils;
 import com.sellbycar.marketplace.utilities.payload.request.LoginRequest;
 import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
 import com.sellbycar.marketplace.utilities.payload.response.JwtResponse;
-import com.sellbycar.marketplace.utilities.payload.response.MessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -31,7 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @AllArgsConstructor
-@Tag(name = "User Registration Library", description = "Endpoints for register user")
+@Tag(name = "Authentication Registration Library", description = "Endpoints for authentication user")
 @CrossOrigin(origins = "*")
 public class AuthController {
 

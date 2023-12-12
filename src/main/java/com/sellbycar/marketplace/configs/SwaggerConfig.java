@@ -19,7 +19,6 @@ public class SwaggerConfig {
                         .termsOfService("s"))
                 .addServersItem(new Server()
                         .url("https://185.69.153.118:8443/")
-//                        .url("http://localhost:8080/")
                         .description("Future Server for Marketplace"));
     }
 }
