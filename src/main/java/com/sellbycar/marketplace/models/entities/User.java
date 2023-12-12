@@ -60,9 +60,9 @@ public class User implements Serializable {
     @JsonIgnore
     @ManyToMany
     @JoinTable(
-            name = "users_advertisements",
+            name = "users_favorite_cars",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "advertisements_id")
+            inverseJoinColumns = @JoinColumn(name = "advertisement_id")
     )
     private Set<Advertisement> favoriteCars;
 }

@@ -17,15 +17,14 @@ import java.io.Serializable;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
     private Long id;
-    @Column
+    @Column(name = "name")
     private String name;
-    @Column
+    @Column(name = "size")
     private Long size;
-    @Column
+    @Column(name = "content_type")
     private String contentType;
-    @Column
+    @Column(name = "is_preview_image")
     private boolean isPreviewImage;
     @Lob
     private byte[] resource;

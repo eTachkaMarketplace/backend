@@ -1,7 +1,7 @@
 package com.sellbycar.marketplace.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.sellbycar.marketplace.models.enums.Transmission;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +9,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "advertisements")
@@ -23,42 +21,30 @@ public class Advertisement implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "description")
     private String description;
 
-    @Column
+    @Column(name = "name")
     private String name;
 
-    @Column
+    @Column(name = "price")
     private Integer price;
-
-    @Column
-    private boolean change = false;
-
-    @Column
-    private boolean bargain = false;
-
-    @Column
-    private boolean crashed = false;
-
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
     @JsonManagedReference
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "car_id")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "car_id", referencedColumnName = "id")
     private Car car;
 
-    @ElementCollection(targetClass = Transmission.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "transmissions", joinColumns = @JoinColumn(name = "advertisement_id"))
-    @Enumerated(EnumType.STRING)
-    private Set<Transmission> authority = new HashSet<>();
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "region_id", referencedColumnName = "id")
+    private Region region;
 
     @OneToMany(mappedBy = "advertisement", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
-    private Long previewImageId;
 
     public void addImageToAdvertisement(Image image) {
         image.setAdvertisement(this);
