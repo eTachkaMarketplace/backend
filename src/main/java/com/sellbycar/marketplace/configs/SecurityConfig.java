@@ -72,8 +72,8 @@ public class SecurityConfig {
                                 , "/api/advertisements/{id}/update"
                                 , "/api/advertisements/{id}/remove")
                         .authenticated()
-                        .requestMatchers("/api/advertisements/favorites/**"
-                                , "/api/advertisements/{id}/**")
+                        .requestMatchers("/api/advertisements/{id}/favorites"
+                        , "/api/advertisements/favorites")
                         .authenticated()
                         .requestMatchers("/api/image/set/**")
                         .authenticated()
