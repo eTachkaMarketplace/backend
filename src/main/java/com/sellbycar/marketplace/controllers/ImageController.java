@@ -26,7 +26,7 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Get image by id")
     public ResponseEntity<InputStreamResource> getImageById(@PathVariable Long id) {
         Optional<Image> optionalImage = imageService.getImageById(id);

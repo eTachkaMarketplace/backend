@@ -60,5 +60,10 @@ public interface AdvertisementService {
      */
     void removeFromFavoriteList(Long id);
 
+    /**
+     * Removes the specified advertisement from the system.
+     *
+     * @param id The identifier of the advertisement to be removed.
+     */
     void removeAdvertisement(Long id);
 }

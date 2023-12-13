@@ -15,11 +15,9 @@ CREATE TABLE IF NOT EXISTS users
     phone       VARCHAR(255),
     photo       VARCHAR(255),
     unique_code VARCHAR(255),
-    unique (email)
+    unique (email),
+    CONSTRAINT unique_email_constraint UNIQUE (email)
 );
-
-ALTER TABLE users
-    ADD CONSTRAINT unique_email_constraint UNIQUE (email);
 
 CREATE TABLE IF NOT EXISTS authorities
 (
