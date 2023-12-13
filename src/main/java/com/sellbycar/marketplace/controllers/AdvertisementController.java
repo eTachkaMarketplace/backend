@@ -46,7 +46,7 @@ public class AdvertisementController {
         return ResponseHandler.generateResponse("Advertisement by id", HttpStatus.OK, advertisementDTO);
     }
 
-    @PostMapping("")
+    @PostMapping("/create")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new advertisement")
     public ResponseEntity<?> createAd(@RequestPart(value = "images") List<MultipartFile> images,
@@ -97,5 +97,12 @@ public class AdvertisementController {
     public ResponseEntity<?> removeFromFavoriteList(@PathVariable Long id) {
         advertisementService.removeFromFavoriteList(id);
         return ResponseHandler.generateResponse("The advertisement was removed", HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/remove")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<?> deleteAdvertisement(@PathVariable Long id) {
+        advertisementService.removeAdvertisement(id);
+        return ResponseHandler.generateResponse("Ok", HttpStatus.OK);
     }
 }

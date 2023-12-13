@@ -1,6 +1,5 @@
 package com.sellbycar.marketplace.models.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -30,7 +29,8 @@ public class Advertisement implements Serializable {
     @Column(name = "price")
     private Integer price;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST
+            , CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

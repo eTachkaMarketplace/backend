@@ -1,7 +1,10 @@
 package com.sellbycar.marketplace.services.impls;
 
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
-import com.sellbycar.marketplace.models.entities.*;
+import com.sellbycar.marketplace.models.entities.Advertisement;
+import com.sellbycar.marketplace.models.entities.Car;
+import com.sellbycar.marketplace.models.entities.Image;
+import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.repositories.AdvertisementRepository;
 import com.sellbycar.marketplace.services.AdvertisementService;
 import com.sellbycar.marketplace.services.ImageService;
@@ -9,7 +12,6 @@ import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
-import com.sellbycar.marketplace.utilities.mapper.CarMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +32,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
     private final ImageService imageService;
-    private final CarMapper carMapper;
-
     @Transactional
     public List<AdvertisementDTO> findAllAd() {
         List<Advertisement> advertisements = advertisementRepository.findAll();
@@ -129,4 +129,19 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
         user.setFavoriteCars(favoriteCarsOfUser);
     }
+
+    @Transactional
+    public void removeAdvertisement(Long id) {
+        Optional<Advertisement> optionalAdv = Optional.of(advertisementRepository.findById(id).orElseThrow(
+                () -> new UserDataException("Not Found")
+        ));
+
+        optionalAdv.ifPresent(advertisement -> {
+            User user = advertisement.getUser();
+            user.getAdvertisement().remove(advertisement);
+            advertisement.setUser(null);
+            advertisementRepository.delete(advertisement);
+        });
+    }
+
 }

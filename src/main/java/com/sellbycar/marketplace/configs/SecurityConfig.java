@@ -62,11 +62,18 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(configurer -> configurer
-                        .requestMatchers("/v3/api-docs**", "/swagger-ui/**", "/swagger-ui.html")
+                        .requestMatchers("/v3/api-docs**"
+                                , "/swagger-ui/**"
+                                , "/swagger-ui.html")
                         .permitAll()
                         .requestMatchers("/api/users/*")
                         .authenticated()
-                        .requestMatchers("/api/advertisements/create","/api/advertisements/{id}/update")
+                        .requestMatchers("/api/advertisements/create"
+                                , "/api/advertisements/{id}/update"
+                                , "/api/advertisements/{id}/remove")
+                        .authenticated()
+                        .requestMatchers("/api/advertisements/favorites/**"
+                                , "/api/advertisements/{id}/**")
                         .authenticated()
                         .requestMatchers("/api/image/set/**")
                         .authenticated()
