@@ -13,11 +13,9 @@ import java.util.Set;
         , uses = {CarMapper.class})
 public interface AdvertisementMapper {
     @Mapping(source = "carDTO", target = "car")
-//    @Mapping(target = "id", ignore = true)
     Advertisement toModel(AdvertisementDTO dto);
 
     @Mapping(source = "car", target = "carDTO")
-//    @Mapping(target = "id" , ignore = true)
     AdvertisementDTO toDTO(Advertisement model);
 
     Set<AdvertisementDTO> toDtoSet(Set<Advertisement> advertisements);
