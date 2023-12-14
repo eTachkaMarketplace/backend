@@ -23,6 +23,7 @@
         <jwt.version>0.12.2</jwt.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <docker.java.version>3.3.3</docker.java.version>
+        <dotenv.version>4.0.0</dotenv.version>
     </properties>
     <dependencies>
         <dependency>
@@ -127,6 +128,11 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.paulschwarz</groupId>
+            <artifactId>spring-dotenv</artifactId>
+            <version>${dotenv.version}</version>
         </dependency>
 
 
