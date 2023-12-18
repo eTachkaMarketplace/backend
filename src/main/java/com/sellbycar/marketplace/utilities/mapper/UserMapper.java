@@ -1,9 +1,8 @@
 package com.sellbycar.marketplace.utilities.mapper;
 
-import com.sellbycar.marketplace.models.entities.User;
 import com.sellbycar.marketplace.models.dto.UserDTO;
+import com.sellbycar.marketplace.models.entities.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

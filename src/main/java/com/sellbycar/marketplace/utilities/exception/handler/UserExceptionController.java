@@ -1,6 +1,7 @@
 package com.sellbycar.marketplace.utilities.exception.handler;
 
 import com.sellbycar.marketplace.utilities.exception.CustomUserException;
+import com.sellbycar.marketplace.utilities.exception.InvalidAccessException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import io.jsonwebtoken.SignatureException;
 import jakarta.security.auth.message.AuthException;
@@ -38,10 +39,18 @@ public class UserExceptionController {
     public ResponseEntity<String> badAccessToken(SignatureException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
+
     @ExceptionHandler(AuthException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ResponseBody
     public ResponseEntity<String> badRefreshToken(AuthException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidAccessException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ResponseEntity<String> invalidAccess(InvalidAccessException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
 }
