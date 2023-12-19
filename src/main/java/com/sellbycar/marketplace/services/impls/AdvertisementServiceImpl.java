@@ -10,6 +10,7 @@ import com.sellbycar.marketplace.services.AdvertisementService;
 import com.sellbycar.marketplace.services.ImageService;
 import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
+import com.sellbycar.marketplace.utilities.exception.InvalidAccessException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
     private final ImageService imageService;
+
     @Transactional
     public List<AdvertisementDTO> findAllAd() {
         List<Advertisement> advertisements = advertisementRepository.findAll();
@@ -132,15 +134,20 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     @Transactional
     public void removeAdvertisement(Long id) {
+        User existingUser = userService.getUserFromSecurityContextHolder();
         Optional<Advertisement> optionalAdv = Optional.of(advertisementRepository.findById(id).orElseThrow(
-                () -> new UserDataException("Not Found")
+                () -> new UserDataException("Advertisement not found")
         ));
 
         optionalAdv.ifPresent(advertisement -> {
             User user = advertisement.getUser();
-            user.getAdvertisement().remove(advertisement);
-            advertisement.setUser(null);
-            advertisementRepository.delete(advertisement);
+            if (existingUser.equals(user)) {
+                user.getAdvertisement().remove(advertisement);
+                advertisement.setUser(null);
+                advertisementRepository.delete(advertisement);
+            } else {
+                throw new InvalidAccessException("Access denied");
+            }
         });
     }
 

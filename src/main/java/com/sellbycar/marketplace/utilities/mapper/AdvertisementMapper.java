@@ -1,11 +1,10 @@
 package com.sellbycar.marketplace.utilities.mapper;
 
-import com.sellbycar.marketplace.models.entities.Advertisement;
 import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
+import com.sellbycar.marketplace.models.entities.Advertisement;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 import java.util.Set;
 
