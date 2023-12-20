@@ -1,6 +1,7 @@
 package com.sellbycar.marketplace.utilities.exception.handler;
 
 import com.sellbycar.marketplace.utilities.exception.CustomUserException;
+import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.exception.InvalidAccessException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import io.jsonwebtoken.SignatureException;
@@ -23,6 +24,13 @@ public class UserExceptionController {
 
     @ExceptionHandler(UserDataException.class)
     public ResponseEntity<String> duplicateUserEmail(UserDataException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+
+    @ExceptionHandler(FavoritesCarsNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> notFoundFavoritesCars(FavoritesCarsNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 

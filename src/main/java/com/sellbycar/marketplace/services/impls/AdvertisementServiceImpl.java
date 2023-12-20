@@ -103,7 +103,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (!favCars.isEmpty()) {
             return favCars;
         } else {
-            throw new FavoritesCarsNotFoundException();
+            throw new FavoritesCarsNotFoundException("You did not add a cars to your favorite list");
         }
     }
 
@@ -111,10 +111,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public Advertisement addToFavoriteList(Long id) {
         User user = userService.getUserFromSecurityContextHolder();
         Advertisement advertisement = advertisementRepository.findById(id).orElse(null);
-        Set<Advertisement> favoriteCarsOfUser = getAllFavorites();
-        favoriteCarsOfUser.add(advertisement);
 
         if (advertisement != null) {
+
+            // Get all favorites of current user
+            Set<Advertisement> favoriteCarsOfUser = user.getFavoriteCars();
+
+            // Adding the advertisement to set favorites of users
+            favoriteCarsOfUser.add(advertisement);
             user.setFavoriteCars(favoriteCarsOfUser);
         }
 
@@ -124,12 +128,16 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public void removeFromFavoriteList(Long id) {
         User user = userService.getUserFromSecurityContextHolder();
-        Set<Advertisement> favoriteCarsOfUser = getAllFavorites();
+
+        // Get all favorites of current user
+        Set<Advertisement> favoriteCarsOfUser = user.getFavoriteCars();
+
         Advertisement advertisement = advertisementRepository.findById(id).orElse(null);
 
-        favoriteCarsOfUser.remove(advertisement);
-
-        user.setFavoriteCars(favoriteCarsOfUser);
+        if (advertisement != null) {
+            favoriteCarsOfUser.remove(advertisement);
+            user.setFavoriteCars(favoriteCarsOfUser);
+        }
     }
 
     @Transactional

@@ -76,9 +76,8 @@ public class AdvertisementController {
             Set<AdvertisementDTO> favCarsDto = advertisementMapper.toDtoSet(favoritesCars);
             return ResponseHandler.generateResponse("Data was gotten successfully", HttpStatus.OK, favCarsDto);
         } catch (FavoritesCarsNotFoundException e) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(new FavoritesCarsNotFoundException());
+            return ResponseHandler.generateError("You did not add a cars to your favorite list",
+                                                HttpStatus.NOT_FOUND);
         }
     }
 
