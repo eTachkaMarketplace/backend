@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,16 @@ public class AdvertisementController {
 
     @GetMapping("")
     @Operation(summary = "Get all advertisement")
-    public ResponseEntity<?> showAllAd() {
-        var advertisementDto = advertisementService.findAllAd();
+    public ResponseEntity<?> showAllAd(@RequestParam(name = "sortByDate") boolean flag) {
+        if (flag) {
+            Sort sort = Sort.by(
+                    Sort.Order.asc("dateAdded"));
+            var advertisementDto = advertisementService.findAllAd(sort);
 
+            return ResponseHandler.generateResponse("All advertisements", HttpStatus.OK, advertisementDto);
+        }
+
+        var advertisementDto = advertisementService.findAllAd();
         return ResponseHandler.generateResponse("All advertisements", HttpStatus.OK, advertisementDto);
     }
 
@@ -85,9 +93,17 @@ public class AdvertisementController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Add an advertisement to favorite list")
     public ResponseEntity<?> addToFavoriteList(@PathVariable Long id) {
-        Advertisement advertisement = advertisementService.addToFavoriteList(id);
-        AdvertisementDTO advertisementDTO = advertisementMapper.toDTO(advertisement);
-        return ResponseHandler.generateResponse("The advertisement was added to your favorite list", HttpStatus.OK, advertisementDTO);
+
+        try {
+            Advertisement advertisement = advertisementService.addToFavoriteList(id);
+            AdvertisementDTO advertisementDTO = advertisementMapper.toDTO(advertisement);
+
+            return ResponseHandler.generateResponse("The advertisement was added to your favorite list", HttpStatus.OK, advertisementDTO);
+        } catch (FavoritesCarsNotFoundException e) {
+            return ResponseHandler.generateError(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+
     }
 
     @DeleteMapping("/{id}/favorites")
