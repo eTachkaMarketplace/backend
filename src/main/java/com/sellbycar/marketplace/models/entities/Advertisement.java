@@ -5,9 +5,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -28,6 +31,10 @@ public class Advertisement implements Serializable {
 
     @Column(name = "price")
     private Integer price;
+
+    @Column(name = "date_added", columnDefinition = "DATE")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    private Date dateAdded;
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST
             , CascadeType.REFRESH}, fetch = FetchType.EAGER)

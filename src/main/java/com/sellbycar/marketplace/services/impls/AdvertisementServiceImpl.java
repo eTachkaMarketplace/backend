@@ -16,10 +16,12 @@ import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -43,6 +45,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
+    public List<AdvertisementDTO> findAllAd(Sort sort)
+    {
+        List<Advertisement> advertisements = advertisementRepository.findAll(sort);
+        return advertisements.stream()
+                .map(advertisementMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
     public Advertisement getAd(Long id) {
         Optional<Advertisement> ad = advertisementRepository.findById(id);
         if (ad.isPresent()) {
@@ -59,6 +70,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         User user = userService.getUserFromSecurityContextHolder();
 
         advertisement.setUser(user);
+        advertisement.setDateAdded(new Date());
 
         if (!files.isEmpty()) {
             for (MultipartFile multipartFile : files) {
