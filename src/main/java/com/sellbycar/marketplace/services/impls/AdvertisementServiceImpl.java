@@ -120,6 +120,11 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             // Adding the advertisement to set favorites of users
             favoriteCarsOfUser.add(advertisement);
             user.setFavoriteCars(favoriteCarsOfUser);
+        } else
+        {
+            throw new FavoritesCarsNotFoundException(String.format(
+                    "Advertisement with id %s was not found.", id
+            ));
         }
 
         return advertisement;

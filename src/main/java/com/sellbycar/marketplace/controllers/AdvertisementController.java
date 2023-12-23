@@ -85,9 +85,17 @@ public class AdvertisementController {
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Add an advertisement to favorite list")
     public ResponseEntity<?> addToFavoriteList(@PathVariable Long id) {
-        Advertisement advertisement = advertisementService.addToFavoriteList(id);
-        AdvertisementDTO advertisementDTO = advertisementMapper.toDTO(advertisement);
-        return ResponseHandler.generateResponse("The advertisement was added to your favorite list", HttpStatus.OK, advertisementDTO);
+
+        try {
+            Advertisement advertisement = advertisementService.addToFavoriteList(id);
+            AdvertisementDTO advertisementDTO = advertisementMapper.toDTO(advertisement);
+
+            return ResponseHandler.generateResponse("The advertisement was added to your favorite list", HttpStatus.OK, advertisementDTO);
+        } catch (FavoritesCarsNotFoundException e) {
+            return ResponseHandler.generateError(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+
     }
 
     @DeleteMapping("/{id}/favorites")
