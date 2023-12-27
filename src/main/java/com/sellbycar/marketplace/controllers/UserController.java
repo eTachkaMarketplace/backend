@@ -40,15 +40,6 @@ public class UserController {
     private final UserService userService;
     private final JwtUtils jwtUtils;
 
-    private String getTokenFromRequest() {
-        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
-                .getRequestAttributes())).getRequest();
-        String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            return authorizationHeader.substring(7);
-        }
-        return null;
-    }
 
     @GetMapping("/user")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -100,9 +91,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Delete a user by id", tags = {"User Library"})
-    @ApiResponse(responseCode = "200", description = "User deleted successfully")
-    @ApiResponse(responseCode = "400", description = "Bad Request")
-    @ApiResponse(responseCode = "404", description = "User not found")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "404", description = "User not found")})
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         String token = getTokenFromRequest();
         String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
@@ -116,6 +108,11 @@ public class UserController {
 
 
     @PutMapping("/forgot/password")
+    @Operation(description = "Send a unique code to user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
     public ResponseEntity<?> forgotPassword(@RequestBody EmailRequest emailRequest) throws MessagingException {
 
         var forgotPassword = userService.forgotPassword(emailRequest);
@@ -124,17 +121,37 @@ public class UserController {
     }
 
     @PutMapping("/accept/code/{code}")
+    @Operation(description = "Unique code for change the password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<?> acceptCode(@PathVariable("code") String code) {
         var userDTO = userService.acceptCode(code);
         return ResponseHandler.generateResponse("Ok", HttpStatus.OK, userDTO);
     }
 
     @PutMapping("/change/password")
+    @Operation(description = "Change user password")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "400", description = "Bad request")
+    })
     public ResponseEntity<?> changePassword(@RequestBody LoginRequest request) {
         if (!validator.isPasswordValid(request.getPassword())) return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body("Invalid password");
         var changePassword = userService.changePassword(request);
         return ResponseHandler.generateResponse("Ok", HttpStatus.OK, changePassword);
+    }
+
+    private String getTokenFromRequest() {
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder
+                .getRequestAttributes())).getRequest();
+        String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            return authorizationHeader.substring(7);
+        }
+        return null;
     }
 
 }

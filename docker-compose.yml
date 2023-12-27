@@ -4,8 +4,8 @@ services:
     image: postgres:latest
     environment:
       POSTGRES_DB: marketplace
-      POSTGRES_USER: kingofukr
-      POSTGRES_PASSWORD: potusnow
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     networks:
@@ -23,8 +23,16 @@ services:
       - mynetwork
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace
-      SPRING_DATASOURCE_USERNAME: kingofukr
-      SPRING_DATASOURCE_PASSWORD: potusnow
+      SPRING_DATASOURCE_USERNAME: ${DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      EMAIL_HOST: ${EMAIL_HOST}
+      FRONT_HOST: ${FRONT_HOST}
+      SSL_PATH: ${SSL_PATH}
+      SSL_PASSWORD: ${SSL_PASSWORD}
+      YOUR_EMAIL: ${YOUR_EMAIL}
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      JWT_TOKEN_SECRET_ACCESS: ${JWT_TOKEN_SECRET_ACCESS}
+      JWT_TOKEN_SECRET_REFRESH: ${JWT_TOKEN_SECRET_REFRESH}
 
 networks:
   mynetwork:

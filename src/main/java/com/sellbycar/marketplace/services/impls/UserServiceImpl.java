@@ -6,6 +6,7 @@ import com.sellbycar.marketplace.models.enums.UserRole;
 import com.sellbycar.marketplace.repositories.UserRepository;
 import com.sellbycar.marketplace.services.MailService;
 import com.sellbycar.marketplace.services.UserService;
+import com.sellbycar.marketplace.utilities.exception.CustomUserException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.UserMapper;
 import com.sellbycar.marketplace.utilities.payload.request.EmailRequest;
@@ -123,7 +124,7 @@ public class UserServiceImpl implements UserService {
             mailService.sendSimpleMessage(user.getEmail(), "Registration", "forgot_password_message_uk", context);
             return "Link sent for your email";
         }
-        return "User not found";
+        throw new CustomUserException("User not found");
     }
 
     @Override
