@@ -9,6 +9,7 @@ import com.sellbycar.marketplace.repositories.AdvertisementRepository;
 import com.sellbycar.marketplace.services.AdvertisementService;
 import com.sellbycar.marketplace.services.ImageService;
 import com.sellbycar.marketplace.services.UserService;
+import com.sellbycar.marketplace.utilities.exception.CustomUserException;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.exception.InvalidAccessException;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
@@ -59,8 +60,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         if (ad.isPresent()) {
             return ad.get();
         }
-        //TODO
-        throw new UserDataException("ADv with ID " + id + " not found");
+        throw new CustomUserException("ADv with ID " + id + " not found");
     }
 
     @Transactional
@@ -103,7 +103,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             advertisementRepository.save(existingAd);
             return existingAd;
         } else {
-            throw new UserDataException("You don't have permission to update this ad");
+            throw new InvalidAccessException("You don't have permission to update this ad");
         }
     }
 
@@ -161,7 +161,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public void removeAdvertisement(Long id) {
         User existingUser = userService.getUserFromSecurityContextHolder();
         Optional<Advertisement> optionalAdv = Optional.of(advertisementRepository.findById(id).orElseThrow(
-                () -> new UserDataException("Advertisement not found")
+                () -> new CustomUserException("Advertisement not found")
         ));
 
         optionalAdv.ifPresent(advertisement -> {
