@@ -87,7 +87,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         User user = userService.getUserFromSecurityContextHolder();
 
         Advertisement existingAd = advertisementRepository.findById(id)
-                .orElseThrow(() -> new UserDataException("Ad with ID " + id + " not found"));
+                .orElseThrow(() -> new CustomUserException("Ad with ID " + id + " not found"));
 
         if (user.getId().equals(existingAd.getUser().getId())) {
             existingAd.setName(advertisementDTO.getName());

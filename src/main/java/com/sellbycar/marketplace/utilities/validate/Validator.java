@@ -1,7 +1,7 @@
 package com.sellbycar.marketplace.utilities.validate;
 
-import com.sellbycar.marketplace.repositories.UserRepository;
 import com.sellbycar.marketplace.models.entities.User;
+import com.sellbycar.marketplace.repositories.UserRepository;
 import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
 import lombok.RequiredArgsConstructor;

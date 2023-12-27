@@ -81,7 +81,8 @@ public class AdvertisementController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ok"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "403", description = "Forbidden")
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404",description = "Not Found")
     })
     public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
                                        @PathVariable Long id) {
