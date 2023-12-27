@@ -44,6 +44,10 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "404", description = "Not found")
+    })
     public ResponseEntity<?> authenticateUser(
             @Valid @RequestBody LoginRequest loginRequest,
             @RequestParam(name = "rememberMe", defaultValue = "false") boolean rememberMe
@@ -67,16 +71,23 @@ public class AuthController {
 
     @PostMapping("/signup")
     @Operation(summary = "Register User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "400", description = "Bad Request"),
+            @ApiResponse(responseCode = "409", description = "CONFLICT")
+    })
     public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) throws MessagingException {
         if (userService.createNewUser(signUpRequest)) {
             return ResponseHandler.generateResponse("User registered successfully!", HttpStatus.OK);
         }
-        return ResponseHandler.generateError("Error: Email is already in use!", HttpStatus.BAD_REQUEST);
+        return ResponseHandler.generateError("Email is already in use!", HttpStatus.CONFLICT);
     }
 
     @PostMapping("/refresh/access-token")
     @Operation(summary = "Refresh jwt access token")
-    @ApiResponses({@ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")}),})
+    @ApiResponses({@ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getNewAccessToken(@RequestBody JwtResponse response) throws AuthException {
         final JwtResponse token = authService.getJwtAccessToken(response.getJwtRefreshToken());
@@ -87,6 +98,7 @@ public class AuthController {
     @Operation(summary = "Refresh jwt refresh token")
     @ApiResponses({
             @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = JwtResponse.class), mediaType = "application/json")}),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getNewRefreshToken(@RequestBody JwtResponse response) throws AuthException {
