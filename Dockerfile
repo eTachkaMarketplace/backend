@@ -7,9 +7,9 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:17
 
-COPY --from=builder /app/target/marketplace-0.0.1-SNAPSHOT.war /app.war
+COPY --from=builder /app/target/marketplace-0.0.1.war /app.war
 
 EXPOSE 8443
 
