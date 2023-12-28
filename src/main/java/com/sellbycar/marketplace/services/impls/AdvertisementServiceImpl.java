@@ -90,7 +90,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                 .orElseThrow(() -> new CustomUserException("Ad with ID " + id + " not found"));
 
         if (user.getId().equals(existingAd.getUser().getId())) {
-            existingAd.setName(advertisementDTO.getName());
+            existingAd.setName(advertisementDTO.getOwnerName());
             existingAd.setDescription(advertisementDTO.getDescription());
             existingAd.setPrice(advertisementDTO.getPrice());
             Car car = existingAd.getCar();

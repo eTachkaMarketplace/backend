@@ -12,6 +12,7 @@ import java.util.Set;
         , uses = {CarMapper.class})
 public interface AdvertisementMapper {
     @Mapping(source = "carDTO", target = "car")
+    @Mapping(target = "name", source = "ownerName")
     Advertisement toModel(AdvertisementDTO dto);
 
     @Mapping(source = "car", target = "carDTO")

@@ -7,7 +7,8 @@ import lombok.Data;
 public class AdvertisementDTO {
     private long id;
     private String description;
-    private String name;
+    private String ownerName;
+    private String ownerPhone;
     private int price;
     private Region region;
     private CarDTO carDTO;
