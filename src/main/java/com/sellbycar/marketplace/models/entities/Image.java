@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     @Column(name = "name")
     private String name;
     @Column(name = "size")

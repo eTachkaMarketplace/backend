@@ -7,12 +7,12 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 
-FROM eclipse-temurin:17
+FROM amazoncorretto:17
 
-COPY --from=builder /app/target/marketplace-0.0.1.war /app.war
+COPY --from=builder /app/target/marketplace-0.0.1.jar /app.jar
 
 EXPOSE 8443
 
-CMD ["java", "-jar", "/app.war"]
+CMD ["java", "-jar", "/app.jar"]
 
 
