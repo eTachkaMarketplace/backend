@@ -18,6 +18,9 @@ public class Engine
     @Column(name = "name")
     private String name;
 
+    @Column(name = "volume")
+    private String volume;
+
     @JsonIgnore
     @OneToMany(mappedBy = "engine", fetch = FetchType.EAGER)
     private List<Car> cars;
