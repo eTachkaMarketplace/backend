@@ -26,7 +26,7 @@ public class Advertisement implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "name")
+    @Column(name = "owner_name")
     private String name;
 
     @Column(name = "price")
