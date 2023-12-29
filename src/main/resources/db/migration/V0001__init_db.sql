@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS advertisements
 (
     id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     description VARCHAR(255),
-    name        VARCHAR(255),
+    owner_name        VARCHAR(255),
     price       INTEGER,
     car_id      BIGINT UNIQUE,
     region_id   BIGINT,
