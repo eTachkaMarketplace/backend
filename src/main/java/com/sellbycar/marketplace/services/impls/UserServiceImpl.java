@@ -15,7 +15,6 @@ import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
 import com.sellbycar.marketplace.utilities.validate.Validator;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,11 +51,13 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.getAuthority().add(UserRole.USER);
-        user.setEnabled(true);
+        user.setEnabled(false);
+        user.setUniqueCode(UUID.randomUUID().toString());
         userRepository.save(user);
         Context context = new Context();
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", host);
+        context.setVariable("activationCode", user.getUniqueCode());
         mailService.sendSimpleMessage(user.getEmail(), "Registration", "activation_message_uk", context);
         return true;
 
@@ -158,4 +159,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(userDetails.getUsername()).get();
     }
 
+    @Override
+    public void activateUser(String uniqueCode) {
+        User user = userRepository.findUserByUniqueCode(uniqueCode)
+                .orElseThrow(() -> new UserDataException("Bad Request"));
+
+        user.setEnabled(true);
+        user.setUniqueCode(null);
+        userRepository.save(user);
+    }
 }

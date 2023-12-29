@@ -105,4 +105,15 @@ public class AuthController {
         final JwtResponse token = authService.getJwtRefreshToken(response.getJwtRefreshToken());
         return ResponseHandler.generateResponse("Refresh token", HttpStatus.OK, token);
     }
+
+    @PostMapping("/activate/{activationCode}")
+    @Operation(summary = "Activate user with activation code")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
+    public ResponseEntity<?> activateUser(@PathVariable("activationCode") String uniqueCode) {
+        userService.activateUser(uniqueCode);
+        return ResponseHandler.generateResponse("Ok", HttpStatus.OK);
+    }
 }
