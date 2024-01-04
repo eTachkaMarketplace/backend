@@ -25,12 +25,13 @@ public class Validator {
         if (username == null || username.length() < 2 || containsDigits(username))
             throw new UserDataException("Invalid username. Usernames should be at least 2 symbols long and should not contain digits.");
         if (password == null || password.length() < 5 || !isPasswordValid(password))
-            throw new UserDataException("The password must meet the following criteria:\n"
-                    + "- At least 5 characters long\n"
-                    + "- Must contain at least one uppercase letter\n"
-                    + "- Must contain at least one lowercase letter\n"
-                    + "- Must contain at least one digit\n"
-                    + "- Must not contain Cyrillic characters");
+            throw new UserDataException("""
+                    The password must meet the following criteria:
+                    - At least 5 characters long
+                    - Must contain at least one uppercase letter
+                    - Must contain at least one lowercase letter
+                    - Must contain at least one digit
+                    - Must not contain Cyrillic characters""");
         if (email == null || email.isEmpty() || !isEmailValid(email)) {
             throw new UserDataException("Invalid email address. Email should not be empty and should have a valid format.");
         }
