@@ -54,7 +54,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public Advertisement getAd(Long id) {
+    public Advertisement getAdvertisement(Long id) {
         Optional<Advertisement> ad = advertisementRepository.findById(id);
         if (ad.isPresent()) {
             return ad.get();
@@ -63,7 +63,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
+    public long createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
 
         Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
         User user = userService.getUserFromSecurityContextHolder();
@@ -79,6 +79,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
 
         advertisementRepository.save(advertisement);
+        AdvertisementDTO createdAdvertisement = advertisementMapper.toDTO(advertisement);
+        return createdAdvertisement.getId();
     }
 
     @Transactional

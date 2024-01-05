@@ -24,14 +24,15 @@ public interface AdvertisementService {
      * @param id id of user in order to get it
      * @return Advertisement object representing the user if found, null otherwise.
      */
-    Advertisement getAd(Long id);
+    Advertisement getAdvertisement(Long id);
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
      *
      * @param advertisementDTO object with datas for creating
+     * @return
      */
-    void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
+    long createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.

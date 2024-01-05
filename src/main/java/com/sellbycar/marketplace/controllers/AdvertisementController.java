@@ -35,7 +35,7 @@ public class AdvertisementController {
     @GetMapping("")
     @Operation(summary = "Get all advertisement")
     @ApiResponse(responseCode = "200", description = "Ok")
-    public ResponseEntity<?> showAllAd(@RequestParam(name = "sortByDate") boolean flag) {
+    public ResponseEntity<?> showAllAdvertisement(@RequestParam(name = "sortByDate") boolean flag) {
         if (flag) {
             Sort sort = Sort.by(
                     Sort.Order.asc("dateAdded"));
@@ -54,8 +54,8 @@ public class AdvertisementController {
             @ApiResponse(responseCode = "200", description = "Ok"),
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
-    public ResponseEntity<?> getAdById(@PathVariable Long id) {
-        Advertisement adv = advertisementService.getAd(id);
+    public ResponseEntity<?> getAdvertisementById(@PathVariable Long id) {
+        Advertisement adv = advertisementService.getAdvertisement(id);
         AdvertisementDTO advertisementDTO = advertisementMapper.toDTO(adv);
 
         return ResponseHandler.generateResponse("Advertisement by id", HttpStatus.OK, advertisementDTO);
@@ -68,11 +68,11 @@ public class AdvertisementController {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    public ResponseEntity<?> createAd(@RequestPart(value = "images") List<MultipartFile> images,
-                                      @RequestPart("advertisementDTO") AdvertisementDTO advertisementDTO) throws IOException {
-        advertisementService.createAdvertisement(advertisementDTO, images);
+    public ResponseEntity<?> createAdvertisement(@RequestPart(value = "images") List<MultipartFile> images,
+                                                 @RequestPart("advertisementDTO") AdvertisementDTO advertisementDTO) throws IOException {
+        long advertisementId = advertisementService.createAdvertisement(advertisementDTO, images);
 
-        return ResponseHandler.generateResponse("Created", HttpStatus.CREATED);
+        return ResponseHandler.generateResponse("Created", HttpStatus.CREATED,advertisementId);
     }
 
     @PutMapping("/{id}/update")
@@ -84,8 +84,8 @@ public class AdvertisementController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404",description = "Not Found")
     })
-    public ResponseEntity<?> changeADv(@RequestBody AdvertisementDTO advertisementDTO,
-                                       @PathVariable Long id) {
+    public ResponseEntity<?> changeAdvertisement(@RequestBody AdvertisementDTO advertisementDTO,
+                                                 @PathVariable Long id) {
         Advertisement advertisement = advertisementService.updateADv(advertisementDTO, id);
         AdvertisementDTO advDTO = advertisementMapper.toDTO(advertisement);
 
