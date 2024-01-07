@@ -19,13 +19,13 @@ This service allows you to buy and sell cars
 
 ### Main page
 
-Server: https://marketplace-fi3l.onrender.com
+Server: https://etachka-marketplace.space/
 
 Localhost: https://localhost
 
 ### API
 
-Server: https://marketplace-fi3l.onrender.com//swagger-ui/index.html
+Server: https://etachka-marketplace.space//swagger-ui/index.html
 
 Localhost URL: https://localhost/swagger-ui/index.html
 
