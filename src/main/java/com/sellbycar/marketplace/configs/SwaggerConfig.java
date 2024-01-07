@@ -17,7 +17,7 @@ public class SwaggerConfig {
     OpenAPI customOpenApi() {
         return new OpenAPI()
                 .info(new Info().
-                        title("RESTfull API marketplace")
+                        title("REST API marketplace")
                         .version("v1")
                         .description("REST API for user database")
                         .termsOfService("s"))

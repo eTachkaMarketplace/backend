@@ -100,4 +100,12 @@ public interface UserService {
      * @return User object representing the authenticated user.
      */
     User getUserFromSecurityContextHolder();
+
+    /**
+     * Activates a user using the provided activation code.
+     *
+     * @param uniqueCode The unique activation code to identify and activate the user.
+     * @throws UserDataException If the user is not found with the specified activation code.
+     */
+    void activateUser(String uniqueCode);
 }

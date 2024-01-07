@@ -12,7 +12,6 @@ import com.sellbycar.marketplace.services.UserService;
 import com.sellbycar.marketplace.utilities.exception.CustomUserException;
 import com.sellbycar.marketplace.utilities.exception.FavoritesCarsNotFoundException;
 import com.sellbycar.marketplace.utilities.exception.InvalidAccessException;
-import com.sellbycar.marketplace.utilities.exception.UserDataException;
 import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +54,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public Advertisement getAd(Long id) {
+    public Advertisement getAdvertisement(Long id) {
         Optional<Advertisement> ad = advertisementRepository.findById(id);
         if (ad.isPresent()) {
             return ad.get();
@@ -64,7 +63,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public void createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
+    public long createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
 
         Advertisement advertisement = advertisementMapper.toModel(advertisementDTO);
         User user = userService.getUserFromSecurityContextHolder();
@@ -80,6 +79,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
 
         advertisementRepository.save(advertisement);
+        AdvertisementDTO createdAdvertisement = advertisementMapper.toDTO(advertisement);
+        return createdAdvertisement.getId();
     }
 
     @Transactional
