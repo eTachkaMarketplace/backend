@@ -19,6 +19,7 @@ import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 @AllArgsConstructor
 @Tag(name = "Authentication Registration Library", description = "Endpoints for authentication user")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class AuthController {
 
     private final UserService userService;
@@ -52,20 +54,30 @@ public class AuthController {
             @Valid @RequestBody LoginRequest loginRequest,
             @RequestParam(name = "rememberMe", defaultValue = "false") boolean rememberMe
     ) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        try {
+            log.warn("Received login request for user: {}", loginRequest.getEmail());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
-        String jwtRefreshToken = null;
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (rememberMe) {
-            jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
-            authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
+            final String jwtAccessToken = jwtUtils.generateJwtToken(authentication);
+            String jwtRefreshToken = null;
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+            if (rememberMe) {
+                jwtRefreshToken = jwtUtils.generateRefreshToken(authentication);
+                authService.saveJwtRefreshToken(userDetails.getUsername(), jwtRefreshToken);
+            }
+
+            log.warn("User logged in successfully: {}", loginRequest.getEmail());
+
+            return ResponseHandler.generateResponse("Token", HttpStatus.OK, new JwtResponse(jwtAccessToken, jwtRefreshToken));
+        } catch (Exception e) {
+            log.warn("Login attempt failed for user: {}", loginRequest.getEmail());
+            return ResponseHandler.generateError("Login failed", HttpStatus.UNAUTHORIZED);
         }
-
-        return ResponseHandler.generateResponse("Token", HttpStatus.OK, new JwtResponse(jwtAccessToken, jwtRefreshToken));
     }
 
 

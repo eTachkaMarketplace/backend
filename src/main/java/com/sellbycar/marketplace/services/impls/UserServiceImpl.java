@@ -15,6 +15,7 @@ import com.sellbycar.marketplace.utilities.payload.request.SignupRequest;
 import com.sellbycar.marketplace.utilities.validate.Validator;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,6 +31,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Value(("${front.host}"))
     private String host;
@@ -40,28 +42,61 @@ public class UserServiceImpl implements UserService {
     private final Validator validator;
     private final UserMapper userMapper;
 
-    public boolean createNewUser(SignupRequest signUpRequest) throws MessagingException {
+//    public boolean createNewUser(SignupRequest signUpRequest) throws MessagingException {
+//        validator.isValidUserInput(signUpRequest);
+//
+//        String email = signUpRequest.getEmail();
+//
+//        if (userRepository.findByEmail(email).isPresent()) return false;
+//        User user = new User();
+//        user.setEmail(email);
+//        user.setFirstName(signUpRequest.getName());
+//        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+//        user.getAuthority().add(UserRole.USER);
+//        user.setEnabled(true);
+////        user.setUniqueCode(UUID.randomUUID().toString());
+//        userRepository.save(user);
+//        Context context = new Context();
+//        context.setVariable("username", user.getFirstName());
+//        context.setVariable("host", host);
+////        context.setVariable("activationCode", user.getUniqueCode());
+//        mailService.sendSimpleMessage(user.getEmail(), "Registration", "activation_message_uk", context);
+//        return true;
+//
+//    }
+public boolean createNewUser(SignupRequest signUpRequest) throws MessagingException {
+    try {
         validator.isValidUserInput(signUpRequest);
 
         String email = signUpRequest.getEmail();
 
-        if (userRepository.findByEmail(email).isPresent()) return false;
+        if (userRepository.findByEmail(email).isPresent()) {
+            log.warn("Email is already in use: {}", email);
+            return false;
+        }
+
         User user = new User();
         user.setEmail(email);
         user.setFirstName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.getAuthority().add(UserRole.USER);
         user.setEnabled(true);
-//        user.setUniqueCode(UUID.randomUUID().toString());
+
         userRepository.save(user);
+
         Context context = new Context();
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", host);
-//        context.setVariable("activationCode", user.getUniqueCode());
-        mailService.sendSimpleMessage(user.getEmail(), "Registration", "activation_message_uk", context);
-        return true;
 
+        mailService.sendSimpleMessage(user.getEmail(), "Registration", "activation_message_uk", context);
+
+        log.warn("User registered successfully: {}", email);
+        return true;
+    } catch (Exception e) {
+        log.warn("Error during user registration", e);
+        throw new MessagingException("Error during user registration", e);
     }
+}
 
 
     public User existByEmail(String email) {
