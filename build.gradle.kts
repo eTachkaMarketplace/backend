@@ -2,6 +2,7 @@ plugins {
     java
     id("io.freefair.lombok") version "8.4"
     id("org.springframework.boot") version "3.2.0"
+    id("io.sentry.jvm.gradle") version "4.1.1"
 }
 
 group = "com.sellbycar.marketplace"
@@ -44,6 +45,8 @@ dependencies {
     annotationProcessor("org.mapstruct", "mapstruct-processor", mapstruct)
     // Utilities
     implementation("me.paulschwarz", "spring-dotenv", "4.0.0")
+    // Analytics
+    implementation("io.sentry", "sentry-spring", "7.1.0")
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.10.1")
