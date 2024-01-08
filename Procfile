@@ -1,1 +1,1 @@
-web: cd runtime && java -jar build/libs/server.jar
+web: cd runtime && java -jar ../build/libs/server.jar
