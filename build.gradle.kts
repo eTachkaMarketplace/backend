@@ -46,7 +46,7 @@ dependencies {
     // Utilities
     implementation("me.paulschwarz", "spring-dotenv", "4.0.0")
     // Analytics
-    implementation("io.sentry", "sentry-spring", "7.1.0")
+    implementation("io.sentry", "sentry-spring-boot-starter", "7.1.0")
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.10.1")
