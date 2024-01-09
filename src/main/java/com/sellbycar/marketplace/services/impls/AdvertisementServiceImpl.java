@@ -45,8 +45,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public List<AdvertisementDTO> findAllAd(Sort sort)
-    {
+    public List<AdvertisementDTO> findAllAd(Sort sort) {
         List<Advertisement> advertisements = advertisementRepository.findAll(sort);
         return advertisements.stream()
                 .map(advertisementMapper::toDTO)
@@ -133,8 +132,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             // Adding the advertisement to set favorites of users
             favoriteCarsOfUser.add(advertisement);
             user.setFavoriteCars(favoriteCarsOfUser);
-        } else
-        {
+        } else {
             throw new FavoritesCarsNotFoundException(String.format(
                     "Advertisement with id %s was not found.", id
             ));
@@ -177,4 +175,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         });
     }
 
+    @Transactional
+    public List<AdvertisementDTO> findUserAdvertisement() {
+        User user = userService.getUserFromSecurityContextHolder();
+        List<Advertisement> advertisements = advertisementRepository.findByUser(user);
+        if (user.getAdvertisement().isEmpty()) {
+            throw new CustomUserException("Advertisement not found");
+        }
+        return advertisements.stream()
+                .map(advertisementMapper::toDTO)
+                .collect(Collectors.toList());
+    }
 }

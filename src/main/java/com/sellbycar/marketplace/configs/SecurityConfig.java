@@ -70,10 +70,11 @@ public class SecurityConfig {
                         .authenticated()
                         .requestMatchers("/api/advertisements/create"
                                 , "/api/advertisements/{id}/update"
-                                , "/api/advertisements/{id}/remove")
+                                , "/api/advertisements/{id}/remove"
+                                , "/api/advertisements/user")
                         .authenticated()
                         .requestMatchers("/api/advertisements/{id}/favorites"
-                        , "/api/advertisements/favorites")
+                                , "/api/advertisements/favorites")
                         .authenticated()
                         .requestMatchers("/api/image/set/**")
                         .authenticated()
