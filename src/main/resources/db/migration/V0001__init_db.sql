@@ -84,7 +84,8 @@ CREATE TABLE IF NOT EXISTS body_types
 CREATE TABLE IF NOT EXISTS engines
 (
     id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    name VARCHAR(255)
+    name VARCHAR(255),
+    volume VARCHAR(30)
 );
 
 CREATE TABLE IF NOT EXISTS cars
@@ -120,6 +121,7 @@ CREATE TABLE IF NOT EXISTS advertisements
     car_id      BIGINT UNIQUE,
     region_id   BIGINT,
     user_id     BIGINT,
+    date_added  DATE,
 
     CONSTRAINT car_id_fk FOREIGN KEY (car_id) REFERENCES cars (id),
     CONSTRAINT region_id_fk FOREIGN KEY (region_id) REFERENCES regions (id),
@@ -132,7 +134,7 @@ CREATE TABLE IF NOT EXISTS images
     content_type     VARCHAR(255),
     is_preview_image BOOLEAN,
     name             VARCHAR(255),
-    resource         OID,
+    resource         BYTEA,
     size             BIGINT,
     advertisement_id BIGINT,
 
