@@ -45,6 +45,7 @@ dependencies {
     annotationProcessor("org.mapstruct", "mapstruct-processor", mapstruct)
     // Utilities
     implementation("me.paulschwarz", "spring-dotenv", "4.0.0")
+    implementation("org.jetbrains", "annotations", "24.1.0")
     // Analytics
     implementation("io.sentry", "sentry-spring-boot-starter", "7.1.0")
     // Testing
