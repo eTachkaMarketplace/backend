@@ -51,7 +51,8 @@ dependencies {
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.10.1")
-    testImplementation("org.mockito", "mockito-core", "5.8.0")
+    testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.10.1")
+    testImplementation("org.mockito", "mockito-junit-jupiter", "5.8.0")
 }
 
 tasks {
@@ -66,5 +67,9 @@ tasks {
 
     create("stage") {
         dependsOn("bootJar")
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
