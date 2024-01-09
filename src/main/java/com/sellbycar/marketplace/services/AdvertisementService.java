@@ -16,6 +16,7 @@ public interface AdvertisementService {
      * @return List of all advertisements
      */
     List<AdvertisementDTO> findAllAd();
+
     List<AdvertisementDTO> findAllAd(Sort sort);
 
     /**
@@ -30,7 +31,7 @@ public interface AdvertisementService {
      * Finds a user in the database by checking the given user ID and converts it into DTO.
      *
      * @param advertisementDTO object with datas for creating
-     * @return
+     * @return id of advertisement
      */
     long createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
 
@@ -69,4 +70,12 @@ public interface AdvertisementService {
      * @param id The identifier of the advertisement to be removed.
      */
     void removeAdvertisement(Long id);
+
+    /**
+     * Finds all user's advertisements in the database
+     *
+     * @return All user's advertisements in list
+     */
+    List<AdvertisementDTO> findUserAdvertisement();
+
 }

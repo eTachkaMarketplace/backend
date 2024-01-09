@@ -146,4 +146,17 @@ public class AdvertisementController {
         advertisementService.removeAdvertisement(id);
         return ResponseHandler.generateResponse("Ok", HttpStatus.OK);
     }
+
+    @GetMapping("/user")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Get all user's advertisement")
+
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized")
+    })
+    public ResponseEntity<?> userAdvertisement() {
+        var userAdvertisement = advertisementService.findUserAdvertisement();
+        return ResponseHandler.generateResponse("All advertisements", HttpStatus.OK, userAdvertisement);
+    }
 }
