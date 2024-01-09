@@ -25,6 +25,7 @@ public class Image {
     @Column(name = "is_preview_image")
     private boolean isPreviewImage;
     @Lob
+    @Column(name = "resource", columnDefinition = "BYTEA")
     private byte[] resource;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
