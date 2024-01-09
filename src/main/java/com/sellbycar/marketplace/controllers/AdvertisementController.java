@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,18 +62,20 @@ public class AdvertisementController {
         return ResponseHandler.generateResponse("Advertisement by id", HttpStatus.OK, advertisementDTO);
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Create a new advertisement")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Created"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized")
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
     })
-    public ResponseEntity<?> createAdvertisement(@RequestPart(value = "images") List<MultipartFile> images,
-                                                 @RequestPart("advertisementDTO") AdvertisementDTO advertisementDTO) throws IOException {
+    public ResponseEntity<?> createAdvertisement(
+            @RequestPart("payload") AdvertisementDTO advertisementDTO,
+            @RequestPart("images") List<MultipartFile> images
+    ) throws IOException {
         long advertisementId = advertisementService.createAdvertisement(advertisementDTO, images);
 
-        return ResponseHandler.generateResponse("Created", HttpStatus.CREATED,advertisementId);
+        return ResponseHandler.generateResponse("Created", HttpStatus.CREATED, advertisementId);
     }
 
     @PutMapping("/{id}/update")
@@ -82,7 +85,7 @@ public class AdvertisementController {
             @ApiResponse(responseCode = "200", description = "Ok"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "403", description = "Forbidden"),
-            @ApiResponse(responseCode = "404",description = "Not Found")
+            @ApiResponse(responseCode = "404", description = "Not Found")
     })
     public ResponseEntity<?> changeAdvertisement(@RequestBody AdvertisementDTO advertisementDTO,
                                                  @PathVariable Long id) {

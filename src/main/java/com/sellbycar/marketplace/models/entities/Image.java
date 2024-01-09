@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+
+import java.sql.Types;
 
 @Entity
 @Table(name = "images")
@@ -25,7 +28,8 @@ public class Image {
     @Column(name = "is_preview_image")
     private boolean isPreviewImage;
     @Lob
-    @Column(name = "resource", columnDefinition = "BYTEA")
+    @JdbcTypeCode(Types.BINARY)
+    @Column(name = "resource")
     private byte[] resource;
 
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
