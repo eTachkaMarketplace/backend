@@ -1,42 +1,21 @@
-# Marketplace (Buy and sell cars)
+# eTachka Marketplace (Backend)
 
-This service allows you to buy and sell cars
-## The technologies used:
+[eTachka Marketplace](https://etachka-marketplace.space) is a web car marketplace. It is built using React for frontend and Java
+Spring Boot for backend. Designed and developed by a team joint at [TeamChallenge](https://teamchallenge.io).
 
-#### Front-End
+## How to run
 
-- React (Router, Redux)
+This section describes how to run the project locally.
 
-#### Back-End
+### Prerequisites
 
-- Java, Spring (Boot, Web MVC, Data JPA, Security), JWT, Lombok
-- PostgreSQL
-- Swagger
-- Docker
+Ensure you have the following installed on your local machine:
 
+- Java 17
+- PostgreSQL 15
 
-## Marketplace URL
+### Setting up the environment
 
-### Main page
+Set up the required environment variables, and any optional ones you want to set.
 
-Server: https://etachka-marketplace.space/
-
-Localhost: https://localhost
-
-### API
-
-Server: https://etachka-marketplace.space//swagger-ui/index.html
-
-Localhost URL: https://localhost/swagger-ui/index.html
-
-## Top 3 Contributors
-
-##### The following are currently working on this project
-
-### Back-End
-- [@ahasparian](https://github.com/arturhasparian)
-
-### Front-End
-- [@Yura-Platonov](https://github.com/Yura-Platonov)
-- [@LaPaNu4](https://github.com/LaPaNu4)
-
+- DB_SOURCE –
