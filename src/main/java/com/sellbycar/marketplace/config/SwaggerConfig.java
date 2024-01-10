@@ -10,19 +10,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    @Value("${SERVER_SOURCE}")
+    @Value("${server.url}")
     private String serverURL;
+    @Value("${server.description}")
+    private String serverDescription;
 
     @Bean
     OpenAPI customOpenApi() {
         return new OpenAPI()
                 .info(new Info().
-                        title("REST API marketplace")
+                        title("REST API eTachka Marketplace")
                         .version("v1")
-                        .description("REST API for user database")
-                        .termsOfService("s"))
+                        .description("Documentation for accessing the eTachka Marketplace resources via REST API.")
+                        .termsOfService("https://etachka-marketplace.space/tos"))
                 .addServersItem(new Server()
                         .url(serverURL)
-                        .description("Future Server for Marketplace"));
+                        .description(serverDescription));
     }
 }

@@ -22,7 +22,7 @@ public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
     @Value(("${jwt.secret.access.expirationMs}"))
-    private int jwtAccessExpirationMs;
+    private long jwtAccessExpirationMs;
 
     @Value(("${jwt.secret.refresh.expirationMs}"))
     private long jwtRefreshExpirationMs;

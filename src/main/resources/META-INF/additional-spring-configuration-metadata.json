@@ -1,0 +1,34 @@
+{
+  "properties": [
+    {
+      "name": "server.url",
+      "type": "java.lang.String",
+      "description": "URL of the server."
+    },
+    {
+      "name": "jwt.secret.access.expirationMs",
+      "type": "java.lang.Long",
+      "description": "JWT secret access expiration in milliseconds."
+    },
+    {
+      "name": "jwt.secret.refresh.expirationMs",
+      "type": "java.lang.Long",
+      "description": "JWT secret refresh expiration in milliseconds."
+    },
+    {
+      "name": "jwt.secret.access",
+      "type": "java.lang.String",
+      "description": "JWT secret access."
+    },
+    {
+      "name": "jwt.secret.refresh",
+      "type": "java.lang.String",
+      "description": "JWT secret refresh."
+    },
+    {
+      "name": "server.frontend.host",
+      "type": "java.lang.String",
+      "description": "Frontend server host."
+    }
+  ]
+}

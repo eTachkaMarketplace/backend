@@ -24,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
-    @Value(("${front.host}"))
+    @Value(("${server.frontend.host}"))
     private String host;
     private final UserRepository userRepository;
     private final UserDetailsServiceImpl userDetailsServiceImpl;

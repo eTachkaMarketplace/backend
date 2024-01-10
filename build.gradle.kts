@@ -16,6 +16,17 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    val dev by creating {
+        compileClasspath += main.get().output
+        runtimeClasspath += main.get().output
+    }
+}
+
+val devImplementation: Configuration by configurations.getting {
+    extendsFrom(configurations.implementation.get())
+}
+
 dependencies {
     // Spring
     implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
@@ -50,9 +61,14 @@ dependencies {
     implementation("io.sentry", "sentry-spring-boot-starter", "7.1.0")
     // Testing
     testImplementation("org.springframework.boot", "spring-boot-starter-test")
+    testImplementation("org.springframework.boot", "spring-boot-testcontainers")
+    testImplementation("org.testcontainers", "postgresql", "1.19.3")
+    testImplementation("org.testcontainers", "junit-jupiter", "1.19.3")
     testImplementation("org.junit.jupiter", "junit-jupiter-api", "5.10.1")
     testRuntimeOnly("org.junit.jupiter", "junit-jupiter-engine", "5.10.1")
     testImplementation("org.mockito", "mockito-junit-jupiter", "5.8.0")
+    // Development
+    devImplementation("org.testcontainers", "postgresql", "1.19.3")
 }
 
 tasks {
@@ -69,7 +85,15 @@ tasks {
         dependsOn("bootJar")
     }
 
+    create<org.springframework.boot.gradle.tasks.run.BootRun>("bootDevRun") {
+        group = "application"
+        mainClass.set("com.sellbycar.marketplace.DevelopmentLauncher")
+        classpath(sourceSets["dev"].runtimeClasspath)
+        jvmArgs("-Dspring.profiles.active=development")
+    }
+
     test {
         useJUnitPlatform()
+        jvmArgs("-Dspring.profiles.active=testing")
     }
 }

@@ -1,11 +1,7 @@
 package com.sellbycar.marketplace.controllers;
 
-import com.sellbycar.marketplace.models.dto.AdvertisementDTO;
-import com.sellbycar.marketplace.models.entities.Advertisement;
-import com.sellbycar.marketplace.services.AdvertisementService;
-import com.sellbycar.marketplace.utilities.mapper.AdvertisementMapper;
+import com.sellbycar.marketplace.ad.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -67,7 +63,7 @@ class AdvertisementControllerTest {
 
     @Test
     void testGetAdvertisementById() {
-        Advertisement adv = mock(Advertisement.class);
+        AdvertisementDAO adv = mock(AdvertisementDAO.class);
         AdvertisementDTO advertisementDTO = mock(AdvertisementDTO.class);
 
         AdvertisementService advertisementService = mock(AdvertisementService.class);
@@ -85,35 +81,5 @@ class AdvertisementControllerTest {
         verify(advertisementMapper, times(1)).toDTO(adv);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    @Disabled
-    void createAd() {
-    }
-
-    @Test
-    @Disabled
-    void changeADv() {
-    }
-
-    @Test
-    @Disabled
-    void getAllFavorites() {
-    }
-
-    @Test
-    @Disabled
-    void addToFavoriteList() {
-    }
-
-    @Test
-    @Disabled
-    void removeFromFavoriteList() {
-    }
-
-    @Test
-    @Disabled
-    void deleteAdvertisement() {
     }
 }
