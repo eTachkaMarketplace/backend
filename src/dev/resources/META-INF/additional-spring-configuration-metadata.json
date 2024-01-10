@@ -1,0 +1,14 @@
+{
+  "properties": [
+    {
+      "name": "jwt.secret.access",
+      "type": "java.lang.String",
+      "description": "JWT secret access."
+    },
+    {
+      "name": "jwt.secret.refresh",
+      "type": "java.lang.String",
+      "description": "JWT secret refresh."
+    }
+  ]
+}
