@@ -1,5 +1,7 @@
 # eTachka Marketplace (Backend)
 
+<img src=".idea/icon.png" height="48" width="48" alt="icon">
+
 [eTachka Marketplace](https://etachka-marketplace.space) is a web car marketplace. It is built using React for frontend
 and Java
 Spring Boot for backend. Designed and developed by a team joint at [TeamChallenge](https://teamchallenge.io).
