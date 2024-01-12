@@ -9,9 +9,7 @@ import java.util.Set;
 
 public interface AdvertisementService {
 
-    List<AdvertisementDTO> findAdvertisements();
-
-    List<AdvertisementDTO> findAdvertisements(Sort sort);
+    List<AdvertisementDTO> findAdvertisements(AdvertisementFilter filter, Sort sort, int page, int size);
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.

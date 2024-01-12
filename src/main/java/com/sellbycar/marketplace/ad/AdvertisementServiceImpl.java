@@ -10,6 +10,8 @@ import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,17 +33,13 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final AdvertisementMapper advertisementMapper;
     private final ImageService imageService;
 
-    @Transactional
-    public List<AdvertisementDTO> findAdvertisements() {
-        return findAdvertisements(Sort.unsorted());
-    }
-
-    @Transactional
-    public List<AdvertisementDTO> findAdvertisements(Sort sort) {
-        List<AdvertisementDAO> advertisements = advertisementRepository.findAll(sort);
-        return advertisements.stream()
+    @Override
+    public List<AdvertisementDTO> findAdvertisements(AdvertisementFilter filter, Sort sort, int page, int size) {
+        Pageable pageable = PageRequest.of(page, Integer.min(size, 100), sort);
+        return advertisementRepository.findAll(filter.toSpecification(), pageable)
                 .map(advertisementMapper::toDTO)
-                .collect(Collectors.toList());
+                .stream()
+                .toList();
     }
 
     @Transactional

@@ -18,13 +18,15 @@ public class SwaggerConfig {
     @Bean
     OpenAPI customOpenApi() {
         return new OpenAPI()
-                .info(new Info().
-                        title("REST API eTachka Marketplace")
+                .info(new Info()
+                        .title("REST API eTachka Marketplace")
                         .version("v1")
                         .description("Documentation for access to the eTachka Marketplace resources via REST API.")
-                        .termsOfService("https://etachka-marketplace.space/tos"))
+                        .termsOfService("https://etachka-marketplace.space/tos")
+                )
                 .addServersItem(new Server()
                         .url(serverURL)
-                        .description(serverDescription));
+                        .description(serverDescription)
+                );
     }
 }

@@ -1,17 +1,21 @@
 package com.sellbycar.marketplace.image;
 
 import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Value;
 
 @Mapper(componentModel = "spring")
-public interface ImageMapper {
+public abstract class ImageMapper {
 
-    ImageDTO toDTO(ImageDAO dao);
+    @Value("${server.url}")
+    private String serverUrl;
 
-    default String toString(ImageDAO dao) {
-        return dao == null ? null : String.format("/image/%d", dao.getId());
+    abstract ImageDTO toDTO(ImageDAO dao);
+
+    public String toString(ImageDAO dao) {
+        return dao == null ? null : String.format("%s/image/%d", serverUrl, dao.getId());
     }
 
-    default ImageDAO toDAO(String string) {
+    public ImageDAO toDAO(String string) {
         return null;
     }
 }

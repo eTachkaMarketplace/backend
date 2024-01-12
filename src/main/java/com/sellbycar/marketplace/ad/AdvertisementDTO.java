@@ -12,6 +12,7 @@ public class AdvertisementDTO {
     private long id;
     private String description;
     private String region;
+    private String category;
     private CarDTO car;
     private String contactName;
     private String contactPhone;

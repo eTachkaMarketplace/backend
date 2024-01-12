@@ -87,7 +87,7 @@ public class SecurityConfig {
                         )
                         .authenticated()
                         .requestMatchers(
-                                "/advertisement/favorites/**"
+                                "/advertisement/favorite/**"
                         )
                         .authenticated()
                         .anyRequest()

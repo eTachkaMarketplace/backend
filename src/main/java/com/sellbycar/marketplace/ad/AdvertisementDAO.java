@@ -32,6 +32,9 @@ public class AdvertisementDAO implements Serializable {
     @Column(name = "region")
     private String region;
 
+    @Column(name = "category")
+    private String category;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "car_id", referencedColumnName = "id")
     private CarDAO car;

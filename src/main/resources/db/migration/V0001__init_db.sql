@@ -51,6 +51,7 @@ CREATE TABLE advertisements
     id                BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     description       VARCHAR(1000)            NOT NULL,
     region            VARCHAR(50)              NOT NULL,
+    category          VARCHAR(50)              NOT NULL,
     car_id            BIGINT REFERENCES cars (id),
     user_id           BIGINT REFERENCES users (id),
     contact_name      VARCHAR(40)              NOT NULL,

@@ -2,7 +2,7 @@ package com.sellbycar.marketplace.user;
 
 import com.sellbycar.marketplace.auth.JwtUtils;
 import com.sellbycar.marketplace.auth.LoginRequest;
-import com.sellbycar.marketplace.util.ResponseUtil;
+import com.sellbycar.marketplace.web.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

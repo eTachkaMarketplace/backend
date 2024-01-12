@@ -1,6 +1,6 @@
 package com.sellbycar.marketplace.user;
 
-import com.sellbycar.marketplace.util.ResponseUtil;
+import com.sellbycar.marketplace.web.ResponseUtil;
 import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.security.auth.message.AuthException;
 import org.springframework.http.HttpStatus;

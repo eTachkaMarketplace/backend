@@ -45,9 +45,9 @@ $$
                 1.9, 'На ходу', 'Хетчбек', 'Передній', 'Червоний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', 'Нові', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -77,9 +77,9 @@ $$
                 3.0, 'На ходу', 'Хетчбек', 'Передній', 'Чорний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', 'Нові', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -109,9 +109,9 @@ $$
                 'Бензин', 3.0, 'На ходу', 'Седан', 'Задній', 'Чорний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', 'Нові', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -141,9 +141,9 @@ $$
                 2.5, 'На ходу', 'Седан', 'Передній', 'Чорний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', 'Нові', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -173,9 +173,9 @@ $$
                 'На ходу', 'Седан', 'Задній', 'Синій')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', 'Вживані', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -205,9 +205,9 @@ $$
                 1.9, 'На ходу', 'Хетчбек', 'Передній', 'Червоний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', 'Під пригон', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -237,9 +237,9 @@ $$
                 3.0, 'На ходу', 'Хетчбек', 'Передній', 'Чорний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', 'Нові', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -269,9 +269,9 @@ $$
                 'Бензин', 3.0, 'На ходу', 'Седан', 'Задній', 'Чорний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Київ', 'Вживані', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -301,9 +301,9 @@ $$
                 2.5, 'На ходу', 'Седан', 'Передній', 'Чорний')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', 'Під пригон', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
@@ -333,9 +333,9 @@ $$
                 'На ходу', 'Седан', 'Задній', 'Синій')
         RETURNING id INTO var_car_id;
 
-        INSERT INTO advertisements (description, region, car_id, user_id, contact_name, contact_phone, preview_image_id,
+        INSERT INTO advertisements (description, region, category, car_id, user_id, contact_name, contact_phone, preview_image_id,
                                     is_active, created_timestamp)
-        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', var_car_id, var_test_user_id,
+        VALUES ('Це тестове оголошення було автоматично згенеровано.', 'Львів', 'Нові', var_car_id, var_test_user_id,
                 'Тестовий Користувач', '380000000000', var_advertisement_preview_id, TRUE, NOW())
         RETURNING id INTO var_advertisement_id;
 
