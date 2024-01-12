@@ -47,6 +47,7 @@ public class AdvertisementController {
             )
             @PathParam("sort") String sortBy,
             @Parameter(
+                    name = "sort",
                     description = "Page number",
                     schema = @Schema(implementation = Integer.class)
             )
