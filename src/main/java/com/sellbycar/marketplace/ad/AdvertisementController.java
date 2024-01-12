@@ -38,6 +38,7 @@ public class AdvertisementController {
     })
     public ResponseEntity<ResponseBody<List<AdvertisementDTO>>> searchAdvertisement(
             @Parameter(
+                    name = "sort",
                     description = "Sort method",
                     schema = @Schema(
                             implementation = String.class,
@@ -47,7 +48,6 @@ public class AdvertisementController {
             )
             @PathParam("sort") String sortBy,
             @Parameter(
-                    name = "sort",
                     description = "Page number",
                     schema = @Schema(implementation = Integer.class)
             )
