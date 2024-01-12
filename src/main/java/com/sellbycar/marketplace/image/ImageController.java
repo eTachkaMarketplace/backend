@@ -56,7 +56,7 @@ public class ImageController {
             @ApiResponse(responseCode = "201", description = "Created"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public ResponseEntity<?> uploadImage(@RequestPart MultipartFile image) throws IOException {
+    public ResponseEntity<?> uploadImage(@RequestPart MultipartFile image) {
         if (image.isEmpty()) {
             return ResponseUtil.error("Image should not be empty.", HttpStatus.BAD_REQUEST);
         }

@@ -2,6 +2,8 @@ package com.sellbycar.marketplace.user;
 
 import com.sellbycar.marketplace.auth.LoginRequest;
 import com.sellbycar.marketplace.auth.SignupRequest;
+import com.sellbycar.marketplace.image.ImageDAO;
+import com.sellbycar.marketplace.image.ImageService;
 import com.sellbycar.marketplace.mail.MailService;
 import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.mail.MessagingException;
@@ -13,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.*;
@@ -28,6 +31,14 @@ public class UserServiceImpl implements UserService {
     private final MailService mailService;
     private final UserRequestValidator userRequestValidator;
     private final UserMapper userMapper;
+    private final ImageService imageService;
+
+    @Override
+    public UserDAO updatePhoto(UserDAO userDAO, MultipartFile newPhoto) {
+        ImageDAO imageDAO = imageService.createImage(newPhoto);
+        userDAO.setPhoto(imageDAO);
+        return userRepository.save(userDAO);
+    }
 
     public void createNewUser(SignupRequest signUpRequest) throws MessagingException {
         userRequestValidator.throwIfSignupRequestNotValid(signUpRequest);

@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.image;
 
+import com.sellbycar.marketplace.util.exception.RequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,16 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
 
     @Override
-    public ImageDAO createImage(MultipartFile multipartFile) throws IOException {
+    public ImageDAO createImage(MultipartFile multipartFile) {
         ImageDAO image = new ImageDAO();
         image.setName(multipartFile.getName());
         image.setContentType(multipartFile.getContentType());
         image.setSize(multipartFile.getSize());
-        image.setContent(multipartFile.getBytes());
+        try {
+            image.setContent(multipartFile.getBytes());
+        } catch (IOException e) {
+            throw RequestException.bad("Could not read image file.");
+        }
         image.setCreatedTimestamp(Instant.now());
         return imageRepository.save(image);
     }

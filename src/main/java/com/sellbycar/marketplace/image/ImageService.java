@@ -12,9 +12,8 @@ public interface ImageService {
      *
      * @param multipartFile The MultipartFile representing the image file.
      * @return The created Image entity.
-     * @throws IOException If an I/O error occurs while reading the file.
      */
-    ImageDAO createImage(MultipartFile multipartFile) throws IOException;
+    ImageDAO createImage(MultipartFile multipartFile);
 
     /**
      * Retrieves an Image entity by its unique identifier.

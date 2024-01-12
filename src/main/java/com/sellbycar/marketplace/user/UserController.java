@@ -2,6 +2,7 @@ package com.sellbycar.marketplace.user;
 
 import com.sellbycar.marketplace.auth.JwtUtils;
 import com.sellbycar.marketplace.auth.LoginRequest;
+import com.sellbycar.marketplace.web.ResponseBody;
 import com.sellbycar.marketplace.web.ResponseUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
@@ -32,6 +34,40 @@ public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
     private final JwtUtils jwtUtils;
+
+    @PutMapping("/me")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Update current user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
+            @ApiResponse(responseCode = "403", description = "FORBIDDEN"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    public ResponseEntity<?> updateUser(@RequestBody UserDTO updatedUser) {
+        String token = getTokenFromRequest();
+        String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
+
+        UserDAO user = userService.updateUser(updatedUser, emailOfUser);
+        UserDTO userDTO = userMapper.toDTO(user);
+
+        return ResponseEntity.ok(userDTO);
+    }
+
+    @PutMapping(value = "/me/photo", consumes = {"multipart/form-data"})
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Update current user's photo", tags = {"User Library"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User's photo updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad Request")
+    })
+    public ResponseEntity<ResponseBody<UserDTO>> putUserPhoto(@RequestPart("image") MultipartFile image) {
+        String userToken = getTokenFromRequest();
+        String userEmail = jwtUtils.getEmailFromJwtToken(userToken);
+        UserDAO userDAO = userService.findUserByEmailOrThrow(userEmail);
+        UserDAO updatedUser = userService.updatePhoto(userDAO, image);
+        return ResponseUtil.ok(userMapper.toDTO(updatedUser));
+    }
 
     @GetMapping("/me")
     @SecurityRequirement(name = "Bearer Authentication")
@@ -54,25 +90,6 @@ public class UserController {
         } catch (BadCredentialsException e) {
             return ResponseUtil.error("Not Found", HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PutMapping("/me")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @Operation(summary = "Update current user")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "OK"),
-            @ApiResponse(responseCode = "401", description = "UNAUTHORIZED"),
-            @ApiResponse(responseCode = "403", description = "FORBIDDEN"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-    })
-    public ResponseEntity<?> updateUser(@RequestBody UserDTO updatedUser) {
-        String token = getTokenFromRequest();
-        String emailOfUser = jwtUtils.getEmailFromJwtToken(token);
-
-        UserDAO user = userService.updateUser(updatedUser, emailOfUser);
-        UserDTO userDTO = userMapper.toDTO(user);
-
-        return ResponseEntity.ok(userDTO);
     }
 
     @DeleteMapping("/me")

@@ -77,7 +77,8 @@ public class SecurityConfig {
                                 HttpMethod.PUT,
                                 "/advertisement/{id}",
                                 "/user/me",
-                                "/user/password"
+                                "/user/password",
+                                "/user/me/photo"
                         )
                         .authenticated()
                         .requestMatchers(

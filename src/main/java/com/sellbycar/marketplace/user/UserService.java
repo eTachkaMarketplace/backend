@@ -4,17 +4,18 @@ import com.sellbycar.marketplace.auth.LoginRequest;
 import com.sellbycar.marketplace.auth.SignupRequest;
 import jakarta.mail.MessagingException;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
+
+    UserDAO updatePhoto(UserDAO user, MultipartFile newPhoto);
 
     /**
      * Registers a new user in the system.
      *
      * @param signUpRequest DTO containing all required data for user registration.
-     * @return true if the registration is successful, false otherwise.
      * @throws UserDataException if there is an issue during the registration process.
      */
-
     void createNewUser(SignupRequest signUpRequest) throws MessagingException;
 
     /**

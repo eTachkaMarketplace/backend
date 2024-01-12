@@ -54,7 +54,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public AdvertisementDAO createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException {
+    public AdvertisementDAO createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) {
         UserDAO user = userService.getUserFromSecurityContextHolder();
         AdvertisementDAO advertisement = advertisementMapper.toDAO(advertisementDTO);
         advertisement.setUser(user);
