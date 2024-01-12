@@ -5,6 +5,7 @@ import com.sellbycar.marketplace.car.CarDTO;
 import com.sellbycar.marketplace.image.ImageDAO;
 import com.sellbycar.marketplace.image.ImageService;
 import com.sellbycar.marketplace.user.UserDAO;
+import com.sellbycar.marketplace.user.UserRepository;
 import com.sellbycar.marketplace.user.UserService;
 import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final UserService userService;
     private final AdvertisementMapper advertisementMapper;
     private final ImageService imageService;
+    private final UserRepository userRepository;
 
     @Override
     public List<AdvertisementDTO> findAdvertisements(AdvertisementFilter filter, Sort sort, int page, int size) {
@@ -114,7 +116,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         UserDAO user = userService.getUserFromSecurityContextHolder();
         AdvertisementDAO advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> RequestException.notFound("Advertisement does not exist."));
-        user.getFavorites().add(advertisement);
+        user.addFavorite(advertisement);
+        userRepository.save(user);
         return advertisement;
     }
 
@@ -123,7 +126,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         UserDAO user = userService.getUserFromSecurityContextHolder();
         AdvertisementDAO advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> RequestException.notFound("Advertisement does not exist."));
-        user.getFavorites().remove(advertisement);
+        user.removeFavorite(advertisement);
+        userRepository.save(user);
     }
 
     @Transactional

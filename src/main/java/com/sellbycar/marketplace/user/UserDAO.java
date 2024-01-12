@@ -71,4 +71,18 @@ public class UserDAO implements Serializable {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<AdvertisementDAO> advertisements;
+
+    public void addFavorite(AdvertisementDAO advertisement) {
+        if (favorites == null) {
+            favorites = Set.of(advertisement);
+        } else {
+            favorites.add(advertisement);
+        }
+    }
+
+    public void removeFavorite(AdvertisementDAO advertisement) {
+        if (favorites != null) {
+            favorites.remove(advertisement);
+        }
+    }
 }
