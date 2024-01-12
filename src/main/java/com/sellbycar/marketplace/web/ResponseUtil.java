@@ -31,12 +31,12 @@ public class ResponseUtil {
     }
 
     public static <T> ResponseEntity<ResponseBody<T>> ok(String message, T responseObj) {
-        ResponseBody<T> body = new ResponseBody<>(null, "OK", responseObj);
+        ResponseBody<T> body = new ResponseBody<>(message, "OK", responseObj);
         return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     public static ResponseEntity<ResponseBody<Void>> error(String message, HttpStatus status) {
-        ResponseBody<Void> body = new ResponseBody<>(null, "Created", null);
-        return new ResponseEntity<>(body, HttpStatus.CREATED);
+        ResponseBody<Void> body = new ResponseBody<>(message, status.name(), null);
+        return new ResponseEntity<>(body, status);
     }
 }
