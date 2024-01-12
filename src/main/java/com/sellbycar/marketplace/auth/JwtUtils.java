@@ -2,6 +2,7 @@ package com.sellbycar.marketplace.auth;
 
 import com.sellbycar.marketplace.user.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -85,6 +86,7 @@ public class JwtUtils {
             Jwts.parser().setSigningKey(secret).build().parse(token);
             return true;
         } catch (Exception e) {
+            if (e instanceof ExpiredJwtException) return false;
             logger.error("Failed to validate JWT token", e);
         }
 
