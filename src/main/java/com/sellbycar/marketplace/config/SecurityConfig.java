@@ -6,6 +6,7 @@ import com.sellbycar.marketplace.user.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -29,14 +30,11 @@ public class SecurityConfig {
 
     private final AuthEntryPointJwt unauthorizedHandler;
 
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
-
         return authProvider;
     }
 
@@ -62,28 +60,42 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .authorizeHttpRequests(configurer -> configurer
-                        .requestMatchers("/v3/api-docs**"
-                                , "/swagger-ui/**"
-                                , "/swagger-ui.html")
-                        .permitAll()
-                        .requestMatchers("/api/users/*")
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/advertisement",
+                                "/user/me"
+                        )
                         .authenticated()
-                        .requestMatchers("/api/advertisements/create"
-                                , "/api/advertisements/{id}/update"
-                                , "/api/advertisements/{id}/remove")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/advertisement",
+                                "/auth/refresh/**",
+                                "/image"
+                        )
                         .authenticated()
-                        .requestMatchers("/api/advertisements/{id}/favorites"
-                                , "/api/advertisements/favorites")
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/advertisement/{id}",
+                                "/user/me",
+                                "/user/password"
+                        )
                         .authenticated()
-                        .requestMatchers("/api/image/set/**")
+                        .requestMatchers(
+                                HttpMethod.DELETE,
+                                "/advertisement/{id}",
+                                "/user/me"
+                        )
+                        .authenticated()
+                        .requestMatchers(
+                                "/advertisement/favorites/**"
+                        )
                         .authenticated()
                         .anyRequest()
-                        .permitAll());
+                        .permitAll()
+                );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
-
-
 }

@@ -1,16 +1,17 @@
 package com.sellbycar.marketplace.user;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sellbycar.marketplace.ad.AdvertisementDAO;
+import com.sellbycar.marketplace.image.ImageDAO;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.sql.Types;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
@@ -18,53 +19,56 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email", name = "unique_email_constraint"))
+@Table(name = "users")
 public class UserDAO implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "id")
     private Long id;
-    @Column
+
+    @Column(name = "first_name")
     private String firstName;
-    @Column
+
+    @Column(name = "last_name")
     private String lastName;
-    @Column(unique = true)
+
+    @Column(name = "email", unique = true)
     private String email;
 
-    @JsonIgnore
-    @Column
+    @Column(name = "password")
     private String password;
-    @Column
+
+    @Column(name = "phone")
     private String phone;
 
-    @JsonIgnore
-    @Column
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JdbcTypeCode(Types.BIGINT)
+    @JoinColumn(name = "photo")
+    private ImageDAO photo;
+
+    @Column(name = "enabled")
     private Boolean enabled;
-    @Column
+
+    @Column(name = "unique_code", unique = true)
     private String uniqueCode;
-    @Column
-    private String photo;
 
-    public UserDAO(String email) {
-        this.email = email;
-    }
-
-    @JsonBackReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<AdvertisementDAO> advertisement = new ArrayList<>();
-
-    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "authorities", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> authority = new HashSet<>();
+    @JdbcTypeCode(Types.ARRAY)
+    @Column(name = "authorities")
+    private Set<UserAuthority> authorities;
 
-    @JsonIgnore
-    @ManyToMany
+    @Column(name = "created_timestamp")
+    private Instant createdTimestamp;
+
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "users_favorite_cars",
+            name = "user_favorite_advertisements",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "advertisement_id")
     )
-    private Set<AdvertisementDAO> favoriteCars;
+    private Set<AdvertisementDAO> favorites;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<AdvertisementDAO> advertisements;
 }

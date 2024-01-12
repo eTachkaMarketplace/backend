@@ -4,6 +4,7 @@ import jakarta.security.auth.message.AuthException;
 import jakarta.validation.constraints.NotNull;
 
 public interface AuthService {
+
     /**
      * Saves the JWT refresh token associated with a user's email.
      * <p>

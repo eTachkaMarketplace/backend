@@ -21,10 +21,10 @@ import java.util.Date;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
-    @Value(("${jwt.secret.access.expirationMs}"))
+    @Value("${jwt.secret.access.expirationMs}")
     private long jwtAccessExpirationMs;
 
-    @Value(("${jwt.secret.refresh.expirationMs}"))
+    @Value("${jwt.secret.refresh.expirationMs}")
     private long jwtRefreshExpirationMs;
 
     private final Key jwtAccessSecret;
@@ -44,7 +44,7 @@ public class JwtUtils {
         final Date expiration = new Date(new Date().getTime() + jwtAccessExpirationMs);
 
         return Jwts.builder()
-                .claim("id", userPrincipal.getId())
+                .claim("id", userPrincipal.getUser().getId())
                 .subject((userPrincipal.getUsername()))
                 .issuedAt(new Date())
                 .expiration(expiration)

@@ -39,8 +39,8 @@ class AdvertisementControllerTest {
 
         List<AdvertisementDTO> allAdvertisements = List.of(ad1, ad2);
 
-        when(advertisementService.findAllAd()).thenReturn(allAdvertisements);
-        when(advertisementService.findAllAd(Sort.by(Sort.Order.asc("dateAdded"))))
+        when(advertisementService.findAdvertisements()).thenReturn(allAdvertisements);
+        when(advertisementService.findAdvertisements(Sort.by(Sort.Order.asc("dateAdded"))))
                 .thenReturn(List.of(ad1, ad2));
 
         ResponseEntity<?> responseWithoutSorting = advertisementController.showAllAdvertisement(false);
@@ -49,7 +49,7 @@ class AdvertisementControllerTest {
         assertEquals("All advertisements", ((Map<?, ?>) Objects.requireNonNull(responseWithoutSorting.getBody())).get("message"));
         assertEquals(allAdvertisements, ((Map<?, ?>) responseWithoutSorting.getBody()).get("data"));
 
-        verify(advertisementService, times(1)).findAllAd();
+        verify(advertisementService, times(1)).findAdvertisements();
 
         ResponseEntity<?> responseWithSorting = advertisementController.showAllAdvertisement(true);
 
@@ -57,7 +57,7 @@ class AdvertisementControllerTest {
         assertEquals("All advertisements", ((Map<?, ?>) Objects.requireNonNull(responseWithSorting.getBody())).get("message"));
         assertEquals(allAdvertisements, ((Map<?, ?>) responseWithSorting.getBody()).get("data"));
 
-        verify(advertisementService, times(1)).findAllAd(Sort.by(Sort.Order.asc("dateAdded")));
+        verify(advertisementService, times(1)).findAdvertisements(Sort.by(Sort.Order.asc("dateAdded")));
     }
 
 

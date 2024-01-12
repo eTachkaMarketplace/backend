@@ -3,7 +3,7 @@ package com.sellbycar.marketplace.user;
 import lombok.Data;
 
 @Data
-public class ForgotPasswordRequest {
+public class ChangePasswordRequest {
 
-    private String email;
+    private String newPassword;
 }

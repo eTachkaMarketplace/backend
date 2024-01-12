@@ -3,6 +3,7 @@ package com.sellbycar.marketplace.auth;
 import com.sellbycar.marketplace.user.UserDAO;
 import com.sellbycar.marketplace.user.UserDetailsImpl;
 import com.sellbycar.marketplace.user.UserService;
+import com.sellbycar.marketplace.util.exception.RequestException;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.constraints.NotNull;
@@ -18,7 +19,6 @@ import java.util.Map;
 public class AuthServiceImpl implements AuthService {
 
     private final JwtUtils jwtUtils;
-
     private final UserService userService;
     private final Map<String, String> refreshStorage = new HashMap<>();
 
@@ -26,40 +26,38 @@ public class AuthServiceImpl implements AuthService {
         refreshStorage.put(email, jwtRefreshToken);
     }
 
-    public JwtResponse getJwtAccessToken(@NotNull String refreshToken) throws AuthException {
-        if (jwtUtils.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtUtils.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final Authentication authentication = userService.userAuthentication(new UserDAO(login));
-                if (authentication == null) throw new AuthException("User authentication error");
-
-                final String accessToken = jwtUtils.generateJwtToken(authentication);
-
-                return new JwtResponse(accessToken, null);
-            }
-        }
-        throw new AuthException("Invalid Token");
+    public JwtResponse getJwtAccessToken(@NotNull String refreshToken) {
+        Authentication authentication = authenticateWithRefreshToken(refreshToken);
+        String accessToken = jwtUtils.generateJwtToken(authentication);
+        return new JwtResponse(accessToken, refreshToken);
     }
 
-    public JwtResponse getJwtRefreshToken(@NotNull String refreshToken) throws AuthException {
-        if (jwtUtils.validateRefreshToken(refreshToken)) {
-            final Claims claims = jwtUtils.getRefreshClaims(refreshToken);
-            final String login = claims.getSubject();
-            final String saveRefreshToken = refreshStorage.get(login);
-            if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final Authentication authentication = userService.userAuthentication(new UserDAO(login));
-                if (authentication == null) throw new AuthException("User authentication error");
+    public JwtResponse getJwtRefreshToken(@NotNull String refreshToken) {
+        Authentication authentication = authenticateWithRefreshToken(refreshToken);
+        String accessToken = jwtUtils.generateJwtToken(authentication);
+        String newRefreshToken = jwtUtils.generateRefreshToken(authentication);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        refreshStorage.put(userDetails.getUsername(), newRefreshToken);
+        return new JwtResponse(accessToken, newRefreshToken);
+    }
 
-                final String accessToken = jwtUtils.generateJwtToken(authentication);
-                final String newRefreshToken = jwtUtils.generateRefreshToken(authentication);
-                UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-                refreshStorage.put(userDetails.getUsername(), newRefreshToken);
-                return new JwtResponse(accessToken, newRefreshToken);
-            }
+    private Authentication authenticateWithRefreshToken(String refreshToken) {
+        if (!jwtUtils.validateRefreshToken(refreshToken)) {
+            throw RequestException.forbidden("Invalid refresh token.");
         }
-        throw new AuthException("Invalid JWT token");
+        Claims claims = jwtUtils.getRefreshClaims(refreshToken);
+        String login = claims.getSubject();
+        String saveRefreshToken = refreshStorage.get(login);
+        if (saveRefreshToken == null || !saveRefreshToken.equals(refreshToken)) {
+            throw RequestException.forbidden("Invalid refresh token.");
+        }
+        UserDAO user = new UserDAO();
+        user.setEmail(login);
+        Authentication authentication = userService.userAuthentication(user);
+        if (authentication == null) {
+            throw RequestException.forbidden("Not allowed.");
+        }
+        return authentication;
     }
 }
 

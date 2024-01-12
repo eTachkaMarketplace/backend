@@ -1,27 +1,19 @@
 package com.sellbycar.marketplace.user;
 
-import org.springframework.security.core.GrantedAuthority;
+import lombok.Data;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 
+@Data
 public class UserDetailsImpl implements UserDetails {
 
     private final UserDAO user;
 
-    public Long getId() {
-        return user.getId();
-    }
-
-    public UserDetailsImpl(UserDAO user) {
-        this.user = user;
-    }
-
-
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getAuthority();
+    public Collection<UserAuthority> getAuthorities() {
+        return user.getAuthorities();
     }
 
     @Override
@@ -53,6 +45,4 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isEnabled() {
         return user.getEnabled();
     }
-
-
 }

@@ -8,14 +8,10 @@ import java.util.List;
 import java.util.Set;
 
 public interface AdvertisementService {
-    /**
-     * Finds a user in the database by checking the given user ID and converts it into DTO.
-     *
-     * @return List of all advertisements
-     */
-    List<AdvertisementDTO> findAllAd();
 
-    List<AdvertisementDTO> findAllAd(Sort sort);
+    List<AdvertisementDTO> findAdvertisements();
+
+    List<AdvertisementDTO> findAdvertisements(Sort sort);
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
@@ -25,21 +21,14 @@ public interface AdvertisementService {
      */
     AdvertisementDAO getAdvertisement(Long id);
 
-    /**
-     * Finds a user in the database by checking the given user ID and converts it into DTO.
-     *
-     * @param advertisementDTO object with datas for creating
-     * @return
-     */
-    long createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
+    AdvertisementDAO createAdvertisement(AdvertisementDTO advertisementDTO, List<MultipartFile> files) throws IOException;
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
      *
      * @param advertisementDTO object with datas for changes
-     * @param id               id of advertisement in order to get it
      */
-    AdvertisementDAO updateADv(AdvertisementDTO advertisementDTO, Long id);
+    AdvertisementDAO updateAdvertisement(AdvertisementDTO advertisementDTO);
 
     /**
      * Get all advertisements from favorite list

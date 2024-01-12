@@ -23,12 +23,4 @@ public interface ImageService {
      * @return An Optional containing the Image entity if found, or empty if not found.
      */
     Optional<ImageDAO> getImageById(Long id);
-
-    /**
-     * Adds an image as a preview to an advertisement.
-     *
-     * @param advertisementID The identifier of the advertisement to which the preview should be added.
-     * @param imageId         The identifier of the image to be set as the preview.
-     */
-    void addPreviewImageToAdvertisement(Long advertisementID, Long imageId);
 }

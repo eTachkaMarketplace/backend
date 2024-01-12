@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.mail;
 
+import com.sellbycar.marketplace.user.UserDAO;
 import jakarta.mail.MessagingException;
 import org.thymeleaf.context.Context;
 
@@ -19,6 +20,9 @@ public interface MailService {
      * @throws MessagingException If there is an issue with sending the email.
      */
 
-    public void sendSimpleMessage(String emailTo, String subject, String templateName, Context context) throws MessagingException;
+    void sendSimpleMessage(String emailTo, String subject, String templateName, Context context) throws MessagingException;
 
+    void sendRegistrationMail(UserDAO user) throws MessagingException;
+
+    void sendResetPasswordMail(UserDAO user) throws MessagingException;
 }

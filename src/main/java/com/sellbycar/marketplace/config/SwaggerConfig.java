@@ -21,7 +21,7 @@ public class SwaggerConfig {
                 .info(new Info().
                         title("REST API eTachka Marketplace")
                         .version("v1")
-                        .description("Documentation for accessing the eTachka Marketplace resources via REST API.")
+                        .description("Documentation for access to the eTachka Marketplace resources via REST API.")
                         .termsOfService("https://etachka-marketplace.space/tos"))
                 .addServersItem(new Server()
                         .url(serverURL)

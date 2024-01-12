@@ -1,6 +1,5 @@
 package com.sellbycar.marketplace.image;
 
-import com.sellbycar.marketplace.ad.AdvertisementDAO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,31 +8,35 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import java.sql.Types;
+import java.time.Instant;
 
 @Entity
-@Table(name = "images")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "images")
 public class ImageDAO {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "size")
     private Long size;
+
     @Column(name = "content_type")
     private String contentType;
-    @Column(name = "is_preview_image")
-    private boolean isPreviewImage;
+
     @Lob
     @JdbcTypeCode(Types.BINARY)
-    @Column(name = "resource")
-    private byte[] resource;
+    @Column(name = "content")
+    private byte[] content;
 
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
-    @JoinColumn(name = "advertisement_id")
-    private AdvertisementDAO advertisement;
+    @Column(name = "created_timestamp")
+    private Instant createdTimestamp;
 }
