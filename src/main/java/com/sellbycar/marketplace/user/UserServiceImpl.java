@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setAuthorities(Set.of(UserAuthority.USER));
         user.setEnabled(true);
+        user.setCreatedTimestamp(Instant.now());
 
         userRepository.save(user);
         mailService.sendRegistrationMail(user);
