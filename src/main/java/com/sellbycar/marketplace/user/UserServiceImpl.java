@@ -14,8 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(email);
         user.setFirstName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.getAuthorities().add(UserAuthority.USER);
+        user.setAuthorities(Set.of(UserAuthority.USER));
         user.setEnabled(true);
 
         userRepository.save(user);
