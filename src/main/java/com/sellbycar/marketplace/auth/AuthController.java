@@ -87,7 +87,6 @@ public class AuthController {
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getNewAccessToken(@RequestBody JwtResponse response) throws AuthException {
         final JwtResponse token = authService.getJwtAccessToken(response.getJwtRefreshToken());
         return ResponseUtil.ok("Access Token", token);
@@ -101,7 +100,6 @@ public class AuthController {
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getNewRefreshToken(@RequestBody JwtResponse response) throws AuthException {
         final JwtResponse token = authService.getJwtRefreshToken(response.getJwtRefreshToken());
         return ResponseUtil.create("Refresh token", HttpStatus.OK, token);
