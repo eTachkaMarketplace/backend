@@ -69,7 +69,6 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/advertisement",
-                                "/auth/refresh/**",
                                 "/image"
                         )
                         .authenticated()
@@ -77,7 +76,7 @@ public class SecurityConfig {
                                 HttpMethod.PUT,
                                 "/advertisement/{id}",
                                 "/user/me",
-                                "/user/password",
+//                                "/user/password",
                                 "/user/me/photo"
                         )
                         .authenticated()
