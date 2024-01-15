@@ -69,7 +69,6 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/advertisement",
-                                "/auth/refresh/**",
                                 "/image"
                         )
                         .authenticated()

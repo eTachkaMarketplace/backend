@@ -26,10 +26,13 @@ public class AuthServiceImpl implements AuthService {
         refreshStorage.put(email, jwtRefreshToken);
     }
 
-    public JwtResponse getJwtAccessToken(@NotNull String refreshToken) {
-        Authentication authentication = authenticateWithRefreshToken(refreshToken);
-        String accessToken = jwtUtils.generateJwtToken(authentication);
-        return new JwtResponse(accessToken, refreshToken);
+    public JwtResponse getJwtAccessToken(@NotNull String refreshToken) throws AuthException {
+        if (jwtUtils.validateRefreshToken(refreshToken)) {
+            Authentication authentication = authenticateWithRefreshToken(refreshToken);
+            String accessToken = jwtUtils.generateJwtToken(authentication);
+            return new JwtResponse(accessToken, null);
+        }
+        throw new AuthException("Invalid token");
     }
 
     public JwtResponse getJwtRefreshToken(@NotNull String refreshToken) {
