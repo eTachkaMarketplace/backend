@@ -46,7 +46,7 @@ public class AdvertisementController {
                             pattern = "^(cheap|expensive|new|old)$"
                     )
             )
-            @PathParam("sort") String sortBy,
+            @RequestParam("sort") String sortBy,
             @Parameter(
                     description = "Page number",
                     schema = @Schema(implementation = Integer.class)
