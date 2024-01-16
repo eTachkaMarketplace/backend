@@ -20,7 +20,7 @@ CREATE TABLE users
     phone             VARCHAR(20),
     photo             BIGINT REFERENCES images (id),
     enabled           BOOLEAN                  NOT NULL,
-    unique_code       VARCHAR(20) UNIQUE,
+    unique_code       VARCHAR(10) UNIQUE,
     authorities       VARCHAR(20)[]            NOT NULL DEFAULT '{}'::VARCHAR(20)[],
     created_timestamp TIMESTAMP WITH TIME ZONE NOT NULL
 );

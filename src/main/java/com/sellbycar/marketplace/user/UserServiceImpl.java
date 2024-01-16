@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     public void forgotPassword(ForgotPasswordRequest request) {
         UserDAO user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> RequestException.notFound("User not found."));
-        user.setUniqueCode(UUID.randomUUID().toString());
+        user.setUniqueCode(String.valueOf(new Random().nextInt(999999)));
         userRepository.save(user);
         try {
             mailService.sendResetPasswordMail(user);

@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.security.auth.message.AuthException;
@@ -87,7 +86,6 @@ public class AuthController {
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getNewAccessToken(@RequestBody JwtResponse response) throws AuthException {
         final JwtResponse token = authService.getJwtAccessToken(response.getJwtRefreshToken());
         return ResponseUtil.ok("Access Token", token);
@@ -101,7 +99,6 @@ public class AuthController {
             }),
             @ApiResponse(responseCode = "401", description = "Unauthorized")
     })
-    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<?> getNewRefreshToken(@RequestBody JwtResponse response) throws AuthException {
         final JwtResponse token = authService.getJwtRefreshToken(response.getJwtRefreshToken());
         return ResponseUtil.create("Refresh token", HttpStatus.OK, token);
