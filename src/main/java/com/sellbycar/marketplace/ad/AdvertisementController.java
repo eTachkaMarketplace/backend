@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
@@ -48,10 +47,10 @@ public class AdvertisementController {
             )
             @RequestParam("sort") String sortBy,
             @Parameter(
-                    description = "Page number",
+                    description = "Index of page",
                     schema = @Schema(implementation = Integer.class)
             )
-            @PathParam("page") Integer page,
+            @RequestParam("page") Integer page,
             @Parameter(
                     description = "Number of elements per page",
                     schema = @Schema(
@@ -60,7 +59,7 @@ public class AdvertisementController {
                             maximum = "100"
                     )
             )
-            @PathParam("size") Integer size,
+            @RequestParam("size") Integer size,
             @Parameter(
                     description = "Filter parameters",
                     schema = @Schema(
