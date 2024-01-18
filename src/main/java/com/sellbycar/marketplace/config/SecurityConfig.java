@@ -63,7 +63,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/advertisement",
-                                "/user/me"
+                                "/user/me",
+                                "/advertisement/me"
                         )
                         .authenticated()
                         .requestMatchers(
