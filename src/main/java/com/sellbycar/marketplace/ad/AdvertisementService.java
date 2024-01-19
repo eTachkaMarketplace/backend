@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.ad;
 
+import com.sellbycar.marketplace.util.exception.RequestException;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -55,4 +56,16 @@ public interface AdvertisementService {
      * @param id The identifier of the advertisement to be removed.
      */
     void removeAdvertisement(Long id);
+
+    /**
+     * Retrieves a list of AdvertisementDTO objects associated with the current user.
+     * This method retrieves and returns a list of AdvertisementDTO objects that belong to the
+     * authenticated user. The advertisements may include details such as title, description,
+     * and other relevant information.
+     *
+     * @return A List of AdvertisementDTO objects representing advertisements associated with the user.
+     * If there are no advertisements, an empty list is returned. The list is never null.
+     * @throws RequestException If there is an error while retrieving the user's advertisements.
+     */
+    List<AdvertisementDTO> getUserAdvertisement();
 }

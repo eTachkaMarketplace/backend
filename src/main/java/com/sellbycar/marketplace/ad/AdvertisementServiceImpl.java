@@ -14,15 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -142,5 +143,18 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             throw RequestException.forbidden("You do not have authority to delete this advertisement.");
         }
         advertisementRepository.delete(advertisement);
+    }
+
+    @Transactional
+    public List<AdvertisementDTO> getUserAdvertisement() {
+        UserDAO user = userService.getUserFromSecurityContextHolder();
+        List<AdvertisementDAO> advertisements = advertisementRepository.findAll();
+        if (advertisements.stream().anyMatch(adv -> adv.getUser().getId().equals(user.getId()))) {
+            return advertisements.stream()
+                    .map(advertisementMapper::toDTO)
+                    .collect(Collectors.toList());
+        } else {
+            throw new RequestException("Insufficient privileges", HttpStatus.FORBIDDEN);
+        }
     }
 }

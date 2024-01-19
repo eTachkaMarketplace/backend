@@ -158,4 +158,12 @@ public class AdvertisementController {
         advertisementService.removeFromFavoriteList(id);
         return ResponseUtil.ok("The advertisement was removed from your favorite list.");
     }
+
+    @GetMapping("/me")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Show user's advertisement")
+    public ResponseEntity<?> getUserAdvertisement() {
+        List<AdvertisementDTO> advertisement = advertisementService.getUserAdvertisement();
+        return ResponseUtil.ok(advertisement);
+    }
 }
