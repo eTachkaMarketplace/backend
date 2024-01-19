@@ -68,4 +68,7 @@ public interface AdvertisementService {
      * @throws RequestException If there is an error while retrieving the user's advertisements.
      */
     List<AdvertisementDTO> getUserAdvertisement();
+
+    void enableAdvertisement(Long id);
+    void disableAdvertisement(Long id);
 }

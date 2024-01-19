@@ -70,7 +70,9 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/advertisement",
-                                "/image"
+                                "/image",
+                                "advertisement/enable/{id}",
+                                "/advertisement/disable/{id}"
                         )
                         .authenticated()
                         .requestMatchers(

@@ -166,4 +166,31 @@ public class AdvertisementController {
         List<AdvertisementDTO> advertisement = advertisementService.getUserAdvertisement();
         return ResponseUtil.ok(advertisement);
     }
+
+    @PostMapping("/enable/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Enable user's advertisement")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "409", description = "Conflict")
+    })
+    public ResponseEntity<ResponseBody<Void>> enableAdvertisement(@PathVariable Long id) {
+        advertisementService.enableAdvertisement(id);
+        return ResponseUtil.ok("Advertisement is enabled");
+    }
+    @PostMapping("/disable/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @Operation(summary = "Disable user's advertisement")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ok"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "409", description = "Conflict")
+    })
+    public ResponseEntity<ResponseBody<Void>> disableAdvertisement(@PathVariable Long id) {
+        advertisementService.disableAdvertisement(id);
+        return ResponseUtil.ok("Advertisement is disabled");
+    }
 }
