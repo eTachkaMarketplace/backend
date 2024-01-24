@@ -148,13 +148,42 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public List<AdvertisementDTO> getUserAdvertisement() {
         UserDAO user = userService.getUserFromSecurityContextHolder();
-        List<AdvertisementDAO> advertisements = advertisementRepository.findAll();
-        if (advertisements.stream().anyMatch(adv -> adv.getUser().getId().equals(user.getId()))) {
-            return advertisements.stream()
-                    .map(advertisementMapper::toDTO)
-                    .collect(Collectors.toList());
-        } else {
-            throw new RequestException("Insufficient privileges", HttpStatus.FORBIDDEN);
+        List<AdvertisementDAO> advertisements = advertisementRepository.findByUserId(user.getId());
+        return advertisements.stream()
+                .map(advertisementMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public void enableAdvertisement(Long id) {
+        UserDAO existingUser = userService.getUserFromSecurityContextHolder();
+        AdvertisementDAO advertisement = advertisementRepository.findById(id)
+                .orElseThrow(() -> RequestException.notFound("Advertisement does not exist."));
+        boolean isUpdatedByOwner = existingUser.getId().equals(advertisement.getUser().getId());
+        if (!isUpdatedByOwner) {
+            throw RequestException.forbidden("You do not have authority to update this advertisement.");
         }
+        if (advertisement.isActive()) {
+            throw RequestException.conflict("This advertisement is already activated");
+        }
+        advertisement.setActive(true);
+        advertisementRepository.save(advertisement);
+    }
+
+
+    @Transactional
+    public void disableAdvertisement(Long id) {
+        UserDAO existingUser = userService.getUserFromSecurityContextHolder();
+        AdvertisementDAO advertisement = advertisementRepository.findById(id)
+                .orElseThrow(() -> RequestException.notFound("Advertisement does not exist."));
+        boolean isUpdatedByOwner = existingUser.getId().equals(advertisement.getUser().getId());
+        if (!isUpdatedByOwner) {
+            throw RequestException.forbidden("You do not have authority to update this advertisement.");
+        }
+        if (advertisement.isActive()) {
+            advertisement.setActive(false);
+            advertisementRepository.save(advertisement);
+        } else throw RequestException.conflict("This advertisement is already deactivated");
     }
 }
