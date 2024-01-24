@@ -148,15 +148,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public List<AdvertisementDTO> getUserAdvertisement() {
         UserDAO user = userService.getUserFromSecurityContextHolder();
-        List<AdvertisementDAO> advertisements = advertisementRepository.findAll();
-        if (advertisements.stream().anyMatch(adv -> adv.getUser().getId().equals(user.getId()))) {
-            return advertisements.stream()
-                    .map(advertisementMapper::toDTO)
-                    .collect(Collectors.toList());
-        } else {
-            throw new RequestException("Insufficient privileges", HttpStatus.FORBIDDEN);
-        }
+        List<AdvertisementDAO> advertisements = advertisementRepository.findByUserId(user.getId());
+        return advertisements.stream()
+                .map(advertisementMapper::toDTO)
+                .collect(Collectors.toList());
     }
+
 
     @Transactional
     public void enableAdvertisement(Long id) {
