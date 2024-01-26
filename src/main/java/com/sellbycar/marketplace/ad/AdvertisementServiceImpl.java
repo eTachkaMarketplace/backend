@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -83,6 +82,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         Optional.ofNullable(updated.getContactPhone()).ifPresent(current::setContactPhone);
         Optional.ofNullable(updated.getDescription()).ifPresent(current::setDescription);
         Optional.ofNullable(updated.getRegion()).ifPresent(current::setRegion);
+        Optional.ofNullable(updated.getCity()).ifPresent(current::setCity);
 
         CarDAO car = current.getCar();
         CarDTO updatedCar = updated.getCar();

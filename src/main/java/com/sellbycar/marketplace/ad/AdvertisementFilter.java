@@ -15,6 +15,7 @@ public class AdvertisementFilter {
     private String brand;
     private String model;
     private String region;
+    private String city;
     private Integer yearMin;
     private Integer yearMax;
     private BigDecimal priceMin;
@@ -35,6 +36,7 @@ public class AdvertisementFilter {
                 .equal(root.get("car").get("brand"), brand)
                 .equal(root.get("car").get("model"), model)
                 .equal(root.get("region"), region)
+                .equal(root.get("city"), city)
                 .between(root.get("car").get("year"), yearMin, yearMax)
                 .between(root.get("car").get("price"), priceMin, priceMax)
                 .equal(root.get("car").get("bodyType"), bodyType)

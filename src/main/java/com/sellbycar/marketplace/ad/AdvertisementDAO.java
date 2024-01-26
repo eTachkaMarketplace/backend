@@ -32,6 +32,9 @@ public class AdvertisementDAO implements Serializable {
     @Column(name = "region")
     private String region;
 
+    @Column(name = "city")
+    private String city;
+
     @Column(name = "category")
     private String category;
 
