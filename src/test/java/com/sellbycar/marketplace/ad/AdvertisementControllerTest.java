@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.ad;
 
+import com.sellbycar.marketplace.auth.JwtResponse;
 import com.sellbycar.marketplace.util.ConfiguredSpringBootTest;
 import com.sellbycar.marketplace.util.Util;
 import lombok.SneakyThrows;
@@ -14,7 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import javax.sql.DataSource;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -81,7 +82,43 @@ class AdvertisementControllerTest extends ConfiguredSpringBootTest {
     }
 
     @Test
+    @SneakyThrows
     void addToFavoriteList() {
+        JwtResponse jwt = Util.authenticate(mvc, "user@test.com", "test");
+        mvc.perform(
+                post("/advertisement/favorite/{id}", 1)
+                        .header("Authorization", "Bearer " + jwt.getJwtAccessToken())
+        ).andExpect(status().isCreated());
+    }
+
+    @Test
+    @SneakyThrows
+    void removeFavoriteFromList() {
+        JwtResponse jwt = Util.authenticate(mvc, "user@test.com", "test");
+        mvc.perform(
+                post("/advertisement/favorite/{id}", 1)
+                        .header("Authorization", "Bearer " + jwt.getJwtAccessToken())
+        ).andExpect(status().isCreated());
+        mvc.perform(
+                delete("/advertisement/favorite/{id}", 1)
+                        .header("Authorization", "Bearer " + jwt.getJwtAccessToken())
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    @SneakyThrows
+    void getFavoriteList() {
+        JwtResponse jwt = Util.authenticate(mvc, "user@test.com", "test");
+        mvc.perform(
+                post("/advertisement/favorite/{id}", 1)
+                        .header("Authorization", "Bearer " + jwt.getJwtAccessToken())
+        ).andExpect(status().isCreated());
+        mvc.perform(
+                        get("/advertisement/favorite")
+                                .header("Authorization", "Bearer " + jwt.getJwtAccessToken())
+                )
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data", Matchers.hasSize(1)));
     }
 
     @Test
