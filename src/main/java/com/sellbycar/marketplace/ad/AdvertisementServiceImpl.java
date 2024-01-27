@@ -11,6 +11,8 @@ import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -109,7 +111,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional
     public Set<AdvertisementDAO> getAllFavorites() {
         UserDAO user = userService.getUserFromSecurityContextHolder();
-        return user.getFavorites();
+        UserDAO userDAO = userRepository.getReferenceById(user.getId());
+        return userDAO.getFavorites();
     }
 
     @Transactional
@@ -117,8 +120,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         UserDAO user = userService.getUserFromSecurityContextHolder();
         AdvertisementDAO advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> RequestException.notFound("Advertisement does not exist."));
-        user.addFavorite(advertisement);
-        userRepository.save(user);
+        UserDAO userDAO = userRepository.getReferenceById(user.getId());
+        userDAO.addFavorite(advertisement);
+        userRepository.save(userDAO);
         return advertisement;
     }
 
@@ -127,8 +131,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         UserDAO user = userService.getUserFromSecurityContextHolder();
         AdvertisementDAO advertisement = advertisementRepository.findById(id)
                 .orElseThrow(() -> RequestException.notFound("Advertisement does not exist."));
-        user.removeFavorite(advertisement);
-        userRepository.save(user);
+        UserDAO userDAO = userRepository.getReferenceById(user.getId());
+        userDAO.removeFavorite(advertisement);
+        userRepository.save(userDAO);
     }
 
     @Transactional
