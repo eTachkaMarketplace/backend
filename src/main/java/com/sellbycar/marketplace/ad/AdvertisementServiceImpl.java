@@ -11,8 +11,6 @@ import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -67,6 +65,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
         advertisement.setImages(images);
         advertisement.setPreviewImage(images.get(0));
+        advertisement.setActive(true);
         return advertisementRepository.save(advertisement);
     }
 
