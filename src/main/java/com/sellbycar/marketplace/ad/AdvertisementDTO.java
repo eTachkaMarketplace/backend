@@ -17,7 +17,7 @@ public class AdvertisementDTO {
     private CarDTO car;
     private String contactName;
     private String contactPhone;
-    private Boolean isActive;
+    private boolean isActive;
     private String previewImage;
     private List<String> images;
     private Instant createdTimestamp;
