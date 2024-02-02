@@ -143,6 +143,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             throw RequestException.notFound("Advertisement does not exist.");
         }
         UserDAO user = advertisement.getUser();
+        removeFromFavoriteList(id);
         if (!existingUser.getId().equals(user.getId())) {
             throw RequestException.forbidden("You do not have authority to delete this advertisement.");
         }
