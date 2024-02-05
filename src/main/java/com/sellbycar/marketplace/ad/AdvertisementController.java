@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -78,8 +79,11 @@ public class AdvertisementController {
         };
         int pageOrDefault = (page != null) ? page : 0;
         int sizeOrDefault = (size != null) ? size : 10;
-        List<AdvertisementDTO> list = advertisementService.findAdvertisements(filter, sort, pageOrDefault, sizeOrDefault);
-        return ResponseUtil.ok(list);
+        Page<AdvertisementDTO> pageResult = advertisementService.findAdvertisements(filter, sort, pageOrDefault, sizeOrDefault);
+        List<AdvertisementDTO> list = pageResult.getContent();
+        long totalAdvertisements = pageResult.getTotalElements();
+
+        return ResponseUtil.ok("Total advertisement = " + totalAdvertisements, list);
     }
 
     @GetMapping("/{id}")
@@ -180,6 +184,7 @@ public class AdvertisementController {
         advertisementService.enableAdvertisement(id);
         return ResponseUtil.ok("Advertisement is enabled");
     }
+
     @PostMapping("/disable/{id}")
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Disable user's advertisement")

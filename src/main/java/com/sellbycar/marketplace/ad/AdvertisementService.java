@@ -1,6 +1,7 @@
 package com.sellbycar.marketplace.ad;
 
 import com.sellbycar.marketplace.util.exception.RequestException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,7 @@ import java.util.Set;
 
 public interface AdvertisementService {
 
-    List<AdvertisementDTO> findAdvertisements(AdvertisementFilter filter, Sort sort, int page, int size);
+    Page<AdvertisementDTO> findAdvertisements(AdvertisementFilter filter, Sort sort, int page, int size);
 
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
