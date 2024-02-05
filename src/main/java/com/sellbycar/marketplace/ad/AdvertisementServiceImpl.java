@@ -11,6 +11,7 @@ import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,12 +37,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final UserRepository userRepository;
 
     @Override
-    public List<AdvertisementDTO> findAdvertisements(AdvertisementFilter filter, Sort sort, int page, int size) {
+    public Page<AdvertisementDTO> findAdvertisements(AdvertisementFilter filter, Sort sort, int page, int size) {
         Pageable pageable = PageRequest.of(page, Integer.min(size, 100), sort);
         return advertisementRepository.findAll(filter.toSpecification(), pageable)
-                .map(advertisementMapper::toDTO)
-                .stream()
-                .toList();
+                .map(advertisementMapper::toDTO);
     }
 
     @Transactional
