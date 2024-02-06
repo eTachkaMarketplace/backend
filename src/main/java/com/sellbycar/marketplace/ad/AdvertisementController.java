@@ -112,7 +112,7 @@ public class AdvertisementController {
         return ResponseUtil.created(advertisementMapper.toDTO(advertisement));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @SecurityRequirement(name = "Bearer Authentication")
     @Operation(summary = "Update an advertisement")
     @ApiResponses(value = {
@@ -121,8 +121,10 @@ public class AdvertisementController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "404", description = "Not Found")
     })
-    public ResponseEntity<ResponseBody<AdvertisementDTO>> changeAdvertisement(@RequestBody AdvertisementDTO updated) {
-        AdvertisementDAO advertisement = advertisementService.updateAdvertisement(updated);
+    public ResponseEntity<ResponseBody<AdvertisementDTO>> changeAdvertisement(
+            @RequestPart("payload") AdvertisementDTO updated,
+            @RequestPart("images") List<MultipartFile> images) {
+        AdvertisementDAO advertisement = advertisementService.updateAdvertisement(updated, images);
         return ResponseUtil.ok("The advertisement was updated.", advertisementMapper.toDTO(advertisement));
     }
 

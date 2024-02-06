@@ -9,6 +9,7 @@ import com.sellbycar.marketplace.util.exception.RequestException;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,9 +17,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Optional;
+import java.util.Random;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -119,9 +123,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDAO getUserFromSecurityContextHolder() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        return userDetails.getUser();
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            return userDetails.getUser();
+        } catch (RuntimeException e){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid token", e);
+        }
     }
 
     @Override

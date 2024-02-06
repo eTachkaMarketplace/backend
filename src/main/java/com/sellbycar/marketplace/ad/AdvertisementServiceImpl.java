@@ -69,7 +69,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     }
 
     @Transactional
-    public AdvertisementDAO updateAdvertisement(AdvertisementDTO updated) {
+    public AdvertisementDAO updateAdvertisement(AdvertisementDTO updated,List<MultipartFile> files) {
         UserDAO user = userService.getUserFromSecurityContextHolder();
         Long id = updated.getId();
         AdvertisementDAO current = advertisementRepository.findById(id)
@@ -83,6 +83,15 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         Optional.ofNullable(updated.getDescription()).ifPresent(current::setDescription);
         Optional.ofNullable(updated.getRegion()).ifPresent(current::setRegion);
         Optional.ofNullable(updated.getCity()).ifPresent(current::setCity);
+
+        if (files != null && files.stream().anyMatch(file -> file != null && !file.isEmpty())) {
+            List<ImageDAO> images = new ArrayList<>();
+            for (MultipartFile file : files) {
+                images.add(imageService.createImage(file));
+            }
+            current.setImages(images);
+            current.setPreviewImage(images.get(0));
+        }
 
         CarDAO car = current.getCar();
         CarDTO updatedCar = updated.getCar();
