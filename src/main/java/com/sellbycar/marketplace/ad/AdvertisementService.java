@@ -26,9 +26,8 @@ public interface AdvertisementService {
     /**
      * Finds a user in the database by checking the given user ID and converts it into DTO.
      *
-     * @param advertisementDTO object with datas for changes
      */
-    AdvertisementDAO updateAdvertisement(AdvertisementDTO advertisementDTO);
+    AdvertisementDAO updateAdvertisement(AdvertisementDTO updated,List<MultipartFile> files);
 
     /**
      * Get all advertisements from favorite list
