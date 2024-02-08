@@ -1,0 +1,6 @@
+ALTER TABLE user_favorite_advertisements
+DROP CONSTRAINT user_favorite_advertisements_advertisement_id_fkey,
+ADD CONSTRAINT user_favorite_advertisements_advertisement_id_fkey
+FOREIGN KEY (advertisement_id)
+REFERENCES advertisements (id)
+ON DELETE CASCADE;
