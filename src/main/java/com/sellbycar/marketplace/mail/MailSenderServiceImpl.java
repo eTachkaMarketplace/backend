@@ -13,9 +13,9 @@ import org.thymeleaf.context.Context;
 @Service
 public class MailSenderServiceImpl implements MailService {
 
-    @Value(("spring.mail.username"))
+    @Value(("${spring.mail.username}"))
     private String username;
-    @Value(("server.frontend.host"))
+    @Value(("${server.frontend.host}"))
     private String frontendHost;
 
     private final JavaMailSender javaMailSender;
