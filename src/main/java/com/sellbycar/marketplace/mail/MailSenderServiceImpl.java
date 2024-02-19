@@ -45,6 +45,7 @@ public class MailSenderServiceImpl implements MailService {
         Context context = new Context();
         context.setVariable("username", user.getFirstName());
         context.setVariable("host", frontendHost);
+        context.setVariable("code", user.getUniqueCode());
         sendSimpleMessage(user.getEmail(), "Registration", "activation_message_ua", context);
     }
 
