@@ -56,8 +56,9 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(signUpRequest.getName());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         user.setAuthorities(Set.of(UserAuthority.USER));
-        user.setEnabled(true);
         user.setCreatedTimestamp(Instant.now());
+        user.setEnabled(false);
+        user.setUniqueCode(String.valueOf(new Random().nextInt(999999)));
 
         userRepository.save(user);
         mailService.sendRegistrationMail(user);

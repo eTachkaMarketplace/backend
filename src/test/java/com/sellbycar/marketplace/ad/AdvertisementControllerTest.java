@@ -124,9 +124,6 @@ class AdvertisementControllerTest extends ConfiguredSpringBootTest {
     void deleteAdvertisement() {
     }
 
-    @Test
-    void getAllFavorites() {
-    }
 
     @Test
     @SneakyThrows
@@ -168,7 +165,4 @@ class AdvertisementControllerTest extends ConfiguredSpringBootTest {
                 .andExpect(jsonPath("$.data", Matchers.hasSize(1)));
     }
 
-    @Test
-    void removeFromFavoriteList() {
-    }
 }
