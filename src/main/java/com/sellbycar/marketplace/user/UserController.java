@@ -1,5 +1,6 @@
 package com.sellbycar.marketplace.user;
 
+import com.sellbycar.marketplace.auth.ActivateRequest;
 import com.sellbycar.marketplace.auth.JwtUtils;
 import com.sellbycar.marketplace.auth.LoginRequest;
 import com.sellbycar.marketplace.web.ResponseBody;
@@ -125,8 +126,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Ok"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public ResponseEntity<?> acceptCode(@PathVariable("code") String code) {
-        var userDTO = userService.resetUniqueCode(code);
+    public ResponseEntity<?> acceptCode(@RequestBody ActivateRequest request) {
+        var userDTO = userService.resetUniqueCode(request.getCode());
         return ResponseUtil.create("Ok", HttpStatus.OK, userDTO);
     }
 
