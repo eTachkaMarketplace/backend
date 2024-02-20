@@ -126,8 +126,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Ok"),
             @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public ResponseEntity<?> acceptCode(@RequestBody ActivateRequest request) {
-        var userDTO = userService.resetUniqueCode(request.getCode());
+    public ResponseEntity<?> acceptCode(@PathVariable("code") String code) {
+        var userDTO = userService.resetUniqueCode(code);
         return ResponseUtil.create("Ok", HttpStatus.OK, userDTO);
     }
 

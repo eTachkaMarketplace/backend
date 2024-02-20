@@ -114,8 +114,8 @@ public class AuthController {
             ),
             @ApiResponse(responseCode = "400", description = "Bad Request")
     })
-    public ResponseEntity<?> activateUser(@RequestBody ActivateRequest request) {
-        userService.activateUser(request.getCode());
+    public ResponseEntity<?> activateUser(@PathVariable("code") String code) {
+        userService.activateUser(code);
         return ResponseUtil.ok("User activated successfully!");
     }
 }
