@@ -28,7 +28,7 @@ import java.util.Objects;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 @Tag(name = "User Library", description = "Endpoints for managing user")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserRequestValidator userRequestValidator;

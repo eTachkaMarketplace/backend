@@ -25,7 +25,7 @@ import java.util.Set;
 @RequestMapping("/advertisement")
 @RequiredArgsConstructor
 @Tag(name = "Advertisement Library", description = "Endpoints for Advertisement business logic")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class AdvertisementController {
 
     private final AdvertisementService advertisementService;

@@ -21,7 +21,7 @@ import java.util.Optional;
 @RequestMapping("/image")
 @RequiredArgsConstructor
 @Tag(name = "Image Library", description = "Endpoints for work with images")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class ImageController {
 
     private final ImageService imageService;
